@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Geai Éditions — Développement Web & Applications</title>
+<meta name="description" content="Développement de sites web et applications sur mesure. Sites vitrines, plateformes administrables, e-commerce. Basé à Lyon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1714;
+    --parchment: #f4f0ea;
+    --warmgray: #e8e2d9;
+    --muted: #8a8077;
+    --accent: #6b4c3b;
+    --accent-light: #8b6c5b;
+    --gold: #b8964e;
+    --gold-dim: rgba(184, 150, 78, 0.15);
+    --shadow: rgba(26, 23, 20, 0.08);
+    --shadow-deep: rgba(26, 23, 20, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--gold-dim);
+    color: var(--ink);
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── NAVIGATION ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(244, 240, 234, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(26, 23, 20, 0.06);
+    transition: all 0.4s ease;
+  }
+
+  .nav-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    line-height: 1.15;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 550px;
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.2rem;
+    background: var(--ink);
+    color: var(--parchment);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-cta:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--shadow-deep);
+  }
+
+  .hero-cta .arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .hero-cta:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 2rem;
+  }
+
+  .section-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .section-subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto 3.5rem;
+  }
+
+  /* ── PHILOSOPHY (bande sombre) ── */
+  .philosophy {
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .philosophy blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+
+  .philosophy .attribution {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ── OFFERS GRID ── */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .offer-card {
+    background: #fff;
+    border: 1px solid rgba(26, 23, 20, 0.08);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .offer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .offer-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .offer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px var(--shadow);
+  }
+
+  .offer-tier {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .offer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .offer-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+  }
+
+  .offer-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .offer-price span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  /* ── MAINTENANCE ── */
+  .maintenance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .maint-card {
+    padding: 2rem;
+    border: 1px solid rgba(26, 23, 20, 0.1);
+    background: #fff;
+    text-align: left;
+    transition: all 0.3s ease;
+  }
+
+  .maint-card:hover {
+    border-color: var(--gold);
+  }
+
+  .maint-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .maint-price {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+
+  .maint-price span {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .maint-features {
+    list-style: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .maint-features li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(26, 23, 20, 0.05);
+  }
+
+  .maint-features li:last-child { border: none; }
+
+  /* ── PORTFOLIO ── */
+  .portfolio-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(26, 23, 20, 0.06);
+  }
+
+  .portfolio-item:last-child {
+    border: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .portfolio-preview {
+    background: var(--ink);
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(26, 23, 20, 0.1);
+  }
+
+  .portfolio-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: all 0.5s ease;
+  }
+
+  .portfolio-preview:hover img {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+
+  .portfolio-preview .placeholder-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--parchment);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    opacity: 0.6;
+  }
+
+  .portfolio-preview .placeholder-text small {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    opacity: 0.5;
+  }
+
+  .portfolio-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .portfolio-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .portfolio-tags span {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    background: var(--gold-dim);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .portfolio-info p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .portfolio-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .portfolio-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+  }
+
+  .contact-section .section-title {
+    color: var(--parchment);
+  }
+
+  .contact-section .section-subtitle {
+    color: rgba(244, 240, 234, 0.6);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-email {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184, 150, 78, 0.3);
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .contact-email:hover {
+    border-color: var(--gold);
+  }
+
+  .contact-details {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    font-size: 0.85rem;
+    color: rgba(244, 240, 234, 0.5);
+  }
+
+  .contact-details strong {
+    color: rgba(244, 240, 234, 0.8);
+    font-weight: 500;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+
+    .offers-grid,
+    .maintenance-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .portfolio-item {
+      grid-template-columns: 1fr;
+    }
+
+    section { padding: 4rem 1.5rem; }
+
+    .hero { padding: 6rem 1.5rem 3rem; }
+
+    .contact-details {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-brand">Le Geai Éditions</a>
+  <ul class="nav-links">
+    <li><a href="#offres">Offres</a></li>
+    <li><a href="#realisations">Réalisations</a></li>
+    <li><a href="#maintenance">Pérennité</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <p class="hero-eyebrow">Développement web & applications</p>
+  <h1>Des outils numériques<br>conçus pour <em>durer</em></h1>
+  <p class="hero-sub">Sites web, plateformes administrables et applications de bureau — pensés pour être compris par tous, construits pour résister au temps.</p>
+  <a href="#contact" class="hero-cta">
+    Discuter de votre projet
+    <span class="arrow">→</span>
+  </a>
+</section>
+
+<!-- ── PHILOSOPHY ── -->
+<div class="philosophy">
+  <blockquote>
+    « Si un utilisateur doit chercher, c'est que l'interface a échoué. La technique doit servir la clarté — jamais l'inverse. »
+  </blockquote>
+  <p class="attribution">Notre approche</p>
+</div>
+
+<!-- ── OFFRES ── -->
+<section id="offres">
+  <div class="section-inner reveal">
+    <p class="section-label">Création</p>
+    <h2 class="section-title">Trois formats, un standard</h2>
+    <p class="section-subtitle">Chaque projet est construit sur mesure. Pas de template, pas de compromis sur l'expérience utilisateur.</p>
+
+    <div class="offers-grid">
+      <div class="offer-card">
+        <p class="offer-tier">Essentiel</p>
+        <h3 class="offer-name">Site Vitrine</h3>
+        <p class="offer-desc">2 à 5 pages. Votre activité présentée avec clarté — identité visuelle, formulaire de contact, adapté à tous les écrans. L'essentiel, sans superflu.</p>
+        <p class="offer-price">800 € <span>/ projet</span></p>
+      </div>
+
+      <div class="offer-card">
+        <p class="offer-tier">Avancé</p>
+        <h3 class="offer-name">Plateforme Admin</h3>
+        <p class="offer-desc">Interface d'administration, base de données, gestion de contenu. Vous gardez la main sur votre site en toute autonomie.</p>
+        <p class="offer-price">2 000 € <span>/ projet</span></p>
+      </div>
+
+      <div class="offer-card">
+        <p class="offer-tier">Sur mesure</p>
+        <h3 class="offer-name">E-Commerce</h3>
+        <p class="offer-desc">Boutique en ligne complète — catalogue, paiement, gestion des commandes. Architecture robuste pour vendre sereinement.</p>
+        <p class="offer-price">6 000 € <span>/ projet</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── REALISATIONS ── -->
+<section id="realisations">
+  <div class="section-inner reveal">
+    <p class="section-label">Portfolio</p>
+    <h2 class="section-title">Ce que nous avons construit</h2>
+    <p class="section-subtitle">Chaque projet reflète notre exigence : clarté, performance, élégance.</p>
+
+    <div class="portfolio-item">
+      <div class="portfolio-preview">
+        <div class="placeholder-text">
+          Bergfrid
+          <small>Média géopolitique</small>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <h3>Bergfrid</h3>
+        <div class="portfolio-tags">
+          <span>Média</span>
+          <span>OSINT</span>
+          <span>Multilingue</span>
+          <span>Temps réel</span>
+        </div>
+        <p>Plateforme éditoriale géopolitique complète — fil d'actualité en temps réel, dossiers thématiques, widget de conflits OSINT, système multilingue (FR/EN/Latin), newsletter, flux RSS, comptes utilisateurs. Design system « Archéofuturisme ».</p>
+        <a href="https://www.bergfrid.com" target="_blank" class="portfolio-link">
+          Visiter le site <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="portfolio-preview">
+        <div class="placeholder-text">
+          Applications
+          <small>Bureau & outils métier</small>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <h3>Applications de bureau</h3>
+        <div class="portfolio-tags">
+          <span>Desktop</span>
+          <span>Outils métier</span>
+          <span>Sur mesure</span>
+        </div>
+        <p>Développement d'applications bureau adaptées à des besoins spécifiques — gestion, automatisation, outils internes. Pensées pour être utilisées au quotidien sans formation.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── MAINTENANCE ── -->
+<section id="maintenance">
+  <div class="section-inner reveal">
+    <p class="section-label">Pérennité</p>
+    <h2 class="section-title">Un site vit après sa livraison</h2>
+    <p class="section-subtitle">Hébergement, domaine, mises à jour, évolutions — nous prenons soin de votre outil dans la durée.</p>
+
+    <div class="maintenance-grid">
+      <div class="maint-card">
+        <h3 class="maint-name">Veille</h3>
+        <p class="maint-price">39 € <span>/ mois</span></p>
+        <ul class="maint-features">
+          <li>Hébergement & nom de domaine</li>
+          <li>Surveillance de disponibilité</li>
+          <li>Sauvegardes régulières</li>
+          <li>Mises à jour de sécurité</li>
+        </ul>
+      </div>
+
+      <div class="maint-card">
+        <h3 class="maint-name">Évolution</h3>
+        <p class="maint-price">149 € <span>/ mois</span></p>
+        <ul class="maint-features">
+          <li>Tout le forfait Veille</li>
+          <li>Améliorations continues</li>
+          <li>Ajout de fonctionnalités</li>
+          <li>Support prioritaire</li>
+        </ul>
+      </div>
+
+      <div class="maint-card">
+        <h3 class="maint-name">Partenariat</h3>
+        <p class="maint-price">300 € <span>/ mois</span></p>
+        <ul class="maint-features">
+          <li>Tout le forfait Évolution</li>
+          <li>Refonte & redesign inclus</li>
+          <li>Conseil stratégique digital</li>
+          <li>Développements sur mesure</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="contact-section">
+  <div class="section-inner reveal">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">Parlons de votre projet</h2>
+    <p class="section-subtitle">Un besoin, une idée, une question — un seul message suffit.</p>
+    <a href="mailto:contact@legeai-editions.com" class="contact-email">contact@legeai-editions.com</a>
+    <div class="contact-details">
+      <span><strong>Basé à</strong> Lyon — Auvergne-Rhône-Alpes</span>
+      <span><strong>Disponible</strong> Lyon · Annecy · Clermont-Ferrand</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  © 2026 Le Geai Éditions — Tous droits réservés
+</footer>
+
+<!-- ── SCROLL REVEAL ── -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
