@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable | Le Geai Informatique</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1f2c23">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
+
+<nav aria-label="Navigation principale">
+  <a href="index.html" class="nav-brand"><span class="nav-brand-top">Le Geai</span><span class="nav-brand-bottom">Informatique</span></a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="creation-site-internet.html">Création</a></li>
+    <li><a href="maintenance-web.html">Maintenance</a></li>
+    <li><a href="microsoft-365.html">Microsoft 365</a></li>
+    <li><a href="logiciel-sur-mesure.html">Logiciels</a></li>
+    <li><a href="expertise-informatique.html">Expertise</a></li>
+    <li><a href="index.html#realisations">Portfolio</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+
+<section class="error-page">
+  <div class="error-ornament">G</div>
+  <h1 class="error-code">404</h1>
+  <p class="error-title">Page introuvable</p>
+  <p class="error-text">La page que vous cherchez n'existe pas ou a été déplacée.</p>
+  <div class="error-links">
+    <a href="index.html" class="hero-cta" style="opacity:1;animation:none;">Retour à l'accueil <span>→</span></a>
+  </div>
+  <div class="error-nav">
+    <p class="error-nav-label">Ou consultez directement :</p>
+    <a href="creation-site-internet.html">Création web</a>
+    <a href="maintenance-web.html">Maintenance</a>
+    <a href="microsoft-365.html">Microsoft 365</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 <a href="https://www.legeai-editions.com">Le Geai · Éditions</a> · Tous droits réservés</div>
+  <div class="footer-legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <span class="sep">·</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.nav-burger');
+  const navEl = document.querySelector('nav');
+  burger.addEventListener('click', () => {
+    navEl.classList.toggle('nav-open');
+    document.body.classList.toggle('menu-open');
+    burger.setAttribute('aria-expanded', navEl.classList.contains('nav-open'));
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navEl.classList.remove('nav-open');
+      document.body.classList.remove('menu-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+</html>

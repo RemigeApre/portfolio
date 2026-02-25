@@ -3,995 +3,444 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le Geai Éditions — Services numériques</title>
-<meta name="description" content="Développement web, applications sur mesure, infogérance et automatisation. Des outils numériques conçus pour durer. Basé à Lyon.">
+<title>Le Geai Informatique · Services numériques à Lyon</title>
+<meta name="description" content="Le Geai Informatique conçoit vos outils numériques : sites web, applications, Microsoft 365, automatisation. Basé à Lyon, disponible partout en France.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="Le Geai Informatique">
+<meta name="theme-color" content="#1f2c23">
+<meta name="geo.region" content="FR-ARA">
+<meta name="geo.placename" content="Lyon">
+<link rel="canonical" href="https://www.legeai-informatique.fr/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Le Geai Informatique">
+<meta property="og:title" content="Le Geai Informatique · Services numériques à Lyon">
+<meta property="og:description" content="Sites web, applications, Microsoft 365, automatisation. Des outils numériques conçus pour durer. Lyon, Annecy, Clermont-Ferrand.">
+<meta property="og:url" content="https://www.legeai-informatique.fr/">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Le Geai Informatique · Services numériques à Lyon">
+<meta name="twitter:description" content="Sites web, applications, Microsoft 365, automatisation. Des outils numériques conçus pour durer.">
+<!-- Fonts & CSS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --or-sable: #af8f3c;
-    --or-sable-dim: rgba(175, 143, 60, 0.15);
-    --rouge-antique: #b74d34;
-    --vert-minuit: #1f2c23;
-    --lune-lait: #f7f0de;
-    --lune-lait-soft: #faf6ec;
-    --ink: #1a1714;
-    --muted: #7a7168;
-    --muted-light: #a59d93;
-    --shadow: rgba(31, 44, 35, 0.08);
-    --shadow-deep: rgba(31, 44, 35, 0.18);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Crimson Pro', serif;
-    font-weight: 400;
-    background: var(--lune-lait);
-    color: var(--ink);
-    line-height: 1.75;
-    overflow-x: hidden;
-    font-size: 17px;
-  }
-
-  ::selection { background: var(--or-sable-dim); color: var(--ink); }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 1.1rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-    z-index: 100;
-    background: rgba(247, 240, 222, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(31, 44, 35, 0.06);
-  }
-
-  .nav-brand {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.25rem;
-    color: var(--ink);
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.3s ease;
-  }
-
-  .nav-links a:hover { color: var(--vert-minuit); }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 10rem 2rem 4rem;
-    max-width: 880px;
-    margin: 0 auto;
-  }
-
-  .hero-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--or-sable);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.2s forwards;
-  }
-
-  .hero h1 {
-    font-family: 'IM Fell DW Pica', serif;
-    font-weight: 400;
-    font-size: clamp(2.5rem, 5.5vw, 4rem);
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.4s forwards;
-  }
-
-  .hero h1 em { font-style: italic; color: var(--or-sable); }
-
-  .hero-sub {
-    font-size: 1.15rem;
-    font-weight: 300;
-    color: var(--muted);
-    max-width: 600px;
-    margin: 0 auto 3rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.6s forwards;
-  }
-
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.4rem;
-    background: var(--vert-minuit);
-    color: var(--lune-lait);
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    transition: all 0.35s ease;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.8s forwards;
-  }
-
-  .hero-cta:hover {
-    background: var(--or-sable);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 35px var(--shadow-deep);
-  }
-
-  .hero-cta .arrow { transition: transform 0.3s ease; }
-  .hero-cta:hover .arrow { transform: translateX(4px); }
-
-  /* ── DIVIDER ── */
-  .divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1.5rem 0;
-  }
-
-  .divider::before, .divider::after {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: var(--or-sable);
-    opacity: 0.5;
-  }
-
-  .divider-symbol {
-    font-family: 'UnifrakturCook', cursive;
-    font-size: 1.2rem;
-    color: var(--or-sable);
-    opacity: 0.6;
-  }
-
-  /* ── SECTIONS ── */
-  section { padding: 5rem 2rem; }
-
-  .section-inner {
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .section-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--or-sable);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'IM Fell DW Pica', serif;
-    font-weight: 400;
-    font-size: clamp(1.9rem, 3.5vw, 2.8rem);
-    margin-bottom: 1.2rem;
-    line-height: 1.25;
-  }
-
-  .section-subtitle {
-    color: var(--muted);
-    font-size: 1.05rem;
-    font-weight: 300;
-    max-width: 600px;
-    margin: 0 auto 3.5rem;
-  }
-
-  /* ── DEVISE ── */
-  .devise {
-    background: var(--ink);
-    color: var(--lune-lait);
-    text-align: center;
-    padding: 4.5rem 2rem;
-  }
-
-  .devise blockquote {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-    font-style: italic;
-    line-height: 1.7;
-    max-width: 650px;
-    margin: 0 auto;
-    opacity: 0.9;
-  }
-
-  .devise .devise-latin {
-    font-family: 'UnifrakturCook', cursive;
-    display: block;
-    font-style: normal;
-    font-size: clamp(1rem, 2vw, 1.4rem);
-    color: var(--or-sable);
-    margin-top: 1.5rem;
-  }
-
-  /* ── UNIVERSE HEADER (on lune-lait bg, not vert) ── */
-  .universe-header {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: var(--vert-minuit);
-    color: var(--lune-lait);
-  }
-
-  .universe-header h2 {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
-    font-weight: 400;
-    margin-bottom: 0.5rem;
-    color: var(--lune-lait);
-  }
-
-  .universe-header p {
-    font-size: 1rem;
-    font-weight: 300;
-    color: rgba(247, 240, 222, 0.6);
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* ── CARDS ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-  }
-
-  .cards-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background: var(--lune-lait-soft);
-    border: 1px solid rgba(31, 44, 35, 0.08);
-    padding: 2.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: var(--or-sable);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-  }
-
-  .card:hover::before { transform: scaleX(1); }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px var(--shadow);
-  }
-
-  .card-tier {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--or-sable);
-    margin-bottom: 1rem;
-  }
-
-  .card-name {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.45rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .card-desc {
-    color: var(--muted);
-    font-size: 0.93rem;
-    font-weight: 300;
-    margin-bottom: 2rem;
-    flex-grow: 1;
-    line-height: 1.7;
-  }
-
-  .card-price {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 2rem;
-    color: var(--vert-minuit);
-  }
-
-  .card-price span {
-    font-size: 0.8rem;
-    font-weight: 300;
-    color: var(--muted);
-    font-family: 'Crimson Pro', serif;
-  }
-
-  .card-price-note {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.3rem;
-    color: var(--or-sable);
-    font-style: italic;
-  }
-
-  /* ── INFOGÉRANCE CARD (improved) ── */
-  .info-showcase {
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .info-main {
-    background: var(--lune-lait-soft);
-    border: 1px solid rgba(31, 44, 35, 0.08);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .info-main::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: var(--or-sable);
-  }
-
-  .info-header {
-    text-align: center;
-    padding: 2.5rem 2.5rem 2rem;
-    border-bottom: 1px solid rgba(31, 44, 35, 0.06);
-  }
-
-  .info-header-title {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .info-header-price {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 2.2rem;
-    color: var(--or-sable);
-  }
-
-  .info-header-price span {
-    font-size: 0.85rem;
-    font-weight: 300;
-    color: var(--muted);
-    font-family: 'Crimson Pro', serif;
-  }
-
-  .info-pillars {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-bottom: 1px solid rgba(31, 44, 35, 0.06);
-  }
-
-  .info-pillar {
-    padding: 2rem;
-    text-align: left;
-    border-right: 1px solid rgba(31, 44, 35, 0.06);
-  }
-
-  .info-pillar:last-child { border-right: none; }
-
-  .info-pillar-icon {
-    font-size: 1.6rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .info-pillar-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--or-sable);
-    margin-bottom: 0.8rem;
-  }
-
-  .info-pillar-list {
-    list-style: none;
-    color: var(--muted);
-    font-size: 0.88rem;
-    font-weight: 300;
-  }
-
-  .info-pillar-list li {
-    padding: 0.35rem 0;
-  }
-
-  .info-footer {
-    padding: 1.5rem 2.5rem;
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--muted-light);
-  }
-
-  /* ── PORTFOLIO (improved cards) ── */
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  .pf-card {
-    background: var(--vert-minuit);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .pf-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px var(--shadow-deep);
-  }
-
-  .pf-card-visual {
-    height: 140px;
-    background: linear-gradient(135deg, #111210 0%, rgba(175,143,60,0.08) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    border-bottom: 1px solid rgba(175, 143, 60, 0.08);
-  }
-
-  .pf-card-visual-name {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 2rem;
-    color: var(--lune-lait);
-    opacity: 0.2;
-    letter-spacing: 0.1em;
-  }
-
-  .pf-card-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 0.58rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    background: var(--rouge-antique);
-    color: var(--lune-lait);
-  }
-
-  .pf-card-body {
-    padding: 1.8rem 2rem 2rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .pf-card-type {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--or-sable);
-    margin-bottom: 0.4rem;
-  }
-
-  .pf-card-body h3 {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.4rem;
-    color: var(--lune-lait);
-    margin-bottom: 0.6rem;
-  }
-
-  .pf-card-body p {
-    font-size: 0.88rem;
-    font-weight: 300;
-    color: rgba(247, 240, 222, 0.5);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    flex-grow: 1;
-  }
-
-  .pf-card-tags {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.8rem;
-  }
-
-  .pf-card-tags span {
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    padding: 0.2rem 0.55rem;
-    background: rgba(175, 143, 60, 0.12);
-    color: var(--or-sable);
-  }
-
-  .pf-card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--or-sable);
-    text-decoration: none;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: opacity 0.3s ease;
-  }
-
-  .pf-card-link:hover { opacity: 0.7; }
-
-  /* ── APPROACH ── */
-  .approach-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    text-align: left;
-  }
-
-  .approach-item { padding: 1.5rem 0; }
-
-  .approach-number {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 2.5rem;
-    color: var(--or-sable-dim);
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-
-  .approach-title {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.15rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .approach-text {
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  /* ── CONTACT ── */
-  .contact-section {
-    background: var(--vert-minuit);
-    color: var(--lune-lait);
-    text-align: center;
-  }
-
-  .contact-section .section-title { color: var(--lune-lait); }
-  .contact-section .section-subtitle { color: rgba(247, 240, 222, 0.55); }
-
-  .contact-email {
-    font-family: 'IM Fell DW Pica', serif;
-    font-size: clamp(1.3rem, 2.5vw, 2rem);
-    color: var(--or-sable);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(175, 143, 60, 0.3);
-    padding-bottom: 4px;
-    transition: all 0.3s ease;
-  }
-
-  .contact-email:hover { border-color: var(--or-sable); }
-
-  .contact-method {
-    margin-top: 1.5rem;
-    font-size: 0.88rem;
-    font-weight: 300;
-    color: rgba(247, 240, 222, 0.45);
-  }
-
-  .contact-details {
-    margin-top: 2.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    font-size: 0.88rem;
-    font-weight: 300;
-    color: rgba(247, 240, 222, 0.4);
-  }
-
-  .contact-details strong {
-    color: rgba(247, 240, 222, 0.7);
-    font-weight: 500;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.78rem;
-    font-weight: 300;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-  }
-
-  footer a { color: var(--or-sable); text-decoration: none; }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .cards-grid, .cards-grid-2, .portfolio-grid, .approach-grid { grid-template-columns: 1fr; }
-    .info-pillars { grid-template-columns: 1fr; }
-    .info-pillar { border-right: none; border-bottom: 1px solid rgba(31, 44, 35, 0.06); }
-    .info-pillar:last-child { border-bottom: none; }
-    section { padding: 4rem 1.5rem; }
-    .hero { padding: 8rem 1.5rem 3rem; }
-    .contact-details { flex-direction: column; gap: 1rem; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Organization", "LocalBusiness"],
+      "@id": "https://www.legeai-informatique.fr/#organization",
+      "name": "Le Geai Informatique",
+      "url": "https://www.legeai-informatique.fr",
+      "description": "Services numériques : création web, applications sur mesure, Microsoft 365, infogérance. Lyon, Annecy, Clermont-Ferrand et partout en France.",
+      "telephone": "+33482532564",
+      "email": "administration@legeai-editions.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lyon",
+        "addressRegion": "Auvergne-Rhône-Alpes",
+        "addressCountry": "FR"
+      },
+      "areaServed": [
+        {"@type": "City", "name": "Lyon"},
+        {"@type": "City", "name": "Annecy"},
+        {"@type": "City", "name": "Clermont-Ferrand"},
+        {"@type": "Country", "name": "France"}
+      ],
+      "serviceType": [
+        "Création de sites web",
+        "Développement d'applications",
+        "Gestion Microsoft 365",
+        "Infogérance et maintenance web",
+        "Data Engineering",
+        "Formation informatique"
+      ],
+      "slogan": "Des outils numériques conçus pour durer",
+      "knowsAbout": [
+        "Création de sites web",
+        "Développement d'applications sur mesure",
+        "Microsoft 365",
+        "Automatisation et scripts",
+        "Data engineering",
+        "Formation informatique",
+        "Hébergement et maintenance web"
+      ],
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "Le Geai Éditions",
+        "url": "https://www.legeai-editions.com"
+      },
+      "priceRange": "€€"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.legeai-informatique.fr/#website",
+      "url": "https://www.legeai-informatique.fr",
+      "name": "Le Geai Informatique",
+      "publisher": {"@id": "https://www.legeai-informatique.fr/#organization"},
+      "inLanguage": "fr-FR"
+    }
+  ]
+}
+</script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
 
-<!-- ── NAV ── -->
-<nav>
-  <a href="#" class="nav-brand">Le Geai — Éditions</a>
+<!-- ── NAV (starts at bottom, scrolls to top) ── -->
+<nav class="nav-bottom-start" id="main-nav" aria-label="Navigation principale">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-brand-top">Le Geai</span>
+    <span class="nav-brand-bottom">Informatique</span>
+  </a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <ul class="nav-links">
-    <li><a href="#creation">Création</a></li>
-    <li><a href="#perennite">Pérennité</a></li>
-    <li><a href="#infogerance">Infogérance</a></li>
-    <li><a href="#outils">Outils</a></li>
+    <li><a href="creation-site-internet.html">Création</a></li>
+    <li><a href="maintenance-web.html">Maintenance</a></li>
+    <li><a href="microsoft-365.html">Microsoft 365</a></li>
+    <li><a href="logiciel-sur-mesure.html">Logiciels</a></li>
+    <li><a href="expertise-informatique.html">Expertise</a></li>
     <li><a href="#realisations">Portfolio</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
 
-<!-- ── HERO ── -->
-<section class="hero">
-  <p class="hero-eyebrow">Services numériques</p>
-  <h1>Le numérique au service<br>de <em>votre métier</em></h1>
-  <p class="hero-sub">Sites web, applications, infogérance, automatisation — nous construisons vos outils numériques et veillons sur eux dans la durée. Vous exercez votre métier, nous nous occupons du reste.</p>
-  <a href="#contact" class="hero-cta">
-    Discuter de votre projet
-    <span class="arrow">→</span>
-  </a>
+<main id="main-content">
+
+<!-- ── LANDING HERO ── -->
+<section class="landing-hero" id="landing-hero">
+  <h1 class="landing-hero-title">
+    <span class="line1">Le Geai</span>
+    <span class="line2">Informatique</span>
+  </h1>
+  <p class="landing-hero-provocation">Ceux qui ignorent le numérique disparaissent.<br>Ceux qui se contentent d'un site sans vision stagnent.<br>Vous êtes là parce que vous refusez les deux.</p>
+  <p class="landing-hero-value">Vos clients vous cherchent. Ils comparent, jugent, décident en quelques secondes. Sans les bons outils numériques, ils choisissent un concurrent. Ce que nous construisons n'est pas un coût, c'est un avantage. Sites, applications, Microsoft 365, automatisation : chaque solution sert un seul objectif, faire croître votre activité.</p>
+  <div class="landing-hero-scroll-line" aria-hidden="true"></div>
 </section>
 
 <!-- ── DEVISE ── -->
 <div class="devise">
   <blockquote>
-    « Si un utilisateur doit chercher, c'est que l'interface a échoué.<br>La technique doit servir la clarté — jamais l'inverse. »
+    « Si un utilisateur doit chercher, c'est que l'interface a échoué.<br>La technique doit servir la clarté, jamais l'inverse. »
     <span class="devise-latin">Obscuritas nutrit flammam.</span>
   </blockquote>
 </div>
 
 <div class="divider"><span class="divider-symbol">❧</span></div>
 
-<!-- ═══ CRÉATION WEB ═══ -->
-
-<div class="universe-header" id="creation">
-  <h2>Création web</h2>
-  <p>Votre site internet, conçu sur mesure et livré clé en main.</p>
-</div>
-
+<!-- ── NOS SERVICES ── -->
 <section>
   <div class="section-inner reveal">
-    <div class="cards-grid">
-      <div class="card">
-        <p class="card-tier">Essentiel</p>
-        <h3 class="card-name">Site Vitrine</h3>
-        <p class="card-desc">2 à 5 pages. Votre activité présentée avec clarté — identité visuelle, formulaire de contact, adapté à tous les écrans.</p>
-        <p class="card-price">800 € <span>/ projet</span></p>
-      </div>
-      <div class="card">
-        <p class="card-tier">Avancé</p>
-        <h3 class="card-name">Plateforme Administrable</h3>
-        <p class="card-desc">Interface d'administration, base de données, gestion de contenu. Vous gardez la main sur votre site en toute autonomie.</p>
-        <p class="card-price">2 000 € <span>/ projet</span></p>
-      </div>
-      <div class="card">
-        <p class="card-tier">Sur mesure</p>
-        <h3 class="card-name">E-Commerce</h3>
-        <p class="card-desc">Boutique en ligne complète — catalogue, paiement sécurisé, gestion des commandes. Une architecture robuste pour vendre sereinement.</p>
-        <p class="card-price">6 000 € <span>/ projet</span></p>
-      </div>
-    </div>
-  </div>
-</section>
+    <p class="section-label">Nos services</p>
+    <h2 class="section-title">Ce que nous faisons</h2>
+    <p class="section-subtitle">Chaque prestation est conçue pour servir votre métier.</p>
 
-<div class="divider"><span class="divider-symbol">❧</span></div>
+    <div class="home-services">
 
-<!-- ═══ PÉRENNITÉ ═══ -->
-
-<div class="universe-header" id="perennite">
-  <h2>Pérennité</h2>
-  <p>Un site vit après sa livraison. Nous veillons sur le vôtre.</p>
-</div>
-
-<section>
-  <div class="section-inner reveal">
-    <div class="cards-grid">
-      <div class="card">
-        <p class="card-tier">Socle</p>
-        <h3 class="card-name">Veille</h3>
-        <p class="card-desc">Hébergement, noms de domaine (.fr + .com), surveillance de disponibilité, mises à jour vitales au bon fonctionnement. Votre nom protégé sur le web.</p>
-        <p class="card-price">39 € <span>/ mois</span></p>
-      </div>
-      <div class="card">
-        <p class="card-tier">Croissance</p>
-        <h3 class="card-name">Évolution</h3>
-        <p class="card-desc">Tout le forfait Veille, plus des améliorations régulières de confort et de qualité, des ajustements sur demande chaque mois, et un support prioritaire.</p>
-        <p class="card-price">149 € <span>/ mois</span></p>
-      </div>
-      <div class="card">
-        <p class="card-tier">Alliance</p>
-        <h3 class="card-name">Partenariat</h3>
-        <p class="card-desc">Tout le forfait Évolution, plus une amélioration active et continue de votre site, des développements sur demande étendus, et une priorité maximale.</p>
-        <p class="card-price">300 € <span>/ mois</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><span class="divider-symbol">❧</span></div>
-
-<!-- ═══ INFOGÉRANCE ═══ -->
-
-<div class="universe-header" id="infogerance">
-  <h2>Infogérance</h2>
-  <p>Votre informatique d'entreprise, mise en place et maintenue.</p>
-</div>
-
-<section>
-  <div class="section-inner reveal">
-    <div class="info-showcase">
-      <div class="info-main">
-        <div class="info-header">
-          <h3 class="info-header-title">Accompagnement numérique</h3>
-          <p class="info-header-price">50 € <span>/ utilisateur / mois</span></p>
+      <div class="home-service-group reveal">
+        <div class="home-service-header">
+          <h3>Création web</h3>
         </div>
-        <div class="info-pillars">
-          <div class="info-pillar">
-            <div class="info-pillar-icon">⚙</div>
-            <p class="info-pillar-label">Mise en place</p>
-            <ul class="info-pillar-list">
-              <li>Domaine professionnel</li>
-              <li>Configuration Microsoft 365</li>
-              <li>Espaces de travail partagés</li>
-              <li>Gestion des comptes</li>
-            </ul>
+        <div class="cards-grid">
+          <div class="card card-compact">
+            <p class="card-tier">Essentiel</p>
+            <h3 class="card-name">Site Vitrine</h3>
+            <p class="card-desc">2 à 5 pages. Votre activité présentée avec clarté, adaptée à tous les écrans.</p>
+            <p class="card-price">800 € <span>/ projet</span></p>
           </div>
-          <div class="info-pillar">
-            <div class="info-pillar-icon">✉</div>
-            <p class="info-pillar-label">Support</p>
-            <ul class="info-pillar-list">
-              <li>Assistance par email</li>
-              <li>Rappel sur créneau planifié</li>
-              <li>Interlocuteur unique</li>
-              <li>Réponse sous 48h ouvrées</li>
-            </ul>
+          <div class="card card-compact">
+            <p class="card-tier">Avancé</p>
+            <h3 class="card-name">Site de Gestion</h3>
+            <p class="card-desc">Administration, base de données, gestion de contenu. Formation incluse.</p>
+            <p class="card-price">2 500 € <span>/ projet</span></p>
           </div>
-          <div class="info-pillar">
-            <div class="info-pillar-icon">🎓</div>
-            <p class="info-pillar-label">Pédagogie</p>
-            <ul class="info-pillar-list">
-              <li>Prise en main pour chaque arrivant</li>
-              <li>Bonnes pratiques & sécurité</li>
-              <li>Un formateur, pas un tutoriel</li>
-            </ul>
+          <div class="card card-compact">
+            <p class="card-tier">Sur mesure</p>
+            <h3 class="card-name">E-Commerce</h3>
+            <p class="card-desc">Boutique complète : catalogue, paiement sécurisé, gestion des commandes.</p>
+            <p class="card-price">6 000 € <span>/ projet</span></p>
           </div>
         </div>
-        <p class="info-footer">Les licences Microsoft 365 sont souscrites par le client directement auprès de Microsoft — aucun surcoût.</p>
+        <div class="home-service-footer">
+          <a href="creation-site-internet.html" class="home-service-link">Détails et conditions →</a>
+        </div>
       </div>
+
+      <div class="home-service-group reveal">
+        <div class="home-service-header">
+          <h3>Maintenance web</h3>
+        </div>
+        <div class="cards-grid-4">
+          <div class="card card-compact">
+            <p class="card-tier">Socle</p>
+            <h3 class="card-name">Essentiel</h3>
+            <p class="card-desc">Hébergement, SSL, surveillance, correctifs critiques.</p>
+            <p class="card-price">39 € <span>/ mois</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Croissance</p>
+            <h3 class="card-name">Pro</h3>
+            <p class="card-desc">Sauvegardes, 2h de modifications mensuelles, améliorations proactives.</p>
+            <p class="card-price">149 € <span>/ mois</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Alliance</p>
+            <h3 class="card-name">Premium</h3>
+            <p class="card-desc">4h de développement, intervention sous 24h, formation employés.</p>
+            <p class="card-price">299 € <span>/ mois</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Excellence</p>
+            <h3 class="card-name">Légendaire</h3>
+            <p class="card-desc">Gestion active, ajout de contenu, priorité maximale.</p>
+            <p class="card-price">499 € <span>/ mois</span></p>
+          </div>
+        </div>
+        <div class="home-service-footer">
+          <a href="maintenance-web.html" class="home-service-link">Détails et conditions →</a>
+        </div>
+      </div>
+
+      <div class="home-service-group reveal">
+        <div class="home-service-header">
+          <h3>Gestion Microsoft 365</h3>
+        </div>
+        <div class="cards-grid">
+          <div class="card card-compact">
+            <p class="card-tier">Mise en place</p>
+            <h3 class="card-name">Basique</h3>
+            <p class="card-desc">Domaine, licences, profils utilisateurs, Teams et SharePoint.</p>
+            <p class="card-price">29 € <span>/ utilisateur / mois</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Accompagnement</p>
+            <h3 class="card-name">Complet</h3>
+            <p class="card-desc">Formation, boîtes mail partagées, alias, support sous 48h.</p>
+            <p class="card-price">49 € <span>/ utilisateur / mois</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Assistance</p>
+            <h3 class="card-name">Support informatique</h3>
+            <p class="card-desc">Support dédié sous 48h, jusqu'à 10 incidents par mois.</p>
+            <p class="card-price">100 € <span>/ 5 utilisateurs / mois</span></p>
+          </div>
+        </div>
+        <div class="home-service-footer">
+          <a href="microsoft-365.html" class="home-service-link">Détails et conditions →</a>
+        </div>
+      </div>
+
+      <div class="home-service-group reveal">
+        <div class="home-service-header">
+          <h3>Logiciel sur mesure</h3>
+        </div>
+        <div class="cards-grid-2">
+          <div class="card card-compact">
+            <p class="card-tier">Application</p>
+            <h3 class="card-name">Logiciel de bureau</h3>
+            <p class="card-desc">Gestion, suivi, organisation. Installé sur vos postes, utilisable au quotidien.</p>
+            <p class="card-price-note">Sur devis</p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Automatisation</p>
+            <h3 class="card-name">Scripts &amp; tableaux de bord</h3>
+            <p class="card-desc">Rapports automatiques, alertes, traitement de données.</p>
+            <p class="card-price-note">Sur devis</p>
+          </div>
+        </div>
+        <div class="home-service-footer">
+          <a href="logiciel-sur-mesure.html" class="home-service-link">Détails et conditions →</a>
+        </div>
+      </div>
+
+      <div class="home-service-group reveal">
+        <div class="home-service-header">
+          <h3>Expertise informatique</h3>
+        </div>
+        <div class="cards-grid-2">
+          <div class="card card-compact">
+            <p class="card-tier">Expertise</p>
+            <h3 class="card-name">Data Engineering</h3>
+            <p class="card-desc">Pipelines de données, intégration, transformation et mise en qualité.</p>
+            <p class="card-price">600 € <span>/ jour</span></p>
+          </div>
+          <div class="card card-compact">
+            <p class="card-tier">Transmission</p>
+            <h3 class="card-name">Formateur</h3>
+            <p class="card-desc">Informatique, développement, outils numériques. En entreprise ou académique.</p>
+            <p class="card-price">400 € <span>/ jour</span></p>
+          </div>
+        </div>
+        <div class="home-service-footer">
+          <a href="expertise-informatique.html" class="home-service-link">Détails et conditions →</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
-
-<div class="divider"><span class="divider-symbol">❧</span></div>
-
-<!-- ═══ OUTILS SUR MESURE ═══ -->
-
-<div class="universe-header" id="outils">
-  <h2>Outils sur mesure</h2>
-  <p>Des applications et automatisations taillées pour votre activité.</p>
-</div>
-
-<section>
-  <div class="section-inner reveal">
-    <div class="cards-grid-2">
-      <div class="card">
-        <p class="card-tier">Application</p>
-        <h3 class="card-name">Logiciel de bureau</h3>
-        <p class="card-desc">Un outil conçu pour votre métier — gestion, suivi, organisation. Installé sur vos postes, pensé pour être utilisé au quotidien sans formation complexe.</p>
-        <p class="card-price-note">Sur devis</p>
-      </div>
-      <div class="card">
-        <p class="card-tier">Automatisation</p>
-        <h3 class="card-name">Scripts & tableaux de bord</h3>
-        <p class="card-desc">Rapports automatiques, alertes, tableaux de bord, traitement de données. Vos tâches répétitives deviennent des processus fiables.</p>
-        <p class="card-price-note">Sur devis</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><span class="divider-symbol">❧</span></div>
 
 <!-- ═══ PORTFOLIO ═══ -->
 
-<section id="realisations">
-  <div class="section-inner reveal">
+<section id="realisations" class="portfolio-section">
+  <div class="section-inner">
+    <div class="portfolio-ornament">G</div>
     <p class="section-label">Portfolio</p>
     <h2 class="section-title">Ce que nous avons construit</h2>
     <p class="section-subtitle">Chaque projet reflète notre exigence : clarté, performance, pérennité.</p>
 
-    <div class="portfolio-grid">
-      <div class="pf-card">
-        <div class="pf-card-visual">
-          <span class="pf-card-visual-name">Bergfrid</span>
-        </div>
-        <div class="pf-card-body">
-          <p class="pf-card-type">Plateforme web</p>
-          <h3>Bergfrid</h3>
-          <p>Média géopolitique — fil temps réel, dossiers thématiques, widget OSINT, multilingue. Publication automatisée vers Telegram, Discord, Mastodon, Bluesky.</p>
-          <div class="pf-card-tags">
-            <span>Web</span><span>OSINT</span><span>Automatisation</span><span>Multilingue</span>
-          </div>
-          <a href="https://www.bergfrid.com" target="_blank" class="pf-card-link">Visiter →</a>
-        </div>
+    <div class="pf-featured reveal">
+      <div class="pf-featured-visual">
+        <span class="pf-featured-badge">Projet phare</span>
+        <span class="pf-featured-watermark">Bergfrid</span>
       </div>
+      <div class="pf-featured-content">
+        <p class="pf-featured-type">Plateforme web</p>
+        <h3>Bergfrid</h3>
+        <p>Média géopolitique complet : fil d'actualité temps réel, dossiers thématiques, widget OSINT intégré, interface multilingue. Publication automatisée vers Telegram, Discord, Mastodon et Bluesky. Conçu pour l'analyse et la veille stratégique.</p>
+        <div class="pf-featured-highlights">
+          <div class="pf-highlight">
+            <div class="pf-highlight-value">5</div>
+            <div class="pf-highlight-label">Plateformes</div>
+          </div>
+          <div class="pf-highlight">
+            <div class="pf-highlight-value">3</div>
+            <div class="pf-highlight-label">Langues</div>
+          </div>
+          <div class="pf-highlight">
+            <div class="pf-highlight-value">24/7</div>
+            <div class="pf-highlight-label">Temps réel</div>
+          </div>
+          <div class="pf-highlight">
+            <div class="pf-highlight-value">OSINT</div>
+            <div class="pf-highlight-label">Intégré</div>
+          </div>
+        </div>
+        <div class="pf-featured-tags">
+          <span>Web</span><span>OSINT</span><span>Automatisation</span><span>Multilingue</span><span>API</span><span>Temps réel</span>
+        </div>
+        <a href="https://www.bergfrid.com" target="_blank" class="pf-featured-link">Visiter le projet <span>→</span></a>
+      </div>
+    </div>
 
+    <div class="portfolio-divider"><span class="portfolio-divider-dot"></span></div>
+
+    <div class="portfolio-grid reveal">
       <div class="pf-card">
-        <div class="pf-card-visual">
+        <div class="pf-card-visual pf-visual-styr">
           <span class="pf-card-visual-name">Styr</span>
         </div>
         <div class="pf-card-body">
           <p class="pf-card-type">Application bureau</p>
           <h3>Styr</h3>
-          <p>Gestion comptable — centralisation financière, prévisionnel, stocks, conformité légale. Conçu pour évoluer avec l'entreprise.</p>
+          <p>Gestion comptable complète : centralisation financière multi-comptes, prévisionnel dynamique, suivi des stocks, conformité légale française.</p>
           <div class="pf-card-tags">
-            <span>Desktop</span><span>Comptabilité</span><span>Conformité</span>
+            <span>Desktop</span><span>Comptabilité</span><span>Conformité</span><span>Multi-comptes</span>
           </div>
         </div>
       </div>
 
       <div class="pf-card">
-        <div class="pf-card-visual">
+        <div class="pf-card-visual pf-visual-lore">
           <span class="pf-card-visual-name">Lore</span>
         </div>
         <div class="pf-card-body">
           <p class="pf-card-type">Application bureau</p>
           <h3>Lore</h3>
-          <p>Outil de création pour auteurs et maîtres de jeu — fiches personnages, lieux, monnaies, événements. Structurer des univers complexes, simplement.</p>
+          <p>Outil de création pour auteurs et maîtres de jeu : fiches personnages, lieux, monnaies, événements, chronologies.</p>
           <div class="pf-card-tags">
-            <span>Desktop</span><span>Worldbuilding</span><span>Création</span>
+            <span>Desktop</span><span>Worldbuilding</span><span>Création</span><span>Base de données</span>
           </div>
         </div>
       </div>
 
       <div class="pf-card">
-        <div class="pf-card-visual">
+        <div class="pf-card-visual pf-visual-legeai">
           <span class="pf-card-visual-name">Le Geai</span>
           <span class="pf-card-badge">Refonte en cours</span>
         </div>
         <div class="pf-card-body">
           <p class="pf-card-type">Site web & e-commerce</p>
-          <h3>Le Geai — Éditions</h3>
-          <p>Vitrine et boutique de notre maison d'édition — catalogue, identité Dark Academia, refonte complète en développement.</p>
+          <h3>Le Geai · Éditions</h3>
+          <p>Vitrine et boutique de notre maison d'édition : catalogue, identité Dark Academia, système de commande.</p>
           <div class="pf-card-tags">
-            <span>Web</span><span>E-commerce</span><span>Éditorial</span>
+            <span>Web</span><span>E-commerce</span><span>Éditorial</span><span>Design</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
-<div class="divider"><span class="divider-symbol">❧</span></div>
 
 <!-- ═══ VALEURS ═══ -->
 
 <section>
   <div class="section-inner reveal">
     <p class="section-label">Engagements</p>
-    <h2 class="section-title">Une jeune maison, une vraie ambition</h2>
-    <p class="section-subtitle">En nous choisissant, vous ne financez pas un prestataire anonyme.</p>
+    <h2 class="section-title">Ce en quoi nous croyons</h2>
+    <p class="section-subtitle">Pas des discours. Des convictions qui guident chaque projet.</p>
 
-    <div class="approach-grid">
+    <div class="approach-grid engagements-grid">
       <div class="approach-item">
-        <div class="info-pillar-icon">🔥</div>
-        <h3 class="approach-title">Le travail bien fait</h3>
-        <p class="approach-text">Nous valorisons la qualité livrée à temps, pas les heures passées à un bureau. Ce qui compte, c'est le résultat — et qu'il dure.</p>
+        <h3 class="approach-title">Le rendu, pas la montre</h3>
+        <p class="approach-text">Nous travaillons en mode hybride et nous valorisons ce qui est livré, pas les heures passées derrière un bureau. Ce qui compte, c'est la qualité du résultat, sa fiabilité et sa pérennité.</p>
       </div>
       <div class="approach-item">
-        <div class="info-pillar-icon">🌱</div>
-        <h3 class="approach-title">Former & transmettre</h3>
-        <p class="approach-text">Nous accueillons des stagiaires — étudiants ou personnes en reconversion — pour leur faire découvrir le métier et leur permettre de valider leur parcours. Trois places chaque année, avec la même exigence que pour nous-mêmes.</p>
+        <h3 class="approach-title">Former ceux qui débutent</h3>
+        <p class="approach-text">Nous accueillons autant de stagiaires motivés que nous pouvons en encadrer. Nous avons été étudiants, nous savons combien un vrai stage compte pour apprendre un métier et valider son parcours.</p>
       </div>
       <div class="approach-item">
-        <div class="info-pillar-icon">🏛</div>
-        <h3 class="approach-title">Construire dans la durée</h3>
-        <p class="approach-text">Vous soutenez une entreprise jeune et ambitieuse, qui grandit projet après projet, avec l'objectif de recruter des personnes talentueuses et motivées pour aller plus loin.</p>
+        <h3 class="approach-title">Soutenir l'économie locale</h3>
+        <p class="approach-text">Nous privilégions les acteurs locaux : artisans, commerces, entrepreneurs. Faire fonctionner l'économie de nos territoires, c'est construire quelque chose de durable, ensemble.</p>
+      </div>
+      <div class="approach-item">
+        <h3 class="approach-title">Penser comme vous</h3>
+        <p class="approach-text">Nous nous mettons à la place du dirigeant, de l'employé et du client. Pas pour tout valider, mais pour proposer ce qui fait avancer l'ensemble. Nous ne sommes pas des exécutants : nous avons une vision, et le goût de bien faire.</p>
+      </div>
+      <div class="approach-item">
+        <h3 class="approach-title">Construire pour une raison</h3>
+        <p class="approach-text">Nous ne faisons pas des outils pour les outils. Chaque solution existe parce qu'il y a un besoin réel et une ambition derrière. Vos ambitions sont les nôtres, et c'est pour cela que nous les défendons.</p>
       </div>
     </div>
   </div>
 </section>
 
-<div class="divider"><span class="divider-symbol">❧</span></div>
+<!-- ═══ CTA ═══ -->
+
+<div class="cta-banner-enhanced">
+  <h2>Convaincu ?</h2>
+  <p class="cta-sub">Un seul message suffit pour démarrer.</p>
+  <a href="contact.html" class="hero-cta">Discuter de votre projet <span>→</span></a>
+</div>
 
 <!-- ═══ FONCTIONNEMENT ═══ -->
 
 <section>
   <div class="section-inner reveal">
     <p class="section-label">Fonctionnement</p>
-    <h2 class="section-title">Comment nous travaillons</h2>
-    <p class="section-subtitle">Un cadre clair, une communication limpide, un travail soigné.</p>
+    <h2 class="section-title">Notre façon de faire</h2>
+    <p class="section-subtitle">Pas de jargon, pas de surprises. Voici concrètement comment ça se passe.</p>
 
     <div class="approach-grid">
       <div class="approach-item">
         <p class="approach-number">01</p>
-        <h3 class="approach-title">On en discute</h3>
-        <p class="approach-text">Par email, par téléphone ou en personne — selon ce qui vous convient. Nous clarifions votre besoin et vous proposons un devis. Chaque accord est confirmé par écrit.</p>
+        <h3 class="approach-title">Vous parlez, on écoute</h3>
+        <p class="approach-text">Par email, téléphone ou en personne. Nous prenons le temps de comprendre votre métier, votre besoin et vos contraintes. Ensuite seulement, nous proposons un devis clair, confirmé par écrit.</p>
       </div>
       <div class="approach-item">
         <p class="approach-number">02</p>
-        <h3 class="approach-title">On construit</h3>
-        <p class="approach-text">Nous travaillons avec rigueur et vous informons à chaque étape importante. Les appels et rendez-vous sont toujours planifiés à l'avance.</p>
+        <h3 class="approach-title">On construit, vous suivez</h3>
+        <p class="approach-text">Vous êtes informé à chaque étape clé. Pas de silence radio, pas de mauvaises surprises. Les rendez-vous sont planifiés, les choix sont partagés, et si quelque chose ne va pas, on le dit.</p>
       </div>
       <div class="approach-item">
         <p class="approach-number">03</p>
-        <h3 class="approach-title">On veille</h3>
-        <p class="approach-text">Après la livraison, nous restons disponibles par email, avec une réponse sous 48h ouvrées. Du travail sérieux, dans la durée.</p>
+        <h3 class="approach-title">On livre, on reste</h3>
+        <p class="approach-text">Un projet livré n'est pas un projet abandonné. Nous restons disponibles, répondons sous 48h ouvrées et assurons que ce que nous avons construit continue de servir votre activité.</p>
       </div>
     </div>
   </div>
@@ -1003,27 +452,107 @@
   <div class="section-inner reveal">
     <p class="section-label">Contact</p>
     <h2 class="section-title">Parlons de votre projet</h2>
-    <p class="section-subtitle">Un besoin, une idée, une question — un seul message suffit.</p>
-    <a href="mailto:administration@legeai-editions.com" class="contact-email">administration@legeai-editions.com</a>
+    <p class="section-subtitle">Un besoin, une idée, une question : un seul message suffit.</p>
+    <noscript><p style="color: var(--or-sable); margin-bottom: 1rem;">Activez JavaScript pour afficher nos coordonnées.</p></noscript>
+    <div class="contact-links">
+      <a class="contact-email" data-u="administration" data-d="legeai-editions" data-t="com" href="#contact">Chargement…</a>
+      <a class="contact-phone" data-a="+33" data-b="4 82 53" data-c="25 64" href="#contact">Chargement…</a>
+    </div>
     <p class="contact-method">Réponse sous 48h ouvrées · Appels et rencontres sur rendez-vous</p>
     <div class="contact-details">
-      <span><strong>Basé à</strong> Lyon — Auvergne-Rhône-Alpes</span>
-      <span><strong>Disponible</strong> Lyon · Annecy · Clermont-Ferrand</span>
+      <span><strong>Basé à</strong> Lyon, Auvergne-Rhône-Alpes</span>
+      <span><strong>Disponible</strong> Lyon · Annecy · Clermont-Ferrand et leurs alentours · Partout en France</span>
     </div>
   </div>
 </section>
 
+</main>
+
 <footer>
-  © 2026 <a href="https://www.legeai-editions.com">Le Geai — Éditions</a> · Tous droits réservés
+  <div>© 2026 <a href="https://www.legeai-editions.com">Le Geai · Éditions</a> · Tous droits réservés</div>
+  <div class="footer-legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <span class="sep">·</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
 </footer>
 
 <script>
+  // Reveal on scroll
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Anti-bot contact assembly
+  document.querySelectorAll('[data-u]').forEach(el => {
+    const addr = el.dataset.u + '\u0040' + el.dataset.d + '.' + el.dataset.t;
+    el.href = 'mai' + 'lto:' + addr;
+    el.textContent = addr;
+  });
+  document.querySelectorAll('[data-a]').forEach(el => {
+    const phone = el.dataset.a + ' ' + el.dataset.b + ' ' + el.dataset.c;
+    el.href = 'te' + 'l:' + phone.replace(/\s/g, '');
+    el.textContent = phone;
+  });
+
+  // Mobile menu
+  const burger = document.querySelector('.nav-burger');
+  const navEl = document.querySelector('nav');
+  burger.addEventListener('click', () => {
+    navEl.classList.toggle('nav-open');
+    document.body.classList.toggle('menu-open');
+    burger.setAttribute('aria-expanded', navEl.classList.contains('nav-open'));
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navEl.classList.remove('nav-open');
+      document.body.classList.remove('menu-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Landing nav: follows scroll from bottom to top
+  (function() {
+    const nav = document.getElementById('main-nav');
+    const hero = document.getElementById('landing-hero');
+    if (!nav || !hero) return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('skip')) {
+      nav.classList.remove('nav-bottom-start');
+      nav.classList.add('nav-skip');
+      return;
+    }
+
+    // Cache layout reads (expensive) — only recalculate on resize
+    var maxOffset, scrollRange;
+    function measure() {
+      maxOffset = window.innerHeight - nav.offsetHeight;
+      scrollRange = Math.max(1, maxOffset);
+    }
+    measure();
+
+    var arrived = false;
+    function update() {
+      var progress = Math.min(1, Math.max(0, window.scrollY / scrollRange));
+      nav.style.transform = 'translateY(' + (maxOffset * (1 - progress)) + 'px)';
+      var nowArrived = progress >= 1;
+      if (nowArrived !== arrived) {
+        arrived = nowArrived;
+        nav.classList.toggle('nav-arrived', arrived);
+      }
+    }
+
+    update();
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) { requestAnimationFrame(function() { update(); ticking = false; }); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', function() { measure(); update(); }, { passive: true });
+  })();
 </script>
 
 </body>

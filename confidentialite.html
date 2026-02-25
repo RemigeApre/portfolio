@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de confidentialité · Le Geai Informatique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
+
+<nav>
+  <a href="index.html" class="nav-brand"><span class="nav-brand-top">Le Geai</span><span class="nav-brand-bottom">Informatique</span></a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="creation-site-internet.html">Création</a></li>
+    <li><a href="maintenance-web.html">Maintenance</a></li>
+    <li><a href="microsoft-365.html">Microsoft 365</a></li>
+    <li><a href="logiciel-sur-mesure.html">Logiciels</a></li>
+    <li><a href="expertise-informatique.html">Expertise</a></li>
+    <li><a href="index.html#realisations">Portfolio</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+
+<section class="page-hero">
+  <h1>Politique de confidentialité</h1>
+  <p>Protection de vos données personnelles conformément au RGPD.</p>
+</section>
+
+<section>
+  <div class="legal-content">
+    <h2>1. Responsable du traitement</h2>
+    <p>Identité : <span class="placeholder">[À REMPLIR : raison sociale]</span></p>
+    <p>Adresse : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Email de contact DPO : <span class="placeholder">[À REMPLIR]</span></p>
+
+    <h2>2. Données collectées</h2>
+    <p>Dans le cadre de l'utilisation du site, les données suivantes peuvent être collectées :</p>
+    <ul>
+      <li>Données de navigation (adresse IP, type de navigateur, pages consultées)</li>
+      <li>Données communiquées volontairement (email, téléphone) lors d'une prise de contact</li>
+    </ul>
+
+    <h2>3. Finalités du traitement</h2>
+    <ul>
+      <li>Répondre aux demandes de contact et de devis</li>
+      <li>Assurer le bon fonctionnement technique du site</li>
+    </ul>
+
+    <h2>4. Base légale</h2>
+    <p>Les traitements de données sont fondés sur :</p>
+    <ul>
+      <li>Consentement (article 6.1.a RGPD)</li>
+      <li>Intérêt légitime (article 6.1.f RGPD)</li>
+    </ul>
+
+    <h2>5. Durée de conservation</h2>
+    <p>Les données de contact sont conservées pendant une durée de <span class="placeholder">[À REMPLIR : durée]</span> à compter du dernier échange. Les données de navigation sont conservées pendant une durée de <span class="placeholder">[À REMPLIR : durée]</span>.</p>
+
+    <h2>6. Destinataires des données</h2>
+    <p>Les données personnelles collectées ne sont transmises à aucun tiers. Le site est hébergé par GitHub Pages (GitHub, Inc.).</p>
+
+    <h2>7. Transferts hors UE</h2>
+    <p>L'hébergement du site par GitHub Pages implique un transfert de données vers les États-Unis. Ce transfert est encadré par <span class="placeholder">[À REMPLIR : cadre juridique, ex. : les clauses contractuelles types de la Commission européenne]</span>.</p>
+
+    <h2>8. Cookies</h2>
+    <p>Ce site <span class="placeholder">[n'utilise aucun cookie / utilise les cookies suivants : À REMPLIR]</span>.</p>
+
+    <h2>9. Droits de l'utilisateur</h2>
+    <p>Conformément au RGPD, vous disposez des droits suivants sur vos données personnelles :</p>
+    <ul>
+      <li>Droit d'accès (art. 15)</li>
+      <li>Droit de rectification (art. 16)</li>
+      <li>Droit à l'effacement (art. 17)</li>
+      <li>Droit à la limitation (art. 18)</li>
+      <li>Droit à la portabilité (art. 20)</li>
+      <li>Droit d'opposition (art. 21)</li>
+    </ul>
+    <p>Pour exercer ces droits, contactez-nous à l'adresse : <span class="placeholder">[À REMPLIR : email]</span>.</p>
+
+    <h2>10. Réclamation</h2>
+    <p>Si vous estimez que le traitement de vos données ne respecte pas la réglementation en vigueur, vous pouvez adresser une réclamation à la CNIL : <a href="https://www.cnil.fr" style="color: var(--or-sable);">www.cnil.fr</a>.</p>
+
+    <p style="font-style: italic; margin-top: 3rem;">Dernière mise à jour : <span class="placeholder">[À REMPLIR : date]</span></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 <a href="https://www.legeai-editions.com">Le Geai · Éditions</a> · Tous droits réservés</div>
+  <div class="footer-legal"><a href="mentions-legales.html">Mentions légales</a><span class="sep">·</span><a href="confidentialite.html">Politique de confidentialité</a></div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.querySelectorAll('[data-u]').forEach(el => {
+    const addr = el.dataset.u + '\u0040' + el.dataset.d + '.' + el.dataset.t;
+    el.href = 'mai' + 'lto:' + addr; el.textContent = addr;
+  });
+  document.querySelectorAll('[data-a]').forEach(el => {
+    const phone = el.dataset.a + ' ' + el.dataset.b + ' ' + el.dataset.c;
+    el.href = 'te' + 'l:' + phone.replace(/\s/g, ''); el.textContent = phone;
+  });
+
+  // Mobile menu
+  const burger = document.querySelector('.nav-burger');
+  const navEl = document.querySelector('nav');
+  burger.addEventListener('click', () => {
+    navEl.classList.toggle('nav-open');
+    document.body.classList.toggle('menu-open');
+    burger.setAttribute('aria-expanded', navEl.classList.contains('nav-open'));
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navEl.classList.remove('nav-open');
+      document.body.classList.remove('menu-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+</html>

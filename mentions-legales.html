@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentions légales · Le Geai Informatique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
+
+<nav>
+  <a href="index.html" class="nav-brand"><span class="nav-brand-top">Le Geai</span><span class="nav-brand-bottom">Informatique</span></a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="creation-site-internet.html">Création</a></li>
+    <li><a href="maintenance-web.html">Maintenance</a></li>
+    <li><a href="microsoft-365.html">Microsoft 365</a></li>
+    <li><a href="logiciel-sur-mesure.html">Logiciels</a></li>
+    <li><a href="expertise-informatique.html">Expertise</a></li>
+    <li><a href="index.html#realisations">Portfolio</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+
+<section class="page-hero">
+  <h1>Mentions légales</h1>
+  <p>Informations légales conformément à la loi française.</p>
+</section>
+
+<section>
+  <div class="legal-content">
+    <h2>1. Éditeur du site</h2>
+    <p>Raison sociale : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Forme juridique : <span class="placeholder">[À REMPLIR : ex. : Auto-entrepreneur]</span></p>
+    <p>Siège social : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>SIRET : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Numéro TVA : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Directeur de la publication : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Téléphone : <span class="placeholder">[À REMPLIR]</span></p>
+    <p>Email : <span class="placeholder">[À REMPLIR]</span></p>
+
+    <h2>2. Hébergeur</h2>
+    <p>Nom : GitHub, Inc.</p>
+    <p>Adresse : 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA</p>
+    <p>Site web : <a href="https://github.com" style="color: var(--or-sable);">github.com</a></p>
+
+    <h2>3. Propriété intellectuelle</h2>
+    <p>L'ensemble du contenu de ce site (textes, images, graphismes, logo, icônes, sons, logiciels, etc.) est la propriété exclusive de <span class="placeholder">[À REMPLIR : raison sociale]</span> ou de ses partenaires et est protégé par les lois françaises et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sauf autorisation écrite préalable de <span class="placeholder">[À REMPLIR : raison sociale]</span>.</p>
+
+    <h2>4. Limitation de responsabilité</h2>
+    <p><span class="placeholder">[À REMPLIR : raison sociale]</span> ne pourra être tenue responsable des dommages directs et indirects causés au matériel de l'utilisateur lors de l'accès au site, et résultant soit de l'utilisation d'un matériel ne répondant pas aux spécifications techniques requises, soit de l'apparition d'un bug ou d'une incompatibilité. <span class="placeholder">[À REMPLIR : raison sociale]</span> ne pourra également être tenue responsable des dommages indirects consécutifs à l'utilisation du site.</p>
+
+    <h2>5. Liens hypertextes</h2>
+    <p>Le site peut contenir des liens hypertextes vers d'autres sites. <span class="placeholder">[À REMPLIR : raison sociale]</span> n'exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu ou aux éventuels traitements de données personnelles qu'ils opèrent.</p>
+
+    <h2>6. Droit applicable</h2>
+    <p>Le présent site et ses mentions légales sont régis par le droit français. En cas de litige, et après tentative de résolution amiable, compétence est attribuée aux tribunaux de <span class="placeholder">[À REMPLIR : ville]</span>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 <a href="https://www.legeai-editions.com">Le Geai · Éditions</a> · Tous droits réservés</div>
+  <div class="footer-legal"><a href="mentions-legales.html">Mentions légales</a><span class="sep">·</span><a href="confidentialite.html">Politique de confidentialité</a></div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.querySelectorAll('[data-u]').forEach(el => {
+    const addr = el.dataset.u + '\u0040' + el.dataset.d + '.' + el.dataset.t;
+    el.href = 'mai' + 'lto:' + addr; el.textContent = addr;
+  });
+  document.querySelectorAll('[data-a]').forEach(el => {
+    const phone = el.dataset.a + ' ' + el.dataset.b + ' ' + el.dataset.c;
+    el.href = 'te' + 'l:' + phone.replace(/\s/g, ''); el.textContent = phone;
+  });
+
+  // Mobile menu
+  const burger = document.querySelector('.nav-burger');
+  const navEl = document.querySelector('nav');
+  burger.addEventListener('click', () => {
+    navEl.classList.toggle('nav-open');
+    document.body.classList.toggle('menu-open');
+    burger.setAttribute('aria-expanded', navEl.classList.contains('nav-open'));
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navEl.classList.remove('nav-open');
+      document.body.classList.remove('menu-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+</html>

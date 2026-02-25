@@ -1,0 +1,7 @@
+# Le Geai Informatique
+# https://www.legeai-informatique.fr
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.legeai-informatique.fr/sitemap.xml
