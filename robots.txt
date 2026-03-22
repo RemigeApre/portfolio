@@ -3,5 +3,39 @@
 
 User-agent: *
 Allow: /
+Disallow: /404.html
 
+# Sitemap for all search engines
 Sitemap: https://www.legeai-informatique.fr/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing / MSN
+User-agent: Bingbot
+Allow: /
+
+# Yahoo / Slurp
+User-agent: Slurp
+Allow: /
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Yandex
+User-agent: Yandex
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+
+# Qwant (French search engine)
+User-agent: Qwantify
+Allow: /
+
+# Apple
+User-agent: Applebot
+Allow: /

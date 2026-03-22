@@ -2,55 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.legeai-informatique.fr/</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/creation-site-internet.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/maintenance-web.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/microsoft-365.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/logiciel-sur-mesure.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/expertise-informatique.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.legeai-informatique.fr/a-propos.html</loc>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.legeai-informatique.fr/tarifs.html</loc>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/contact.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/mentions-legales.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://www.legeai-informatique.fr/confidentialite.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

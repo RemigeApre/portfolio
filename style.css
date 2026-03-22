@@ -16,6 +16,120 @@
   --shadow-deep: rgba(31, 44, 35, 0.18);
 }
 
+/* ── DARK MODE ── */
+[data-theme="dark"] {
+  --lune-lait: #1a1714;
+  --lune-lait-soft: #1f1b16;
+  --ink: #f7f0de;
+  --muted: #a59d93;
+  --muted-light: #7a7168;
+  --shadow: rgba(0, 0, 0, 0.2);
+  --shadow-deep: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] body::before {
+  opacity: 0.015;
+}
+
+[data-theme="dark"] nav {
+  background: rgba(26, 23, 20, 0.92);
+  border-bottom-color: rgba(175, 143, 60, 0.1);
+}
+
+[data-theme="dark"] .nav-links a {
+  color: var(--ink);
+}
+
+[data-theme="dark"] .card {
+  background: #1f1b16;
+  border-color: rgba(175, 143, 60, 0.1);
+}
+
+[data-theme="dark"] .card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .section-dark {
+  background: #0f0d0b;
+}
+
+[data-theme="dark"] .cta-banner-enhanced {
+  background: #0f1a13;
+}
+
+[data-theme="dark"] .pf-card {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .pf-card-body {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .pf-featured-content {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .compare-table th {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .compare-table td {
+  border-color: rgba(175, 143, 60, 0.08);
+}
+
+[data-theme="dark"] .faq-item {
+  border-color: rgba(175, 143, 60, 0.08);
+}
+
+[data-theme="dark"] .engagement-block {
+  background: rgba(175, 143, 60, 0.06);
+  border-color: rgba(175, 143, 60, 0.15);
+}
+
+[data-theme="dark"] .discount-card {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .guarantee-strip {
+  border-color: rgba(175, 143, 60, 0.08);
+}
+
+[data-theme="dark"] .contact-block {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .section-note {
+  background: rgba(175, 143, 60, 0.06);
+}
+
+[data-theme="dark"] .home-service-header {
+  border-bottom-color: var(--or-sable);
+}
+
+[data-theme="dark"] .landing-hero {
+  background: #1a1714;
+}
+
+[data-theme="dark"] .devise {
+  border-color: rgba(175, 143, 60, 0.1);
+}
+
+[data-theme="dark"] footer {
+  background: #1a1714;
+}
+
+[data-theme="dark"] .bg-logo {
+  opacity: 0.02;
+}
+
+[data-theme="dark"] .page-hero-enhanced {
+  background: #1a1714;
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(175, 143, 60, 0.3);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -159,6 +273,29 @@ nav {
   text-decoration: none;
   line-height: 0.9;
   gap: 0;
+  position: relative;
+}
+
+.nav-brand::before {
+  content: '';
+  position: absolute;
+  inset: -0.6rem -0.8rem;
+  background: url('Logo_LeGeais_vecteur.svg') center / contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+/* ── FIXED BACKGROUND LOGO ── */
+.bg-logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80vw, 700px);
+  height: auto;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .nav-brand-top {
@@ -232,6 +369,47 @@ nav.nav-open .nav-burger span:nth-child(3) {
 }
 
 body.menu-open { overflow: hidden; }
+
+/* ── DARK MODE TOGGLE ── */
+.theme-toggle {
+  background: none;
+  border: 1px solid rgba(175, 143, 60, 0.2);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+  z-index: 101;
+}
+
+.theme-toggle:hover {
+  border-color: var(--or-sable);
+  background: rgba(175, 143, 60, 0.08);
+}
+
+.theme-toggle svg {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--or-sable);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(30deg);
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun { display: inline; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: inline; }
 
 .nav-links a {
   text-decoration: none;
@@ -651,11 +829,79 @@ section { padding: 5rem 2rem; }
   font-family: 'Crimson Pro', serif;
 }
 
+.card-market {
+  font-size: 0.78rem;
+  color: var(--muted-light);
+  font-weight: 300;
+  margin-top: -0.8rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.card-market del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
 .card-price-note {
   font-family: 'IM Fell DW Pica', serif;
   font-size: 1.3rem;
   color: var(--or-sable);
   font-style: italic;
+}
+
+/* ── ENGAGEMENT BLOCK ── */
+.engagement-block {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(175, 143, 60, 0.25);
+  border-radius: 2px;
+  background: rgba(175, 143, 60, 0.04);
+}
+
+.engagement-block h3 {
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 1.4rem;
+  color: var(--or-sable);
+  margin-bottom: 1rem;
+}
+
+.engagement-block p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.engagement-block p + p {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ── VALUE PROPOSITION ── */
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 800px;
+  margin: 2rem auto 0;
+}
+
+.value-item h3 {
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+
+.value-item p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .card-features {
@@ -1086,6 +1332,8 @@ section { padding: 5rem 2rem; }
 .section-dark {
   background: var(--ink);
   color: var(--lune-lait);
+  position: relative;
+  z-index: 1;
 }
 
 .section-dark .section-title { color: var(--lune-lait); }
@@ -1149,6 +1397,7 @@ section { padding: 5rem 2rem; }
   padding: 5rem 2rem;
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .cta-banner-enhanced::before {
@@ -1632,6 +1881,8 @@ section { padding: 5rem 2rem; }
 .pf-visual-styr::before { background: linear-gradient(145deg, #0d1a12 0%, #1a2e1f 40%, rgba(175,143,60,0.08) 100%); }
 .pf-visual-lore::before { background: linear-gradient(145deg, #1a0f1e 0%, #2a1832 40%, rgba(175,143,60,0.08) 100%); }
 .pf-visual-legeai::before { background: linear-gradient(145deg, #1a1610 0%, #2a2318 40%, rgba(175,143,60,0.1) 100%); }
+.pf-visual-gaio::before { background: linear-gradient(145deg, #1a1208 0%, #3a2a14 40%, rgba(183,77,52,0.12) 100%); }
+.pf-visual-groupe::before { background: linear-gradient(145deg, #12100e 0%, #1f1a14 40%, rgba(175,143,60,0.15) 100%); }
 
 .pf-card-visual-name {
   font-family: 'IM Fell DW Pica', serif;
@@ -1721,6 +1972,33 @@ section { padding: 5rem 2rem; }
 }
 
 .pf-card-link:hover { opacity: 0.7; }
+
+/* ── 3D TILT EFFECT ── */
+.pf-card {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease;
+}
+
+/* ── STEPS CONNECTING LINE ── */
+.steps-line-container {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+}
+
+.steps-line {
+  width: 100%;
+  height: 2px;
+  overflow: visible;
+}
+
+.steps-line line {
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.steps-line.drawn line {
+  stroke-dashoffset: 0;
+}
 
 /* ── PORTFOLIO ENHANCED ── */
 .portfolio-section { position: relative; }
@@ -2075,6 +2353,9 @@ footer {
   font-weight: 300;
   color: var(--muted);
   letter-spacing: 0.08em;
+  position: relative;
+  z-index: 1;
+  background: var(--lune-lait);
 }
 
 footer a { color: var(--or-sable); text-decoration: none; }
@@ -2180,6 +2461,7 @@ footer a { color: var(--or-sable); text-decoration: none; }
   }
 
   .nav-burger { display: flex; }
+  .theme-toggle { right: 4.5rem; }
 
   .nav-brand { position: relative; z-index: 2; }
 
@@ -2262,6 +2544,7 @@ footer a { color: var(--or-sable); text-decoration: none; }
   }
 
   .cards-grid, .cards-grid-2, .cards-grid-4, .portfolio-grid, .approach-grid { grid-template-columns: 1fr; }
+  .value-grid { grid-template-columns: 1fr; }
   .engagements-grid { flex-direction: column; }
   .engagements-grid .approach-item { flex: 1 1 100%; min-width: 0; padding: 1.2rem 0 1.2rem 1.2rem; }
   .info-pillars { grid-template-columns: 1fr; }
@@ -2326,4 +2609,9 @@ footer a { color: var(--or-sable); text-decoration: none; }
   .contact-grid { grid-template-columns: 1fr; }
   .contact-process { grid-template-columns: 1fr; }
   .contact-block { padding: 2rem 1.5rem; }
+  .engagement-block { padding: 2rem 1.2rem; }
+  .engagement-block p { font-size: 0.88rem; }
+  .card-market { margin-top: -0.5rem; margin-bottom: 1rem; font-size: 0.72rem; }
+  .card-compact .card-price { font-size: 1.6rem; }
+  .pf-card-visual-name { font-size: 2rem; }
 }
