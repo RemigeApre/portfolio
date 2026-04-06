@@ -2426,6 +2426,223 @@ footer a { color: var(--or-sable); text-decoration: none; }
   padding: 0.1rem 0.4rem;
 }
 
+/* ── HERO CTA ── */
+.landing-hero-cta {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.1s forwards;
+}
+
+.hero-reassurance {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── REALITY GRID ── */
+.reality-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.reality-item {
+  padding: 1.8rem;
+  border-left: 2px solid var(--or-sable);
+}
+
+.reality-item h3 {
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+  color: var(--ink);
+}
+
+.reality-item p {
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.reality-conclusion {
+  margin-top: 2.5rem;
+  padding: 1.8rem 2rem;
+  background: rgba(175, 143, 60, 0.06);
+  border: 1px solid rgba(175, 143, 60, 0.12);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* ── DIFFERENCE GRID ── */
+.difference-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ── SERVICES AS NEEDS ── */
+.services-needs {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.need-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid rgba(31, 44, 35, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.4s ease;
+}
+
+.need-block:hover {
+  box-shadow: 0 8px 32px var(--shadow);
+}
+
+.need-context {
+  padding: 2rem 2.5rem;
+  background: var(--lune-lait-soft);
+}
+
+.need-context h3 {
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+.need-context p {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.need-response {
+  padding: 2rem 2.5rem;
+  border-left: 2px solid var(--or-sable);
+}
+
+.need-response-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sable);
+  margin-bottom: 0.8rem;
+}
+
+.need-response p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.7;
+  margin-bottom: 0.3rem;
+}
+
+.need-response strong {
+  font-weight: 500;
+}
+
+.need-response-detail {
+  color: var(--muted) !important;
+  font-size: 0.85rem !important;
+}
+
+.need-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or-sable);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.need-link:hover { opacity: 0.7; }
+
+/* ── TARIFS SUMMARY ── */
+.tarifs-summary {
+  max-width: 600px;
+  margin: 2.5rem auto 0;
+}
+
+.tarif-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(31, 44, 35, 0.06);
+}
+
+.tarif-label {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.tarif-price {
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 1.05rem;
+  color: var(--or-sable);
+}
+
+/* ── CASE STUDY TEXT ── */
+.pf-case-problem,
+.pf-case-solution {
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 0.6rem;
+}
+
+.pf-case-problem strong,
+.pf-case-solution strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── DARK MODE ADDITIONS ── */
+[data-theme="dark"] .reality-item {
+  border-left-color: var(--or-sable);
+}
+
+[data-theme="dark"] .reality-conclusion {
+  background: rgba(175, 143, 60, 0.06);
+  border-color: rgba(175, 143, 60, 0.15);
+}
+
+[data-theme="dark"] .need-context {
+  background: #1f1b16;
+}
+
+[data-theme="dark"] .need-block {
+  border-color: rgba(175, 143, 60, 0.1);
+}
+
+[data-theme="dark"] .need-response {
+  border-left-color: var(--or-sable);
+}
+
+[data-theme="dark"] .tarif-line {
+  border-bottom-color: rgba(175, 143, 60, 0.08);
+}
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -2543,7 +2760,10 @@ footer a { color: var(--or-sable); text-decoration: none; }
     bottom: 0;
   }
 
-  .cards-grid, .cards-grid-2, .cards-grid-4, .portfolio-grid, .approach-grid { grid-template-columns: 1fr; }
+  .cards-grid, .cards-grid-2, .cards-grid-4, .portfolio-grid, .approach-grid, .reality-grid, .difference-grid { grid-template-columns: 1fr; }
+  .need-block { grid-template-columns: 1fr; }
+  .need-response { border-left: none; border-top: 2px solid var(--or-sable); }
+  .need-context, .need-response { padding: 1.5rem; }
   .value-grid { grid-template-columns: 1fr; }
   .engagements-grid { flex-direction: column; }
   .engagements-grid .approach-item { flex: 1 1 100%; min-width: 0; padding: 1.2rem 0 1.2rem 1.2rem; }
