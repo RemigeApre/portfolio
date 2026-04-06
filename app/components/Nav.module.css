@@ -1,0 +1,188 @@
+/* ═══════════════════════════════════════════════
+   NAVIGATION — Le Geai Informatique
+   Always visible. Transparent on hero, solidifies on scroll.
+   ═══════════════════════════════════════════════ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.6rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease,
+    padding 0.4s ease;
+}
+
+.scrolled {
+  background: rgba(12, 11, 9, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: rgba(180, 154, 74, 0.06);
+  padding: 0.9rem 3.5rem;
+}
+
+/* ── Left: Tarifs ── */
+.left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Center: brand (appears on scroll) ── */
+.brandArea {
+  display: flex;
+  justify-content: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.brandMark {
+  width: 26px;
+  height: auto;
+  filter: grayscale(1) brightness(0.65) contrast(1.2);
+  transition: opacity 0.3s ease;
+}
+
+.brand:hover .brandMark {
+  opacity: 1 !important;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Right: Nous écrire ── */
+.right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Links ── */
+.navLink {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(232, 226, 212, 0.6);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: rgba(180, 154, 74, 0.4);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navLink:hover {
+  color: var(--text);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.scrolled .navLink {
+  color: rgba(232, 226, 212, 0.6);
+}
+
+.scrolled .navLink:hover {
+  color: var(--text);
+}
+
+/* ── Mobile menu (hidden on desktop) ── */
+.mobileMenu {
+  display: none;
+}
+
+/* ── Burger ── */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  z-index: 2;
+}
+
+.burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--text);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+  }
+
+  .scrolled {
+    padding: 0.7rem 1.5rem;
+  }
+
+  .brandArea { display: none; }
+  .left { display: none; }
+  .right { display: none; }
+  .burger { display: flex; }
+
+  .mobileMenu {
+    display: none;
+  }
+
+  .open .mobileMenu {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    background: var(--surface);
+    z-index: 1;
+  }
+
+  .open .mobileMenu a {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--text);
+    padding: 1rem;
+    display: block;
+  }
+
+  .open .burger span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  .open .burger span:nth-child(2) { opacity: 0; }
+  .open .burger span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+}

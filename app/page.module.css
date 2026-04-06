@@ -1,0 +1,501 @@
+/* ═══ MOUVEMENT 1 · APPARITION ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroTitle {
+  font-size: clamp(4.5rem, 12vw, 10rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 0.9;
+}
+
+.heroTitleSub {
+  display: block;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.5vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 0.5rem;
+}
+
+.heroPromise {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  color: var(--text);
+  max-width: 560px;
+  margin-top: 3rem;
+  line-height: 1.6;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.heroScroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  width: 1px;
+  height: 48px;
+  overflow: hidden;
+}
+
+.heroScrollInner {
+  width: 100%;
+  height: 100%;
+  background: var(--gold);
+  animation: scrollPulse 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes scrollPulse {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+/* ═══ MOUVEMENT 2 · MONDE FATIGUÉ ═══ */
+.fatigue {
+  padding: 8rem 2rem;
+}
+
+.fatigueInner {
+  max-width: var(--max-w-narrow);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fatigueText {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 2.5rem auto 0;
+}
+
+.fatigueItems {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  margin-top: 4rem;
+  border: 1px solid var(--border);
+}
+
+.fatigueItem {
+  background: var(--surface);
+  padding: 2.5rem 2rem;
+  transition: background 0.4s ease;
+}
+
+.fatigueItem:hover {
+  background: var(--surface-raised);
+}
+
+.fatigueItem h3 {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+.fatigueItem p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ═══ MOUVEMENT 3 · LA BASCULE ═══ */
+.shift {
+  padding: 8rem 2rem;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.shiftInner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.shiftGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+  text-align: left;
+}
+
+.shiftCard {
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.shiftCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shiftCard:hover::before { transform: scaleX(1); }
+.shiftCard:hover { border-color: var(--border-hover); }
+
+.shiftCard h3 {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+
+.shiftCard p {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ═══ MOUVEMENT 4 · PREUVES ═══ */
+.proof {
+  padding: 8rem 2rem;
+}
+
+.proofInner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.proofFeatured {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  text-align: left;
+}
+
+.proofVisual {
+  background: linear-gradient(135deg, var(--surface-card), var(--surface-raised));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  min-height: 320px;
+  position: relative;
+}
+
+.proofVisualName {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: var(--text);
+  opacity: 0.06;
+  position: absolute;
+  letter-spacing: -0.02em;
+}
+
+.proofLabel {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  position: relative;
+  z-index: 1;
+}
+
+.proofContent {
+  padding: 3rem 2.5rem;
+  background: var(--surface-card);
+  border-left: 1px solid var(--border);
+}
+
+.proofContent h3 {
+  font-size: 1.6rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.proofContent p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+}
+
+.proofLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: opacity 0.3s;
+}
+
+.proofLink:hover { opacity: 0.65; }
+
+.proofSecondary {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.proofSmall {
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border);
+  text-align: left;
+  transition: border-color 0.4s ease;
+}
+
+.proofSmall:hover { border-color: var(--border-hover); }
+
+.proofSmall h3 {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+
+.proofSmallSub {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.proofSmall p {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ═══ MOUVEMENT 5 · MÉTHODE ═══ */
+.method {
+  padding: 8rem 2rem;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.methodInner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.methodSteps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 4rem;
+  border: 1px solid var(--border);
+}
+
+.methodStep {
+  background: var(--surface);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.stepNumber {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+
+.methodStep h3 {
+  font-size: 0.98rem;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+
+.methodStep p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ═══ MOUVEMENT 5B · TARIFS ═══ */
+.pricing {
+  padding: 8rem 2rem;
+}
+
+.pricingInner {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pricingTable {
+  margin-top: 3rem;
+  border: 1px solid var(--border);
+}
+
+.pricingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+
+.pricingRow:last-child { border-bottom: none; }
+.pricingRow:hover { background: var(--surface-raised); }
+
+.pricingLabel {
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.pricingValue {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.pricingNote {
+  margin-top: 2rem;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.pricingCta {
+  margin-top: 2.5rem;
+}
+
+/* ═══ MOUVEMENT 6 · ENTRÉE EN RELATION ═══ */
+.contact {
+  padding: 8rem 2rem;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border);
+}
+
+.contactInner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contactOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 4rem;
+  text-align: left;
+}
+
+.contactOption {
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.4s ease;
+}
+
+.contactOption:hover { border-color: var(--border-hover); }
+
+.contactOption h3 {
+  font-size: 1.15rem;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+
+.contactOption p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+}
+
+.contactData {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: opacity 0.3s;
+}
+
+.contactData:hover { opacity: 0.7; }
+
+.contactBottom {
+  margin-top: 3rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+/* ═══ DIVIDER ═══ */
+.divider {
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.dividerLine {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.25;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1024px) {
+  .proofFeatured { grid-template-columns: 1fr; }
+  .proofContent { border-left: none; border-top: 1px solid var(--border); }
+  .methodSteps { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 2rem 1.5rem 4rem; }
+  .fatigue, .shift, .proof, .method, .pricing, .contact { padding: 5rem 1.5rem; }
+  .fatigueItems { grid-template-columns: 1fr; }
+  .shiftGrid { grid-template-columns: 1fr; }
+  .proofSecondary { grid-template-columns: 1fr; }
+  .methodSteps { grid-template-columns: 1fr; }
+  .contactOptions { grid-template-columns: 1fr; }
+  .heroTitle { font-size: clamp(3.5rem, 16vw, 5.5rem); }
+}

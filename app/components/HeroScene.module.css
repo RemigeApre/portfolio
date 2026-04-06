@@ -1,0 +1,200 @@
+/* ═══════════════════════════════════════════════
+   SCÈNE D'ARRIVÉE — Le Geai Informatique
+   ═══════════════════════════════════════════════ */
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* ── Atmospheric background: dark forest, mist, depth ── */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* mist layer: soft horizontal band */
+    radial-gradient(
+      ellipse 120% 35% at 50% 38%,
+      rgba(30, 28, 24, 0.5) 0%,
+      transparent 70%
+    ),
+    /* mass upper-left: dark canopy */
+    radial-gradient(
+      ellipse 60% 50% at 15% 20%,
+      rgba(14, 13, 10, 0.9) 0%,
+      transparent 70%
+    ),
+    /* mass upper-right: dark canopy */
+    radial-gradient(
+      ellipse 55% 45% at 85% 15%,
+      rgba(14, 13, 10, 0.85) 0%,
+      transparent 70%
+    ),
+    /* mass lower: heavy dark floor */
+    radial-gradient(
+      ellipse 100% 40% at 50% 95%,
+      rgba(8, 7, 5, 0.95) 0%,
+      transparent 60%
+    ),
+    /* depth center: slightly lighter clearing */
+    radial-gradient(
+      ellipse 40% 30% at 50% 45%,
+      rgba(22, 20, 17, 0.4) 0%,
+      transparent 70%
+    ),
+    /* scattered masses */
+    radial-gradient(
+      circle at 30% 60%,
+      rgba(12, 11, 8, 0.6) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 72% 55%,
+      rgba(12, 11, 8, 0.5) 0%,
+      transparent 35%
+    ),
+    /* base */
+    var(--surface);
+}
+
+/* film grain */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Central content ── */
+.center {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 720px;
+  padding: 0 2rem;
+  margin-top: -1.5vh;
+}
+
+.promise {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  color: var(--text);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+/* ── CTA principal — corner brackets ── */
+.cta {
+  display: inline-block;
+  margin-top: 3rem;
+  position: relative;
+  color: var(--gold);
+  transition: color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0.9rem 2.2rem;
+}
+
+/* top-left corner */
+.cta::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-top: 1px solid rgba(180, 154, 74, 0.28);
+  border-left: 1px solid rgba(180, 154, 74, 0.28);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* bottom-right corner */
+.cta::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 1px solid rgba(180, 154, 74, 0.28);
+  border-right: 1px solid rgba(180, 154, 74, 0.28);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cta:hover {
+  color: var(--text);
+}
+
+.cta:hover::before {
+  width: 20px;
+  height: 20px;
+  top: -3px;
+  left: -3px;
+  border-color: rgba(180, 154, 74, 0.55);
+}
+
+.cta:hover::after {
+  width: 20px;
+  height: 20px;
+  bottom: -3px;
+  right: -3px;
+  border-color: rgba(180, 154, 74, 0.55);
+}
+
+.ctaText {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  transition: text-shadow 0.6s ease;
+}
+
+.cta:hover .ctaText {
+  text-shadow: 0 0 20px rgba(180, 154, 74, 0.1);
+}
+
+/* ── Animated line — canvas container ── */
+.lineZone {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 140px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.lineCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .center {
+    padding: 0 1.5rem;
+    margin-top: 0;
+  }
+
+  .ctaText {
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+  }
+
+  .lineZone {
+    width: 160px;
+    height: 120px;
+  }
+}

@@ -1,9 +1,0 @@
-services:
-  web:
-    build: .
-    container_name: legeai-informatique
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    labels:
-      - "com.legeai.service=informatique"
