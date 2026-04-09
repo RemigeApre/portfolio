@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Nav from "./components/Nav";
 import HeroScene from "./components/HeroScene";
+import FriezeLine from "./components/FriezeLine";
 import Footer from "./components/Footer";
 import Reveal from "./components/Reveal";
 import s from "./page.module.css";
@@ -11,170 +12,142 @@ export default function Home() {
       <Nav />
       <HeroScene />
 
-      {/* ═══ MOUVEMENT 2 · LE MONDE FATIGUÉ ═══ */}
-      <section className={s.fatigue}>
-        <div className={s.fatigueInner}>
+      {/* ═══ MOUVEMENT 2 · SERVIR DANS LA DURÉE ═══ */}
+      <section className={s.serve}>
+        <div className={s.serveInner}>
           <Reveal>
-            <h2 className="section-title">Ce que beaucoup ont déjà vécu</h2>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <p className={s.fatigueText}>
-              Le numérique professionnel a souvent été vendu comme une promesse
-              simple. La réalité est souvent différente.
+            <h2 className="section-title">Servir votre activité dans la durée</h2>
+            <p className={s.serveIntro}>
+              Chaque intervention respecte la réalité de vos clients, de vos
+              équipes et de vos partenaires. Elle s'accorde à vos usages, à vos
+              contraintes et à votre rythme. Notre travail suit quatre lignes
+              simples : clarifier, alléger, relier, prolonger.
             </p>
           </Reveal>
-        </div>
-        <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
-          <Reveal delay={0.25}>
-            <div className={s.fatigueItems}>
-              <div className={s.fatigueItem}>
-                <h3>Un site présent, mais peu utile</h3>
-                <p>
-                  Une présence en ligne qui n'aide ni les clients à comprendre
-                  l'activité, ni l'entreprise à mieux recevoir les demandes.
-                </p>
-              </div>
-              <div className={s.fatigueItem}>
-                <h3>Des solutions génériques</h3>
-                <p>
-                  Un modèle à peine ajusté, sans logique métier, sans réflexion
-                  d'usage, sans continuité.
-                </p>
-              </div>
-              <div className={s.fatigueItem}>
-                <h3>Des outils qui alourdissent</h3>
-                <p>
-                  Au lieu d'alléger le quotidien, certains dispositifs deviennent
-                  une source de confusion pour le dirigeant et les équipes.
-                </p>
-              </div>
-              <div className={s.fatigueItem}>
-                <h3>Une mise en place sans suite</h3>
-                <p>
-                  L'outil est livré, puis il reste seul. Les questions
-                  s'accumulent, les usages stagnent, personne ne reprend la main.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
-      <div className={s.divider}>
-        <div className={s.dividerLine} />
-      </div>
-
-      {/* ═══ MOUVEMENT 3 · LA BASCULE ═══ */}
-      <section className={s.shift} id="approche">
-        <div className={s.shiftInner}>
-          <Reveal>
-            <h2 className="section-title">
-              Ce que Le Geai Informatique apporte
-            </h2>
-            <p className="section-sub" style={{ margin: "1.2rem auto 0" }}>
-              Un outil utile répond à une réalité de terrain, reste
-              compréhensible et allège le quotidien.
-            </p>
-          </Reveal>
-          <div className={s.shiftGrid}>
+          <div className={s.serveGrid}>
             <Reveal delay={0.1}>
-              <div className={s.shiftCard}>
-                <h3>Une logique métier avant l'outil</h3>
+              <div className={s.serveCard}>
+                <h3>Sur mesure pour votre activité</h3>
                 <p>
-                  Les besoins sont cadrés à partir de l'activité réelle. L'outil
-                  vient ensuite, avec la bonne forme, au bon niveau.
+                  Des outils et des accompagnements taillés pour votre réalité.
+                  Chaque solution s'accorde à vos usages, à vos équipes, à vos
+                  clients, à vos partenaires et à la trajectoire propre de votre
+                  activité.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.15}>
+              <div className={s.serveCard}>
+                <h3>Suivi durable</h3>
+                <p>
+                  Chaque intervention laisse derrière elle une transmission
+                  claire, une disponibilité raisonnable et un accompagnement
+                  ponctuel dans la mesure du possible. Pour ceux qui le
+                  souhaitent, ce socle peut se prolonger par un suivi durable et
+                  un véritable partenariat dans le temps.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={0.2}>
-              <div className={s.shiftCard}>
-                <h3>Des dispositifs simples à utiliser</h3>
+              <div className={s.serveCard}>
+                <h3>Simplicité d'usage réelle</h3>
                 <p>
-                  Un bon outil facilite la lecture, la prise d'information, le
-                  suivi, l'organisation et les usages du quotidien.
+                  Nos équipes rassemblent des profils choisis pour leur
+                  précision, leur intelligence du terrain et leur clarté
+                  d'expression. Les solutions gagnent ainsi en lisibilité, en
+                  simplicité et en fluidité, tandis que la complexité reste à
+                  distance de vos usages quotidiens.
                 </p>
               </div>
             </Reveal>
-            <Reveal delay={0.3}>
-              <div className={s.shiftCard}>
-                <h3>Une activité plus lisible</h3>
+            <Reveal delay={0.25}>
+              <div className={s.serveCard}>
+                <h3>Une ligne d'échange claire</h3>
                 <p>
-                  Une présence claire rassure les futurs clients et donne à
-                  l'activité une forme plus cohérente et plus professionnelle.
-                </p>
-              </div>
-            </Reveal>
-            <Reveal delay={0.4}>
-              <div className={s.shiftCard}>
-                <h3>Un accompagnement durable</h3>
-                <p>
-                  Mise en place, support, maintenance, formation et évolutions
-                  dans une logique de continuité.
+                  Plusieurs canaux de discussion apportent la souplesse
+                  nécessaire. Une chaîne courte affine la compréhension, resserre
+                  les décisions et soutient une continuité plus ferme.
                 </p>
               </div>
             </Reveal>
           </div>
+
+          <Reveal delay={0.3}>
+            <aside className={s.serveAside}>
+              <h3>Une attention portée au réel</h3>
+              <p>
+                Les périodes tendues existent. Nous le savons. Selon le besoin,
+                le périmètre peut s'ajuster, les paiements peuvent
+                s'échelonner, et certaines formules récurrentes peuvent respirer
+                pendant un temps. Une relation durable réclame aussi cette
+                intelligence des circonstances.
+              </p>
+            </aside>
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══ MOUVEMENT 4 · PREUVES ═══ */}
-      <section className={s.proof}>
-        <div className={s.proofInner}>
+      {/* ═══ MOUVEMENT 3 · PREUVES ═══ */}
+      <section className={s.works}>
+        <div className={s.worksInner}>
           <Reveal>
-            <h2 className="section-title">Preuves de structure</h2>
-            <p className="section-sub" style={{ margin: "1.2rem auto 0" }}>
-              La valeur d'un outil se mesure à ce qu'il rend possible.
+            <h2 className="section-title">Trois réalisations, trois usages réels</h2>
+            <p className={s.worksIntro}>
+              Trois cadres différents, une même exigence : rendre un usage plus
+              clair, plus fluide, plus durable.
             </p>
           </Reveal>
-          <Reveal delay={0.2}>
-            <div className={s.proofFeatured}>
-              <div className={s.proofVisual}>
-                <span className={s.proofVisualName}>Bergfrid</span>
-                <span className={s.proofLabel}>Étude de cas</span>
-              </div>
-              <div className={s.proofContent}>
+
+          <div className={s.worksGrid}>
+            <Reveal delay={0.1}>
+              <article className={`${s.workCard} ${s.workBergfrid}`}>
+                <p className={s.workSub}>Plateforme éditoriale</p>
                 <h3>Bergfrid</h3>
-                <p>
-                  Architecture éditoriale, hiérarchie de l'information,
-                  circulation entre les contenus, logique multilingue, parcours
-                  de lecture, continuité de publication. Conçu comme un système
-                  utile, lisible et évolutif.
+                <p className={s.workBody}>
+                  Architecture de publication, hiérarchie de l'information,
+                  circulation entre les contenus, logique de durée.
                 </p>
                 <Link
-                  href="https://www.bergfrid.com"
+                  href="https://bergfrid.com"
                   target="_blank"
                   rel="noopener"
-                  className={s.proofLink}
+                  className={s.workLink}
                 >
-                  Visiter le projet →
+                  Visiter le projet
                 </Link>
-              </div>
-            </div>
-          </Reveal>
-          <div className={s.proofSecondary}>
-            <Reveal delay={0.1}>
-              <div className={s.proofSmall}>
-                <h3>Le Geai Éditions</h3>
-                <p className={s.proofSmallSub}>
-                  Rendre une activité éditoriale plus claire et plus cohérente
-                </p>
-                <p>
-                  Présentation des ouvrages, lisibilité de la structure,
-                  cohérence de l'univers, accès aux informations essentielles.
-                </p>
-              </div>
+              </article>
             </Reveal>
+
             <Reveal delay={0.2}>
-              <div className={s.proofSmall}>
-                <h3>Structuration Microsoft 365</h3>
-                <p className={s.proofSmallSub}>
-                  Mettre de l'ordre dans des outils souvent subis
+              <article className={`${s.workCard} ${s.workGaio}`}>
+                <p className={s.workSub}>Commerce de terrain</p>
+                <h3>Gaio Polart</h3>
+                <p className={s.workBody}>
+                  Présence commerciale, usages quotidiens, données,
+                  listes partagées, logique d'évolution.
                 </p>
-                <p>
-                  Comptes, messagerie, licences, organisation et compréhension
-                  de l'environnement clarifiés pour redonner une base sereine.
+                <Link
+                  href="https://gaio-polart.legeai-informatique.fr/"
+                  target="_blank"
+                  rel="noopener"
+                  className={s.workLink}
+                >
+                  Visiter le projet
+                </Link>
+              </article>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <article className={`${s.workCard} ${s.workSelf}`}>
+                <p className={s.workSub}>Vitrine haut de gamme</p>
+                <h3>Le Geai Informatique</h3>
+                <p className={s.workBody}>
+                  Hiérarchie, matière, rythme, lisibilité, contact :
+                  démonstration appliquée à notre propre maison.
                 </p>
-              </div>
+                <span className={s.workHere}>Vous y êtes</span>
+              </article>
             </Reveal>
           </div>
         </div>
@@ -184,62 +157,70 @@ export default function Home() {
         <div className={s.dividerLine} />
       </div>
 
-      {/* ═══ MOUVEMENT 5 · MÉTHODE ═══ */}
+      {/* ═══ MOUVEMENT 4 · MÉTHODE ═══ */}
       <section className={s.method}>
-        <div className={s.methodInner}>
-          <Reveal>
-            <h2 className="section-title">Comment cela se passe</h2>
-            <p className="section-sub" style={{ margin: "1.2rem auto 0" }}>
-              Comprendre juste, construire proprement, laisser une base claire.
-            </p>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div className={s.methodSteps}>
-              <div className={s.methodStep}>
-                <p className={s.stepNumber}>1</p>
-                <h3>Comprendre l'activité</h3>
-                <p>
-                  Cerner le métier, les usages, les irritants, les attentes et
-                  les marges d'amélioration utiles.
-                </p>
+        <Reveal>
+          <h2 className={s.methodTitle}>Une méthode</h2>
+        </Reveal>
+
+        <div className={s.frieze}>
+          <FriezeLine />
+
+          <div className={s.friezeSteps}>
+            <Reveal delay={0.1}>
+              <div className={s.friezeStep}>
+                <span className={s.friezeNum}>1</span>
+                <h3>Écouter</h3>
+                <p>Usages, contraintes, irritants, rythme, besoins réels.</p>
               </div>
-              <div className={s.methodStep}>
-                <p className={s.stepNumber}>2</p>
-                <h3>Cadrer la réponse</h3>
-                <p>
-                  Site, refonte, Microsoft 365, outil ciblé, formation ou
-                  combinaison : la bonne forme pour le bon besoin.
-                </p>
+            </Reveal>
+            <Reveal delay={0.15}>
+              <div className={s.friezeStep}>
+                <span className={s.friezeNum}>2</span>
+                <h3>Cadrer</h3>
+                <p>La bonne réponse, à la bonne échelle, pour le bon usage.</p>
               </div>
-              <div className={s.methodStep}>
-                <p className={s.stepNumber}>3</p>
-                <h3>Mettre en place</h3>
-                <p>
-                  Lisibilité, cohérence, fiabilité. L'objectif n'est pas de
-                  produire un effet, mais un outil exploitable.
-                </p>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div className={s.friezeStep}>
+                <span className={s.friezeNum}>3</span>
+                <h3>Construire</h3>
+                <p>Un outil lisible, fiable, exploitable, prêt à durer.</p>
               </div>
-              <div className={s.methodStep}>
-                <p className={s.stepNumber}>4</p>
-                <h3>Accompagner</h3>
-                <p>
-                  Prise en main, formation, suivi. Éviter que l'outil ne
-                  devienne une charge de plus.
-                </p>
+            </Reveal>
+            <Reveal delay={0.25}>
+              <div className={s.friezeStep}>
+                <span className={s.friezeNum}>4</span>
+                <h3>Soutenir</h3>
+                <p>Transmission, suivi, ajustements, continuité.</p>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
+
+        <Reveal delay={0.35}>
+          <div className={s.methodExit}>
+            <div className={s.methodExitBar} aria-hidden="true" />
+            <Link href="/contact" className={s.methodExitLink}>
+              Initier l'échange
+            </Link>
+            <p>
+              Décrivez votre situation ou laissez une adresse pour être
+              recontacté au bon moment.
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       {/* ═══ MOUVEMENT 5B · TARIFS ═══ */}
       <section className={s.pricing}>
         <div className={s.pricingInner}>
           <Reveal>
-            <h2 className="section-title">Tarifs clairs</h2>
+            <h2 className="section-title">Des repères tarifaires</h2>
             <p className="section-sub" style={{ margin: "1.2rem auto 0" }}>
-              Un tarif cohérent rémunère une compréhension du besoin, une mise
-              en place propre et une continuité dans le temps.
+              Derrière chaque dossier, il y a une écoute réelle, un cadre
+              juste, une mise en place soignée et un interlocuteur disponible
+              dans le temps.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
@@ -249,7 +230,7 @@ export default function Home() {
                 <span className={s.pricingValue}>dès 800 €</span>
               </div>
               <div className={s.pricingRow}>
-                <span className={s.pricingLabel}>Site avec gestion</span>
+                <span className={s.pricingLabel}>Site avec espace de gestion</span>
                 <span className={s.pricingValue}>dès 2 500 €</span>
               </div>
               <div className={s.pricingRow}>
@@ -274,12 +255,12 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.25}>
             <p className={s.pricingNote}>
-              Chaque besoin ne demande pas la même réponse. Un échange permet de
-              cadrer simplement ce qui est pertinent.
+              Chaque activité appelle son propre cadre. Un échange permet
+              d'ajuster la réponse, le rythme et le niveau d'accompagnement.
             </p>
             <div className={s.pricingCta}>
               <Link href="/contact" className="btn-ghost">
-                Demander un cadrage →
+                Demander un cadrage
               </Link>
             </div>
           </Reveal>
@@ -295,19 +276,19 @@ export default function Home() {
         <div className={s.contactInner}>
           <Reveal>
             <h2 className="section-title">
-              Parlons de ce qui peut améliorer votre activité
+              Parlons de votre activité
             </h2>
             <p className="section-sub" style={{ margin: "1.2rem auto 0" }}>
-              Le bon outil n'est pas le plus spectaculaire. C'est celui qui
-              répond à un besoin réel et tient dans le temps.
+              Le bon outil répond à un besoin réel, s'intègre juste et tient
+              dans le temps.
             </p>
           </Reveal>
           <div className={s.contactOptions}>
             <Reveal delay={0.1}>
               <div className={s.contactOption}>
-                <h3>Échange rapide</h3>
+                <h3>Premier contact</h3>
                 <p>
-                  Une question, un besoin simple, une première prise de contact.
+                  Une question directe, un besoin simple, un premier échange.
                 </p>
                 <a
                   href="mailto:administration@legeai-editions.com"
@@ -324,19 +305,19 @@ export default function Home() {
               <div className={s.contactOption}>
                 <h3>Cadrage structuré</h3>
                 <p>
-                  Décrivez votre activité, vos outils actuels et ce qui pose
-                  problème. Nous reviendrons avec une analyse claire.
+                  Décrivez votre activité, les outils déjà en place et les
+                  points à reprendre. Nous reviendrons avec un cadrage clair.
                 </p>
                 <Link href="/contact" className="btn-primary">
-                  Décrire votre besoin <span>→</span>
+                  Décrire le besoin
                 </Link>
               </div>
             </Reveal>
           </div>
           <Reveal delay={0.3}>
             <p className={s.contactBottom}>
-              Réponse sous 48h ouvrées · Basé à Lyon · Disponible Lyon, Annecy,
-              Clermont-Ferrand et partout en France
+              Réponse sous 48h ouvrées. Basé à Lyon. Disponible à Lyon, Annecy,
+              Clermont-Ferrand et partout en France.
             </p>
           </Reveal>
         </div>

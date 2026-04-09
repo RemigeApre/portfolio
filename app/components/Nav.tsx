@@ -27,11 +27,11 @@ export default function Nav() {
         <Link href="/tarifs" className={s.navLink}>Tarifs</Link>
       </div>
 
-      {/* Center: brand (logo mark + name, revealed on scroll) */}
+      {/* Center: brand stacked — logo above, name below */}
       <div className={s.brandArea}>
         <Link href="/" className={s.brand}>
           <motion.img
-            src="/logo.svg"
+            src="/LeGeai_logo_monochrome.svg"
             alt="Le Geai Informatique"
             className={s.brandMark}
             animate={{ opacity: scrolled ? 0.8 : 0 }}

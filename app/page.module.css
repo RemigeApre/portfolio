@@ -69,289 +69,339 @@
   100% { transform: translateY(100%); }
 }
 
-/* ═══ MOUVEMENT 2 · MONDE FATIGUÉ ═══ */
-.fatigue {
-  padding: 8rem 2rem;
+/* ═══ MOUVEMENT 2 · SERVIR DANS LA DURÉE ═══ */
+.serve {
+  padding: 4rem 2rem 3rem;
 }
 
-.fatigueInner {
-  max-width: var(--max-w-narrow);
+.serveInner {
+  max-width: 880px;
   margin: 0 auto;
   text-align: center;
 }
 
-.fatigueText {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-  color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 580px;
-  margin: 2.5rem auto 0;
+.serveIntro {
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: rgba(232, 226, 212, 0.6);
+  max-width: 540px;
+  margin: 1.2rem auto 0;
+  line-height: 1.8;
 }
 
-.fatigueItems {
+.serveGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--border);
-  margin-top: 4rem;
-  border: 1px solid var(--border);
+  gap: 0.6rem;
+  margin-top: 2rem;
 }
 
-.fatigueItem {
-  background: var(--surface);
-  padding: 2.5rem 2rem;
-  transition: background 0.4s ease;
-}
-
-.fatigueItem:hover {
-  background: var(--surface-raised);
-}
-
-.fatigueItem h3 {
-  font-size: 1.05rem;
-  color: var(--text);
-  margin-bottom: 0.6rem;
-  letter-spacing: -0.01em;
-}
-
-.fatigueItem p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  font-weight: 300;
-}
-
-/* ═══ MOUVEMENT 3 · LA BASCULE ═══ */
-.shift {
-  padding: 8rem 2rem;
-  background: var(--surface-raised);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.shiftInner {
-  max-width: 960px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.shiftGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-top: 4rem;
+.serveCard {
   text-align: left;
-}
-
-.shiftCard {
-  padding: 2.5rem 2rem;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-
-.shiftCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.shiftCard:hover::before { transform: scaleX(1); }
-.shiftCard:hover { border-color: var(--border-hover); }
-
-.shiftCard h3 {
-  font-size: 1.1rem;
-  color: var(--text);
-  margin-bottom: 0.8rem;
-}
-
-.shiftCard p {
-  font-size: 0.86rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
-/* ═══ MOUVEMENT 4 · PREUVES ═══ */
-.proof {
-  padding: 8rem 2rem;
-}
-
-.proofInner {
-  max-width: 960px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.proofFeatured {
-  margin-top: 4rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  text-align: left;
-}
-
-.proofVisual {
-  background: linear-gradient(135deg, var(--surface-card), var(--surface-raised));
+  padding: 1.2rem 1.4rem;
+  transition: all 0.6s ease;
+  border: 1px solid transparent;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 2rem;
-  min-height: 320px;
-  position: relative;
 }
 
-.proofVisualName {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 5rem);
+/* stronger temperature nuances */
+.serveGrid > :nth-child(1) .serveCard { background: rgba(24, 20, 14, 0.7); }
+.serveGrid > :nth-child(2) .serveCard { background: rgba(16, 20, 18, 0.7); }
+.serveGrid > :nth-child(3) .serveCard { background: rgba(22, 18, 14, 0.7); }
+.serveGrid > :nth-child(4) .serveCard { background: rgba(16, 16, 22, 0.7); }
+
+.serveCard:hover {
+  border-color: rgba(180, 154, 74, 0.08);
+  background: rgba(22, 20, 16, 0.85) !important;
+}
+
+.serveCard h3 {
+  font-size: 0.95rem;
   color: var(--text);
-  opacity: 0.06;
-  position: absolute;
-  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-bottom: 0.5rem;
 }
 
-.proofLabel {
-  font-size: 0.6rem;
+.serveCard h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  height: 1px;
+  background: rgba(180, 154, 74, 0.25);
+  transition: width 0.4s ease;
+}
+
+.serveCard:hover h3::after {
+  width: 28px;
+  background: rgba(180, 154, 74, 0.35);
+}
+
+.serveCard p {
+  font-size: 0.84rem;
+  color: rgba(232, 226, 212, 0.55);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* bloc annexe — centered, breathing */
+.serveAside {
+  margin-top: 2rem;
+  padding: 1.4rem 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  animation: asideBreathe 6s ease-in-out infinite;
+}
+
+@keyframes asideBreathe {
+  0%, 100% { border-top-color: rgba(180, 154, 74, 0.08); border-bottom-color: rgba(180, 154, 74, 0.08); }
+  50% { border-top-color: rgba(180, 154, 74, 0.16); border-bottom-color: rgba(180, 154, 74, 0.16); }
+}
+
+.serveAside h3 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 400;
+  margin-bottom: 0.7rem;
+  line-height: 1;
+}
+
+.serveAside p {
+  font-size: 0.86rem;
+  font-weight: 300;
+  color: rgba(232, 226, 212, 0.5);
+  line-height: 1.75;
+}
+
+/* ═══ MOUVEMENT 3 · PREUVES ═══ */
+.works {
+  padding: 5rem 2rem 4rem;
+}
+
+.worksInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.worksIntro {
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: rgba(232, 226, 212, 0.55);
+  max-width: 480px;
+  margin: 1rem auto 0;
+  line-height: 1.75;
+}
+
+.worksGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+}
+
+/* ── cards as plaques ── */
+.workCard {
+  display: flex;
+  flex-direction: column;
+  padding: 2.8rem 2.2rem 2.4rem;
+  border: 1px solid rgba(180, 154, 74, 0.1);
+  transition: all 0.6s ease;
+  height: 100%;
+}
+
+.workCard:hover {
+  border-color: rgba(180, 154, 74, 0.22);
+  transform: translateY(-2px);
+}
+
+/* temperature per card — stronger */
+.workBergfrid {
+  background: rgba(28, 22, 14, 0.7);
+  border-left: 2px solid rgba(160, 120, 50, 0.22);
+}
+.workGaio {
+  background: rgba(14, 24, 20, 0.7);
+  border-left: 2px solid rgba(60, 140, 90, 0.12);
+}
+.workSelf {
+  background: rgba(20, 16, 28, 0.7);
+  border-left: 2px solid rgba(120, 100, 170, 0.12);
+}
+
+.workBergfrid:hover { background: rgba(32, 25, 16, 0.85); }
+.workGaio:hover     { background: rgba(16, 28, 22, 0.85); }
+.workSelf:hover     { background: rgba(22, 18, 32, 0.85); }
+
+.workSub {
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--gold);
-  position: relative;
-  z-index: 1;
-}
-
-.proofContent {
-  padding: 3rem 2.5rem;
-  background: var(--surface-card);
-  border-left: 1px solid var(--border);
-}
-
-.proofContent h3 {
-  font-size: 1.6rem;
-  color: var(--text);
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.proofContent p {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  font-weight: 300;
+  opacity: 0.7;
   margin-bottom: 0.5rem;
 }
 
-.proofLink {
+.workCard h3 {
+  font-size: 1.6rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.workBody {
+  font-size: 0.88rem;
+  color: rgba(232, 226, 212, 0.58);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.workLink {
   display: inline-block;
-  margin-top: 1.5rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gold);
-  transition: opacity 0.3s;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
 }
 
-.proofLink:hover { opacity: 0.65; }
+.workLink:hover { opacity: 1; }
 
-.proofSecondary {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.proofSmall {
-  padding: 2.5rem 2rem;
-  border: 1px solid var(--border);
-  text-align: left;
-  transition: border-color 0.4s ease;
-}
-
-.proofSmall:hover { border-color: var(--border-hover); }
-
-.proofSmall h3 {
-  font-size: 1.1rem;
-  color: var(--text);
-  margin-bottom: 0.4rem;
-}
-
-.proofSmallSub {
-  font-size: 0.72rem;
+.workHere {
+  display: inline-block;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  font-family: var(--font-display);
   font-style: italic;
-  color: var(--gold);
-  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: rgba(232, 226, 212, 0.28);
 }
 
-.proofSmall p {
-  font-size: 0.84rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
-/* ═══ MOUVEMENT 5 · MÉTHODE ═══ */
+/* ═══ MOUVEMENT 4 · MÉTHODE ═══ */
 .method {
-  padding: 8rem 2rem;
-  background: var(--surface-raised);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.methodInner {
-  max-width: 960px;
-  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 2rem;
   text-align: center;
 }
 
-.methodSteps {
+.methodTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 4rem;
+}
+
+/* ── frieze ── */
+.frieze {
+  width: 100%;
+  max-width: 1060px;
+  position: relative;
+}
+
+/* steps under the animated line */
+.friezeSteps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  margin-top: 4rem;
-  border: 1px solid var(--border);
+  gap: 0;
+  margin-top: 1.5rem;
 }
 
-.methodStep {
-  background: var(--surface);
-  padding: 2.5rem 1.5rem;
+.friezeStep {
+  padding: 0 1.8rem;
   text-align: center;
 }
 
-.stepNumber {
+.friezeNum {
+  display: block;
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: var(--gold);
-  opacity: 0.3;
+  opacity: 0.15;
   line-height: 1;
-  margin-bottom: 1.2rem;
-}
-
-.methodStep h3 {
-  font-size: 0.98rem;
-  color: var(--text);
   margin-bottom: 0.8rem;
 }
 
-.methodStep p {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
+.friezeStep h3 {
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.friezeStep p {
+  font-size: 0.9rem;
+  color: rgba(232, 226, 212, 0.55);
+  line-height: 1.75;
   font-weight: 300;
+}
+
+/* ── exit: contact as final seuil ── */
+.methodExit {
+  max-width: 500px;
+  margin-top: 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.methodExitBar {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(
+    to bottom,
+    rgba(180, 154, 74, 0.2),
+    rgba(180, 154, 74, 0.05)
+  );
+  margin: 0 auto 1.5rem;
+}
+
+.methodExitLink {
+  display: inline-block;
+  padding: 0.85rem 2.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(180, 154, 74, 0.25);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 1rem;
+}
+
+.methodExitLink:hover {
+  border-color: var(--gold);
+  background: rgba(180, 154, 74, 0.06);
+}
+
+.methodExit p {
+  font-size: 0.84rem;
+  color: rgba(232, 226, 212, 0.38);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 /* ═══ MOUVEMENT 5B · TARIFS ═══ */
@@ -484,18 +534,18 @@
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 1024px) {
-  .proofFeatured { grid-template-columns: 1fr; }
-  .proofContent { border-left: none; border-top: 1px solid var(--border); }
-  .methodSteps { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
   .hero { padding: 2rem 1.5rem 4rem; }
-  .fatigue, .shift, .proof, .method, .pricing, .contact { padding: 5rem 1.5rem; }
-  .fatigueItems { grid-template-columns: 1fr; }
-  .shiftGrid { grid-template-columns: 1fr; }
-  .proofSecondary { grid-template-columns: 1fr; }
-  .methodSteps { grid-template-columns: 1fr; }
+  .serve, .works, .method, .pricing, .contact { padding: 4rem 1.5rem; }
+  .serveGrid { grid-template-columns: 1fr; gap: 0.6rem; }
+  .serveAside { padding: 1.5rem; }
+  .worksGrid { grid-template-columns: 1fr; }
+  .method { min-height: auto; padding: 4rem 1.5rem; }
+  .friezeLine { display: none; }
+  .friezeSteps { grid-template-columns: 1fr 1fr; gap: 2rem 1rem; }
+  .friezeStep { padding: 0 0.5rem; }
   .contactOptions { grid-template-columns: 1fr; }
   .heroTitle { font-size: clamp(3.5rem, 16vw, 5.5rem); }
 }

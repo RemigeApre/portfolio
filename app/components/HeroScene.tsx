@@ -163,9 +163,9 @@ export default function HeroScene() {
 
   return (
     <section ref={sectionRef} className={s.scene}>
-      {/* ── Atmospheric background ── */}
-      <div className={s.atmosphere} aria-hidden="true" />
-      <div className={s.grain} aria-hidden="true" />
+      {/* ── Emblem ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/LeGeai_logo_monochrome.svg" alt="" aria-hidden="true" className={s.emblem} />
 
       <div className={s.center}>
         <motion.p
