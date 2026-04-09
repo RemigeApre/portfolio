@@ -5,14 +5,16 @@ import Reveal from "../components/Reveal";
 import s from "./page.module.css";
 
 export const metadata = {
-  title: "Tarifs | Le Geai Informatique",
-  description: "Tarifs clairs pour la création de site, la maintenance, Microsoft 365 et le développement sur mesure. Lyon, Annecy, Clermont-Ferrand.",
+  title: "Tarifs | Site web dès 800 €, maintenance dès 39 €/mois | Lyon",
+  description: "Site vitrine dès 800 €, site de gestion dès 2 500 €, e-commerce dès 6 000 €, maintenance dès 39 €/mois. Le Geai Informatique, Lyon, Annecy.",
+  alternates: { canonical: "https://www.legeai-informatique.fr/tarifs" },
 };
 
 export default function Tarifs() {
   return (
     <>
       <Nav />
+      <main id="main-content">
       <section className={s.hero}>
         <Reveal>
           <p className="label">Tarifs</p>
@@ -136,6 +138,7 @@ export default function Tarifs() {
         </Reveal>
       </section>
 
+      </main>
       <Footer />
     </>
   );

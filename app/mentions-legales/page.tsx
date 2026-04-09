@@ -5,13 +5,16 @@ import s from "./page.module.css";
 
 export const metadata = {
   title: "Mentions légales | Le Geai Informatique",
-  description: "Mentions légales du site Le Geai Informatique.",
+  description: "Mentions légales du site Le Geai Informatique : éditeur, hébergement, propriété intellectuelle, responsabilité, contact.",
+  alternates: { canonical: "https://www.legeai-informatique.fr/mentions-legales" },
+  robots: { index: false },
 };
 
 export default function MentionsLegales() {
   return (
     <>
       <Nav />
+      <main id="main-content">
       <article className={s.legal}>
         <Reveal>
           <h1>Mentions légales</h1>
@@ -92,6 +95,7 @@ export default function MentionsLegales() {
           </section>
         </Reveal>
       </article>
+      </main>
       <Footer />
     </>
   );

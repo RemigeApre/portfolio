@@ -4,15 +4,35 @@
   border-top: 1px solid rgba(180, 154, 74, 0.08);
 }
 
+.services {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.services a {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+
+.services a:hover { color: var(--gold); }
+
 .links {
   display: flex;
   justify-content: center;
   gap: 2rem;
   margin-bottom: 1.2rem;
+  flex-wrap: wrap;
 }
 
 .links a {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;

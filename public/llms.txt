@@ -1,0 +1,47 @@
+# Le Geai Informatique
+> Création de sites web sur mesure, maintenance, Microsoft 365, outils numériques. Basé à Lyon, disponible à Annecy, Clermont-Ferrand et partout en France.
+
+## À propos
+Le Geai Informatique est une entreprise française de services numériques basée à Lyon (69007). Elle conçoit des sites web sur mesure (sans template, sans WordPress), assure leur maintenance dans la durée, structure des environnements Microsoft 365, et développe des outils numériques adaptés aux besoins réels de chaque activité.
+
+## Services
+- Création de site de présentation (dès 800 €)
+- Création de site avec espace de gestion (dès 2 500 €)
+- Création de boutique en ligne (dès 6 000 €)
+- Maintenance et suivi web (dès 39 €/mois)
+- Microsoft 365 : mise en place, formation, support (dès 29 €/utilisateur/mois)
+- Développement d'outils sur mesure (sur devis)
+- Data Engineering
+- Formation informatique
+
+## Zone d'intervention
+Lyon, Villeurbanne, Annecy, Chambéry, Clermont-Ferrand, Grenoble, Saint-Étienne, Valence, et partout en France en distanciel.
+
+## Spécificités
+- Code sur mesure uniquement (pas de template, pas de WordPress)
+- Accompagnement durable, pas de prestation abandonnée après livraison
+- Interlocuteur unique et joignable
+- Approche métier : chaque outil est pensé à partir de l'activité réelle du client
+- Tarifs de lancement inférieurs au marché
+
+## Contact
+- Site : https://www.legeai-informatique.fr
+- Email : administration@legeai-editions.com
+- Téléphone : +33 4 82 53 25 64
+- Adresse : 31 rue Pasteur, 69007 Lyon
+
+## Réalisations
+- Bergfrid (bergfrid.com) : plateforme éditoriale et journalistique
+- Gaio Polart (gaio-polart.legeai-informatique.fr) : site métier pour commerce de terrain
+- Le Geai Informatique (legeai-informatique.fr) : site vitrine haut de gamme
+
+## Pages du site
+- Accueil : https://www.legeai-informatique.fr
+- Création de site web : https://www.legeai-informatique.fr/creation-site-web
+- Maintenance web : https://www.legeai-informatique.fr/maintenance-web
+- Microsoft 365 : https://www.legeai-informatique.fr/microsoft-365
+- Logiciel sur mesure : https://www.legeai-informatique.fr/logiciel-sur-mesure
+- Data engineering et formation : https://www.legeai-informatique.fr/data-engineering
+- Tarifs : https://www.legeai-informatique.fr/tarifs
+- Contact : https://www.legeai-informatique.fr/contact
+- FAQ : https://www.legeai-informatique.fr/faq

@@ -6,11 +6,19 @@ import Footer from "./components/Footer";
 import Reveal from "./components/Reveal";
 import s from "./page.module.css";
 
+export const metadata = {
+  title: "Le Geai Informatique · Sites web sur mesure | Lyon, Annecy",
+  description: "Sites web sur mesure, maintenance durable, Microsoft 365. Développeur expert à Lyon, Annecy, Clermont-Ferrand. Devis gratuit, réponse sous 48h.",
+  alternates: { canonical: "https://www.legeai-informatique.fr" },
+};
+
 export default function Home() {
   return (
     <>
       <Nav />
       <HeroScene />
+      <main id="main-content">
+      <h1 className={s.srOnly}>Le Geai Informatique — Création de sites web sur mesure, maintenance et accompagnement numérique à Lyon</h1>
 
       {/* ═══ MOUVEMENT 2 · SERVIR DANS LA DURÉE ═══ */}
       <section className={s.serve}>
@@ -323,6 +331,7 @@ export default function Home() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );

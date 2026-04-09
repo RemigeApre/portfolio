@@ -4,14 +4,16 @@ import Reveal from "../components/Reveal";
 import s from "./page.module.css";
 
 export const metadata = {
-  title: "Contact | Le Geai Informatique",
-  description: "Contactez Le Geai Informatique. Basé à Lyon, disponible à Annecy, Clermont-Ferrand et partout en France. Réponse sous 48h ouvrées.",
+  title: "Contact et devis gratuit | Le Geai Informatique Lyon",
+  description: "Contactez Le Geai Informatique pour un cadrage gratuit. Site web, maintenance, Microsoft 365. Réponse sous 48h. Lyon, Annecy.",
+  alternates: { canonical: "https://www.legeai-informatique.fr/contact" },
 };
 
 export default function Contact() {
   return (
     <>
       <Nav />
+      <main id="main-content">
       <section className={s.hero}>
         <Reveal>
           <p className="label">Contact</p>
@@ -73,6 +75,7 @@ export default function Contact() {
         </Reveal>
       </section>
 
+      </main>
       <Footer />
     </>
   );

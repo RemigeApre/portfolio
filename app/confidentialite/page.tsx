@@ -5,13 +5,16 @@ import s from "./page.module.css";
 
 export const metadata = {
   title: "Politique de confidentialité | Le Geai Informatique",
-  description: "Politique de confidentialité du site Le Geai Informatique.",
+  description: "Politique de confidentialité Le Geai Informatique : données collectées, finalités, droits des personnes, cookies, sécurité.",
+  alternates: { canonical: "https://www.legeai-informatique.fr/confidentialite" },
+  robots: { index: false },
 };
 
 export default function Confidentialite() {
   return (
     <>
       <Nav />
+      <main id="main-content">
       <article className={s.legal}>
         <Reveal>
           <h1>Politique de confidentialité</h1>
@@ -149,6 +152,7 @@ export default function Confidentialite() {
           </section>
         </Reveal>
       </article>
+      </main>
       <Footer />
     </>
   );
