@@ -139,6 +139,34 @@ const softwareJsonLd = {
     </div>
   </section>
 
+  <section class="windows-notice" id="avertissement-windows" aria-labelledby="windows-notice-title">
+    <div class="container-narrow">
+      <Reveal>
+        <div class="notice-card">
+          <p class="notice-kicker">Note pratique</p>
+          <h2 id="windows-notice-title">Avertissement Windows à l'installation</h2>
+          <p>
+            Sur Windows, à l'ouverture de nos installeurs, un écran bleu Defender
+            s'affiche : « Windows a protégé votre ordinateur ». C'est normal, et
+            sans risque. Cliquez sur <strong>Informations complémentaires</strong>,
+            puis sur <strong>Exécuter quand même</strong>.
+          </p>
+          <p>
+            Pourquoi : nos exécutables ne sont pas signés numériquement. Le
+            certificat de signature de code coûte 150 à 500 € par an, hors budget
+            actuel. Le code reste ouvert et vérifiable, c'est la même garantie en
+            sens inverse.
+          </p>
+          <p class="notice-tip">
+            Si vous souhaitez nous aider à acquérir une signature et faire
+            disparaître cet avertissement, vous pouvez nous soutenir sur
+            <a href="https://fr.tipeee.com/legeai" target="_blank" rel="noopener">tipeee.com/legeai</a>.
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
   <section class="list-wrap">
     <div class="container">
       {error ? (
@@ -285,6 +313,52 @@ const softwareJsonLd = {
     line-height: 1.7;
     font-size: 0.92rem;
   }
+
+  /* Note pratique sur l'avertissement Windows : sobre, encadrée d'un trait doré */
+  .windows-notice {
+    padding: 2rem 1.5rem 0;
+  }
+  .notice-card {
+    border: 1px solid var(--color-border);
+    border-left: 2px solid var(--color-dore);
+    background: var(--color-surface-raised);
+    padding: 1.6rem 1.8rem;
+  }
+  .notice-kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    margin-bottom: 0.5rem;
+  }
+  .notice-card h2 {
+    font-size: 1.15rem;
+    color: var(--color-text);
+    margin-bottom: 0.8rem;
+  }
+  .notice-card p {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+  }
+  .notice-card p:last-child { margin-bottom: 0; }
+  .notice-card strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .notice-tip {
+    padding-top: 0.6rem;
+    border-top: 1px dashed var(--color-border);
+    font-style: italic;
+  }
+  .notice-tip a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .notice-tip a:hover { border-bottom-color: var(--color-dore); }
 
   .list-wrap { padding: 2.5rem 1.5rem 6rem; }
   .error-state {
