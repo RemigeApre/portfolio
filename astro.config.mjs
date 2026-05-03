@@ -16,4 +16,11 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
+  // CSRF gere au niveau applicatif (cf src/lib/security.ts checkOrigin avec allowlist).
+  // Le check natif d'Astro est desactive car il echoue derriere un reverse proxy :
+  // le navigateur envoie Origin: https://... mais Astro recoit la requete en HTTP via NPM,
+  // donc il considere a tort que c'est cross-origin et rejette les POST de formulaire.
+  security: {
+    checkOrigin: false,
+  },
 });
