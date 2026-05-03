@@ -1,0 +1,165 @@
+---
+import '~/styles/global.css';
+import Nav from '~/components/Nav.astro';
+import Footer from '~/components/Footer.astro';
+import JsonLd from '~/components/JsonLd.astro';
+
+export interface ArticleMeta {
+  publishedTime?: string | null;
+  modifiedTime?: string | null;
+  author?: string | null;
+  tags?: string[] | null;
+}
+
+export interface HrefLang {
+  lang: string; // ex: 'fr', 'en', 'x-default'
+  href: string; // URL absolue ou relative
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  hideNav?: boolean;
+  hideFooter?: boolean;
+  articleMeta?: ArticleMeta;
+  // Désactive le JSON-LD global (LocalBusiness / WebSite) si la page injecte le sien.
+  hideDefaultJsonLd?: boolean;
+  // Versions linguistiques alternatives de la même page (hreflang)
+  hreflang?: HrefLang[];
+  // Code langue de la page courante (par défaut : fr)
+  lang?: 'fr' | 'en';
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/LeGeai_logo_monochrome.svg',
+  ogType = 'website',
+  noindex = false,
+  hideNav = false,
+  hideFooter = false,
+  articleMeta,
+  hideDefaultJsonLd = false,
+  hreflang,
+  lang = 'fr',
+} = Astro.props;
+
+const siteUrl = 'https://www.legeai-informatique.fr';
+const fullTitle = title.includes('Le Geai') ? title : `${title} | Le Geai Informatique`;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageAbs = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).toString();
+const isArticle = ogType === 'article' || Boolean(articleMeta);
+const twitterCard = ogImage && !ogImage.endsWith('.svg') ? 'summary_large_image' : 'summary';
+const ogLocale = lang === 'en' ? 'en_GB' : 'fr_FR';
+
+const resolveHref = (h: string) => (h.startsWith('http') ? h : new URL(h, siteUrl).toString());
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {hreflang && hreflang.map((h) => (
+      <link rel="alternate" hreflang={h.lang} href={resolveHref(h.href)} />
+    ))}
+
+    <link rel="alternate" type="application/rss+xml" title="Le Geai Informatique — Le journal" href={`${siteUrl}/rss.xml`} />
+
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {!noindex && <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />}
+
+    <link rel="icon" type="image/svg+xml" href="/LeGeai_logo_monochrome.svg" />
+    <link rel="apple-touch-icon" href="/LeGeai_logo_monochrome.svg" />
+
+    <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content="Le Geai Informatique" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:image:alt" content={`Le Geai Informatique — ${title}`} />
+
+    {isArticle && articleMeta?.publishedTime && (
+      <meta property="article:published_time" content={articleMeta.publishedTime} />
+    )}
+    {isArticle && articleMeta?.modifiedTime && (
+      <meta property="article:modified_time" content={articleMeta.modifiedTime} />
+    )}
+    {isArticle && articleMeta?.author && (
+      <meta property="article:author" content={articleMeta.author} />
+    )}
+    {isArticle && articleMeta?.tags && articleMeta.tags.map((t) => (
+      <meta property="article:tag" content={t} />
+    ))}
+
+    <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbs} />
+
+    <meta name="theme-color" content="#1A1A1A" />
+
+    {!hideDefaultJsonLd && <JsonLd />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Aller au contenu</a>
+    {!hideNav && <Nav />}
+    <main id="main-content">
+      <slot />
+    </main>
+    {!hideFooter && <Footer />}
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { rootMargin: '-60px 0px', threshold: 0.05 }
+      );
+      for (const el of document.querySelectorAll('.reveal')) {
+        observer.observe(el);
+      }
+
+      // Révèle les emails et téléphones encodés dans data-* (anti-scraping).
+      // Sans JS, le HTML ne contient ni "user@domain" ni "mailto:" / "tel:".
+      const decode = (s: string): string =>
+        s.split(',').map((c: string) => String.fromCharCode(parseInt(c, 10))).join('');
+
+      for (const el of document.querySelectorAll<HTMLAnchorElement>('a.protected-email[data-u][data-d]')) {
+        const u = decode(el.dataset.u || '');
+        const d = decode(el.dataset.d || '');
+        if (!u || !d) continue;
+        const addr = u + '@' + d;
+        el.setAttribute('href', 'mailto:' + addr);
+        el.removeAttribute('rel');
+        el.textContent = addr;
+      }
+
+      for (const el of document.querySelectorAll<HTMLAnchorElement>('a.protected-tel[data-n]')) {
+        const n = decode(el.dataset.n || '');
+        if (!n) continue;
+        el.setAttribute('href', 'tel:' + n);
+        el.removeAttribute('rel');
+      }
+    </script>
+  </body>
+</html>

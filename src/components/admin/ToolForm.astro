@@ -1,0 +1,1372 @@
+---
+import { assetUrl } from '~/lib/directus';
+
+interface ToolDownload {
+  os: string;
+  format: string;
+  file: string;
+  size_bytes?: number | null;
+}
+
+interface ExtensionLink {
+  browser: string;
+  url: string;
+}
+
+interface ToolFeature {
+  title_fr: string;
+  title_en?: string | null;
+  description_fr?: string | null;
+  description_en?: string | null;
+}
+
+interface ToolScreenshot {
+  file: string;
+  caption_fr?: string | null;
+  caption_en?: string | null;
+}
+
+interface Tool {
+  id?: string | number;
+  status?: string;
+  app_type?: string;
+  name_fr?: string;
+  name_en?: string | null;
+  tagline_fr?: string | null;
+  tagline_en?: string | null;
+  slug?: string;
+  version?: string | null;
+  license?: string | null;
+  description_fr?: string | null;
+  description_en?: string | null;
+  cover?: string | null;
+  features?: ToolFeature[] | null;
+  screenshots?: ToolScreenshot[] | null;
+  downloads?: ToolDownload[] | null;
+  download_count?: number | null;
+  web_url?: string | null;
+  extension_links?: ExtensionLink[] | null;
+  github_url?: string | null;
+  changelog?: string | null;
+  usage_wiki_fr?: string | null;
+  usage_wiki_en?: string | null;
+  sort?: number | null;
+}
+
+interface Props {
+  tool?: Tool;
+}
+
+const { tool = {} } = Astro.props;
+const isEdit = Boolean(tool.id);
+const initialPublished = tool.status === 'published';
+const initialAppType = tool.app_type ?? 'desktop';
+const downloadsJson = JSON.stringify(tool.downloads ?? []);
+const extLinksJson = JSON.stringify(tool.extension_links ?? []);
+const coverUrl = tool.cover ? assetUrl(tool.cover) : null;
+---
+
+<form id="tool-form" class="admin-form" data-edit={isEdit ? 'true' : 'false'} data-id={tool.id ?? ''}>
+  <div id="form-flash" class="admin-flash" hidden></div>
+
+  <fieldset class="apptype-fs">
+    <legend>Type d'application <span class="hint">détermine ce que l'utilisateur peut faire</span></legend>
+    <div class="apptype-options">
+      <label class="apptype-opt">
+        <input type="radio" name="app_type" value="desktop" checked={initialAppType === 'desktop'} />
+        <span class="apptype-mark"></span>
+        <span class="apptype-content">
+          <strong>Application bureau</strong>
+          <span class="apptype-hint">Téléchargeable, fichier exécutable ou archive par OS</span>
+        </span>
+      </label>
+      <label class="apptype-opt">
+        <input type="radio" name="app_type" value="web" checked={initialAppType === 'web'} />
+        <span class="apptype-mark"></span>
+        <span class="apptype-content">
+          <strong>Application web</strong>
+          <span class="apptype-hint">Lien direct vers le site où l'utiliser</span>
+        </span>
+      </label>
+      <label class="apptype-opt">
+        <input type="radio" name="app_type" value="extension" checked={initialAppType === 'extension'} />
+        <span class="apptype-mark"></span>
+        <span class="apptype-content">
+          <strong>Extension navigateur</strong>
+          <span class="apptype-hint">Liste de liens vers les boutiques (Chrome, Firefox, Edge…)</span>
+        </span>
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="admin-field">
+    <label for="f-name-fr">Nom de l'outil <span class="hint">requis · identique en FR et EN pour la cohérence de marque · slug auto</span></label>
+    <input type="text" id="f-name-fr" name="name_fr" value={tool.name_fr ?? ''} required maxlength="100" />
+  </div>
+
+  <div class="admin-row">
+    <div class="admin-field">
+      <label for="f-tagline-fr">
+        <span class="lf"><span class="lf-flag">FR</span> Accroche</span>
+        <span class="hint">une phrase sous le titre, ~120 car.</span>
+      </label>
+      <input type="text" id="f-tagline-fr" name="tagline_fr" value={tool.tagline_fr ?? ''} maxlength="200" placeholder="Sobre, libre, sans connexion." />
+    </div>
+    <div class="admin-field">
+      <label for="f-tagline-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Tagline</span>
+        <span class="hint">fallback FR si vide</span>
+        <button type="button" class="copy-btn" data-copy-from="f-tagline-fr" data-copy-to="f-tagline-en">↳ FR</button>
+      </label>
+      <input type="text" id="f-tagline-en" name="tagline_en" value={tool.tagline_en ?? ''} maxlength="200" placeholder="Sober, free, no connection." />
+    </div>
+  </div>
+
+  <div class="admin-row cols-3">
+    <div class="admin-field">
+      <label for="f-version">Version</label>
+      <input type="text" id="f-version" name="version" value={tool.version ?? ''} maxlength="40" placeholder="1.0.0" />
+    </div>
+    <div class="admin-field">
+      <label for="f-license">Licence <span class="hint">MIT, GPL-3.0, Source disponible…</span></label>
+      <input type="text" id="f-license" name="license" value={tool.license ?? ''} maxlength="80" placeholder="Source disponible" />
+    </div>
+    <div class="admin-field">
+      <label for="f-sort">Ordre <span class="hint">plus petit = plus haut</span></label>
+      <input type="number" id="f-sort" name="sort" value={tool.sort ?? ''} step="1" />
+    </div>
+  </div>
+
+  <div class="admin-field">
+    <label>État de publication</label>
+    <div class="status-toggle">
+      <label class="toggle-opt">
+        <input type="radio" name="status" value="published" checked={initialPublished} />
+        <span class="opt-mark"></span><span class="opt-text">Publié</span>
+      </label>
+      <label class="toggle-opt">
+        <input type="radio" name="status" value="draft" checked={!initialPublished} />
+        <span class="opt-mark"></span><span class="opt-text">Brouillon</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="admin-row">
+    <div class="admin-field">
+      <label for="f-desc-fr">
+        <span class="lf"><span class="lf-flag">FR</span> Description courte</span>
+        <span class="hint">~200 car., affichée sur la liste</span>
+      </label>
+      <textarea id="f-desc-fr" name="description_fr" rows="3" maxlength="300">{tool.description_fr ?? ''}</textarea>
+    </div>
+    <div class="admin-field">
+      <label for="f-desc-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Short description</span>
+        <span class="hint">fallback FR si vide</span>
+        <button type="button" class="copy-btn" data-copy-from="f-desc-fr" data-copy-to="f-desc-en">↳ FR</button>
+      </label>
+      <textarea id="f-desc-en" name="description_en" rows="3" maxlength="300">{tool.description_en ?? ''}</textarea>
+    </div>
+  </div>
+
+  <fieldset class="features-fs">
+    <legend>Caractéristiques principales <span class="hint">3 à 6, affichées en grille sur la page détail</span></legend>
+    <ul id="features-list" class="features-list"></ul>
+    <button type="button" id="add-feature" class="btn-link">+ Ajouter une caractéristique</button>
+    <input type="hidden" name="features" id="features-json" value={JSON.stringify(tool.features ?? [])} />
+  </fieldset>
+
+  <div class="admin-field">
+    <label>Visuel principal <span class="hint">image héro, optionnelle</span></label>
+    <div class="upload-block" id="cover-block">
+      {coverUrl && (
+        <img src={coverUrl} alt="" class="cover-preview" id="cover-preview" />
+      )}
+      <div class="upload-row">
+        <button type="button" id="cover-pick" class="btn-link">📁 Choisir une image</button>
+        <input type="file" id="cover-file" accept="image/*" hidden />
+        <span id="cover-status" class="upload-status"></span>
+        <button type="button" id="cover-remove" class="btn-link" hidden={!coverUrl}>Retirer</button>
+      </div>
+      <input type="hidden" name="cover" id="cover-uuid" value={tool.cover ?? ''} />
+    </div>
+  </div>
+
+  <fieldset class="screenshots-fs">
+    <legend>Captures d'écran <span class="hint">galerie sur la page détail · upload + légende facultative</span></legend>
+    <ul id="screenshots-list" class="screenshots-list"></ul>
+    <button type="button" id="add-screenshot" class="btn-link">+ Ajouter une capture</button>
+    <input type="hidden" name="screenshots" id="screenshots-json" value={JSON.stringify(tool.screenshots ?? [])} />
+  </fieldset>
+
+  <!-- Section conditionnelle : Téléchargements (desktop) -->
+  <fieldset class="downloads-fs cond-section" data-show-if="desktop">
+    <legend>Téléchargements <span class="hint">un fichier par OS, format détecté depuis l'extension</span></legend>
+    <ul id="downloads-list" class="downloads-list"></ul>
+    <button type="button" id="add-download" class="btn-link add-dl">+ Ajouter un téléchargement</button>
+    <input type="hidden" name="downloads" id="downloads-json" value={downloadsJson} />
+  </fieldset>
+
+  <!-- Section conditionnelle : URL web (web) -->
+  <div class="admin-field cond-section" data-show-if="web">
+    <label for="f-web-url">URL de l'application web <span class="hint">requis si type = application web</span></label>
+    <input type="url" id="f-web-url" name="web_url" value={tool.web_url ?? ''} placeholder="https://..." />
+  </div>
+
+  <!-- Section conditionnelle : Liens extensions (extension) -->
+  <fieldset class="ext-fs cond-section" data-show-if="extension">
+    <legend>Liens vers les boutiques de navigateurs <span class="hint">une entrée par navigateur</span></legend>
+    <ul id="ext-list" class="ext-list"></ul>
+    <button type="button" id="add-ext" class="btn-link">+ Ajouter un navigateur</button>
+    <input type="hidden" name="extension_links" id="ext-json" value={extLinksJson} />
+  </fieldset>
+
+  <div class="admin-field">
+    <label for="f-github">Code source <span class="hint">URL vers GitHub, GitLab... optionnel</span></label>
+    <input type="url" id="f-github" name="github_url" value={tool.github_url ?? ''} placeholder="https://github.com/..." />
+  </div>
+
+  <div class="admin-field">
+    <label for="f-changelog">Journal de mise à jour <span class="hint">technique, langue agnostique · HTML accepté</span></label>
+    <div class="editor-toolbar" data-target="f-changelog">
+      <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Gras"><b>B</b></button>
+      <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italique"><i>I</i></button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="wrap-line" data-before="<h3>" data-after="</h3>">H3</button>
+      <button type="button" data-cmd="link">Lien</button>
+      <button type="button" data-cmd="list" data-tag="ul">Liste •</button>
+    </div>
+    <textarea id="f-changelog" name="changelog" rows="8">{tool.changelog ?? ''}</textarea>
+  </div>
+
+  <div class="admin-field">
+    <label for="f-wiki-fr">
+      <span class="lf"><span class="lf-flag">FR</span> Mini-wiki d'usage</span>
+      <span class="hint">explications, astuces, raccourcis · HTML accepté</span>
+    </label>
+    <div class="editor-toolbar" data-target="f-wiki-fr">
+      <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Gras"><b>B</b></button>
+      <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italique"><i>I</i></button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="wrap-line" data-before="<h2>" data-after="</h2>">H2</button>
+      <button type="button" data-cmd="wrap-line" data-before="<h3>" data-after="</h3>">H3</button>
+      <button type="button" data-cmd="link">Lien</button>
+      <button type="button" data-cmd="list" data-tag="ul">Liste •</button>
+      <button type="button" data-cmd="list" data-tag="ol">Liste 1.</button>
+    </div>
+    <textarea id="f-wiki-fr" name="usage_wiki_fr" rows="10">{tool.usage_wiki_fr ?? ''}</textarea>
+  </div>
+
+  <div class="admin-field">
+    <label for="f-wiki-en">
+      <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Usage wiki</span>
+      <span class="hint">fallback FR si vide</span>
+      <button type="button" class="copy-btn" data-copy-from="f-wiki-fr" data-copy-to="f-wiki-en">↳ Copier FR → EN</button>
+    </label>
+    <div class="editor-toolbar" data-target="f-wiki-en">
+      <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Bold"><b>B</b></button>
+      <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italic"><i>I</i></button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="wrap-line" data-before="<h2>" data-after="</h2>">H2</button>
+      <button type="button" data-cmd="wrap-line" data-before="<h3>" data-after="</h3>">H3</button>
+      <button type="button" data-cmd="link">Link</button>
+      <button type="button" data-cmd="list" data-tag="ul">List •</button>
+    </div>
+    <textarea id="f-wiki-en" name="usage_wiki_en" rows="10">{tool.usage_wiki_en ?? ''}</textarea>
+  </div>
+
+  {isEdit && (
+    <p class="counter-info">
+      Compteur : <strong>{(tool.download_count ?? 0).toLocaleString('fr-FR')}</strong> téléchargement{(tool.download_count ?? 0) > 1 ? 's' : ''} (mis à jour automatiquement)
+    </p>
+  )}
+
+  <div class="admin-form-actions">
+    <button type="submit" class="btn-primary-sm">{isEdit ? 'Enregistrer' : "Créer l'outil"}</button>
+    <a href="/admin/tools" class="btn-link">Annuler</a>
+    {isEdit && (
+      <button type="button" id="delete-btn" class="btn-danger right">Supprimer</button>
+    )}
+  </div>
+</form>
+
+<style>
+  /* Indicateurs visuels langue : drapeau FR/EN dans les labels */
+  .lf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .lf-flag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--color-dore);
+    border: 1px solid var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .copy-btn {
+    margin-left: auto;
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .copy-btn:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+
+  .apptype-fs {
+    border: 1px solid var(--color-border);
+    padding: 1rem 1.2rem;
+    background: var(--color-surface);
+  }
+  .apptype-fs legend {
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .apptype-fs .hint {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-text-dim);
+    text-transform: none;
+    letter-spacing: 0.04em;
+    margin-left: 0.5rem;
+  }
+  .apptype-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+  .apptype-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .apptype-opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .apptype-mark {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease;
+  }
+  .apptype-mark::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-dore);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+  }
+  .apptype-opt input:checked ~ .apptype-mark { border-color: var(--color-dore); }
+  .apptype-opt input:checked ~ .apptype-mark::after { transform: scale(1); }
+  .apptype-opt:has(input:checked) {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .apptype-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .apptype-content strong {
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .apptype-hint {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .status-toggle {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+  }
+  .toggle-opt {
+    display: flex; align-items: center; gap: 0.4rem; cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: all 0.3s ease;
+    flex: 1;
+  }
+  .toggle-opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt-mark {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color 0.3s ease;
+  }
+  .opt-mark::after {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-dore);
+    transform: scale(0); transition: transform 0.2s ease;
+  }
+  .toggle-opt input:checked ~ .opt-mark { border-color: var(--color-dore); }
+  .toggle-opt input:checked ~ .opt-mark::after { transform: scale(1); }
+  .toggle-opt:has(input:checked) {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .opt-text { font-size: 0.9rem; color: var(--color-text); }
+
+  .upload-block {
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  .cover-preview {
+    display: block;
+    max-width: 240px;
+    height: auto;
+    margin-bottom: 0.8rem;
+    border: 1px solid var(--color-border);
+  }
+  .upload-row {
+    display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+  }
+  .upload-status {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+  .upload-status.ok { color: var(--color-dore); }
+  .upload-status.error { color: #f0a4a4; }
+
+  .downloads-fs, .ext-fs {
+    border: 1px solid var(--color-border);
+    padding: 1rem 1.2rem;
+    background: var(--color-surface);
+  }
+  .downloads-fs legend, .ext-fs legend {
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .downloads-fs .hint, .ext-fs .hint {
+    font-style: italic; font-weight: 400;
+    color: var(--color-text-dim); text-transform: none;
+    letter-spacing: 0.04em; margin-left: 0.5rem;
+  }
+  .downloads-list, .ext-list {
+    list-style: none;
+    display: flex; flex-direction: column;
+    gap: 0.6rem;
+    margin: 0.8rem 0;
+  }
+  .download-row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 0.6rem; align-items: center;
+    padding: 0.7rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+  }
+  .ext-row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 0.6rem; align-items: center;
+    padding: 0.7rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+  }
+  .download-row select, .ext-row select, .ext-row input {
+    padding: 0.5rem 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.88rem;
+  }
+  .download-row .file-info {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .download-row .file-info .filename {
+    color: var(--color-text);
+    font-style: italic;
+    word-break: break-all;
+  }
+  .download-row .file-info .size {
+    color: var(--color-text-dim);
+    font-size: 0.78rem;
+  }
+  .download-row .file-info .format-chip {
+    display: inline-block;
+    padding: 0.18rem 0.5rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    border: 1px solid var(--color-border);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .download-row .pick-btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.78rem;
+    border: 1px solid var(--color-border);
+    background: none; color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .download-row .pick-btn:hover { border-color: var(--color-dore); color: var(--color-dore); }
+  .download-row .pick-btn:disabled { opacity: 0.6; cursor: wait; }
+  .download-row .remove-btn, .ext-row .remove-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text-dim); cursor: pointer;
+    font-size: 1.4rem; line-height: 1;
+    padding: 0.2rem 0.5rem;
+    transition: all 0.3s ease;
+  }
+  .download-row .remove-btn:hover, .ext-row .remove-btn:hover {
+    color: #f0a4a4; border-color: #c66;
+  }
+  .add-dl, #add-ext { margin-top: 0.4rem; }
+
+  .editor-toolbar {
+    display: flex; align-items: center; gap: 0.3rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+  }
+  .editor-toolbar button {
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .editor-toolbar button:hover {
+    border-color: var(--color-border);
+    background: rgba(201, 169, 97, 0.06);
+    color: var(--color-dore);
+  }
+  .editor-toolbar .sep {
+    width: 1px; height: 18px;
+    background: var(--color-border);
+    margin: 0 0.3rem;
+  }
+  .editor-toolbar + textarea { border-top: none; }
+
+  .counter-info {
+    font-size: 0.85rem; color: var(--color-text-muted);
+    font-style: italic;
+    padding: 0.8rem 1rem;
+    background: rgba(201, 169, 97, 0.04);
+    border: 1px solid var(--color-border);
+  }
+  .counter-info strong {
+    color: var(--color-dore); font-style: normal; font-size: 1.05rem;
+  }
+
+  .cond-section[hidden] { display: none; }
+
+  /* Features list */
+  .features-fs, .screenshots-fs {
+    border: 1px solid var(--color-border);
+    padding: 1rem 1.2rem;
+    background: var(--color-surface);
+  }
+  .features-fs legend, .screenshots-fs legend {
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .features-fs .hint, .screenshots-fs .hint {
+    font-style: italic; font-weight: 400;
+    color: var(--color-text-dim); text-transform: none;
+    letter-spacing: 0.04em; margin-left: 0.5rem;
+  }
+  .features-list, .screenshots-list {
+    list-style: none;
+    display: flex; flex-direction: column;
+    gap: 0.8rem;
+    margin: 0.8rem 0;
+  }
+  .feature-row, .screenshot-row {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    position: relative;
+  }
+  .feature-row .row-num, .screenshot-row .row-num {
+    position: absolute;
+    top: -10px; left: -10px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--color-dore);
+    color: var(--color-noir);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    font-style: italic;
+  }
+  .feature-row input, .feature-row textarea, .screenshot-row input {
+    padding: 0.5rem 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.88rem;
+    width: 100%;
+  }
+  .feature-row textarea { min-height: 50px; resize: vertical; }
+  .feature-row .row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .feature-row .row-label, .screenshot-row .row-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 0.2rem;
+  }
+  .feature-row .remove-btn, .screenshot-row .remove-btn {
+    position: absolute;
+    top: 0.4rem; right: 0.4rem;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text-dim); cursor: pointer;
+    font-size: 1.3rem; line-height: 1;
+    padding: 0.1rem 0.4rem;
+    transition: all 0.3s ease;
+  }
+  .feature-row .remove-btn:hover, .screenshot-row .remove-btn:hover {
+    color: #f0a4a4; border-color: #c66;
+  }
+  .screenshot-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0.8rem;
+    align-items: center;
+  }
+  .screenshot-thumb {
+    width: 120px; height: 80px;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+  }
+  .screenshot-thumb-empty {
+    width: 120px; height: 80px;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--color-text-dim);
+    font-size: 0.78rem;
+  }
+  .screenshot-row .ss-meta {
+    display: flex; flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 700px) {
+    .apptype-options { grid-template-columns: 1fr; }
+    .download-row, .ext-row { grid-template-columns: 1fr 1fr; }
+    .feature-row .row-grid { grid-template-columns: 1fr; }
+    .screenshot-row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  interface ToolDownload {
+    os: string; format: string; file: string;
+    size_bytes?: number | null;
+    _filename?: string | null;
+  }
+  interface ExtensionLink { browser: string; url: string; }
+
+  const OS_OPTIONS = [
+    { v: 'windows', l: 'Windows' },
+    { v: 'macos', l: 'macOS' },
+    { v: 'linux', l: 'Linux' },
+    { v: 'any', l: 'Toutes plateformes' },
+  ];
+  const FORMAT_LABELS: Record<string, string> = {
+    exe: 'EXE', msi: 'MSI', zip: 'ZIP', dmg: 'DMG',
+    appimage: 'AppImage', deb: 'DEB', targz: 'TAR.GZ',
+  };
+  const BROWSER_OPTIONS = [
+    { v: 'chrome', l: 'Chrome' },
+    { v: 'firefox', l: 'Firefox' },
+    { v: 'edge', l: 'Microsoft Edge' },
+    { v: 'safari', l: 'Safari' },
+    { v: 'brave', l: 'Brave' },
+    { v: 'opera', l: 'Opera' },
+  ];
+
+  function detectFromFilename(filename: string): { format: string; suggestedOs: string | null } {
+    const f = filename.toLowerCase();
+    if (f.endsWith('.tar.gz') || f.endsWith('.tgz')) return { format: 'targz', suggestedOs: 'linux' };
+    if (f.endsWith('.exe')) return { format: 'exe', suggestedOs: 'windows' };
+    if (f.endsWith('.msi')) return { format: 'msi', suggestedOs: 'windows' };
+    if (f.endsWith('.dmg')) return { format: 'dmg', suggestedOs: 'macos' };
+    if (f.endsWith('.deb')) return { format: 'deb', suggestedOs: 'linux' };
+    if (f.endsWith('.appimage')) return { format: 'appimage', suggestedOs: 'linux' };
+    if (f.endsWith('.zip')) return { format: 'zip', suggestedOs: null };
+    return { format: 'zip', suggestedOs: null };
+  }
+
+  const formatBytes = (n: number | null | undefined): string => {
+    if (!n || n <= 0) return '';
+    const u = ['o', 'Ko', 'Mo', 'Go'];
+    let i = 0; let v = n;
+    while (v >= 1024 && i < u.length - 1) { v /= 1024; i++; }
+    return `${v.toFixed(v >= 100 ? 0 : 1)} ${u[i]}`;
+  };
+
+  const form = document.getElementById('tool-form') as HTMLFormElement | null;
+  const flash = document.getElementById('form-flash') as HTMLElement | null;
+  const downloadsJsonEl = document.getElementById('downloads-json') as HTMLInputElement | null;
+  const downloadsListEl = document.getElementById('downloads-list') as HTMLElement | null;
+  const addDlBtn = document.getElementById('add-download');
+  const extJsonEl = document.getElementById('ext-json') as HTMLInputElement | null;
+  const extListEl = document.getElementById('ext-list') as HTMLElement | null;
+  const addExtBtn = document.getElementById('add-ext');
+  const coverPickBtn = document.getElementById('cover-pick');
+  const coverFileEl = document.getElementById('cover-file') as HTMLInputElement | null;
+  const coverStatusEl = document.getElementById('cover-status') as HTMLElement | null;
+  const coverUuidEl = document.getElementById('cover-uuid') as HTMLInputElement | null;
+  const coverRemoveBtn = document.getElementById('cover-remove');
+  const deleteBtn = document.getElementById('delete-btn');
+
+  // ── Conditional sections selon app_type ──
+  const updateCondSections = () => {
+    const checked = form?.querySelector<HTMLInputElement>('input[name="app_type"]:checked');
+    const v = checked?.value ?? 'desktop';
+    document.querySelectorAll<HTMLElement>('.cond-section').forEach((el) => {
+      const showFor = el.dataset.showIf;
+      if (showFor === v) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    });
+  };
+  form?.querySelectorAll<HTMLInputElement>('input[name="app_type"]').forEach((r) => {
+    r.addEventListener('change', updateCondSections);
+  });
+  updateCondSections();
+
+  // ── State downloads ──
+  let downloads: ToolDownload[] = [];
+  if (downloadsJsonEl) {
+    try { downloads = JSON.parse(downloadsJsonEl.value) || []; } catch { downloads = []; }
+  }
+  const syncDownloadsJson = () => {
+    if (downloadsJsonEl) {
+      downloadsJsonEl.value = JSON.stringify(downloads.map(({ _filename, ...rest }) => rest));
+    }
+  };
+
+  const showFlash = (msg: string, ok: boolean) => {
+    if (!flash) return;
+    flash.textContent = msg;
+    flash.className = `admin-flash ${ok ? 'ok' : 'error'}`;
+    flash.removeAttribute('hidden');
+    flash.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  async function uploadFile(file: File): Promise<{ id: string; filename: string; size: number } | null> {
+    const fd = new FormData();
+    fd.append('file', file, file.name);
+    try {
+      const r = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const j = await r.json();
+      if (!r.ok || !j.ok) return null;
+      return { id: j.id, filename: j.filename, size: j.size };
+    } catch {
+      return null;
+    }
+  }
+
+  function renderDownloads() {
+    if (!downloadsListEl) return;
+    downloadsListEl.innerHTML = '';
+    downloads.forEach((d, idx) => {
+      const li = document.createElement('li');
+      li.className = 'download-row';
+
+      const osSel = document.createElement('select');
+      osSel.setAttribute('aria-label', "Système d'exploitation");
+      OS_OPTIONS.forEach((o) => {
+        const opt = document.createElement('option');
+        opt.value = o.v; opt.textContent = o.l;
+        if (o.v === d.os) opt.selected = true;
+        osSel.appendChild(opt);
+      });
+      osSel.addEventListener('change', () => { downloads[idx].os = osSel.value; syncDownloadsJson(); });
+
+      const fileWrap = document.createElement('div');
+      fileWrap.className = 'file-info';
+      const pickBtn = document.createElement('button');
+      pickBtn.type = 'button';
+      pickBtn.className = 'pick-btn';
+      pickBtn.textContent = d.file ? 'Remplacer le fichier' : 'Choisir le fichier (ZIP, EXE, DMG…)';
+      const hiddenFile = document.createElement('input');
+      hiddenFile.type = 'file';
+      hiddenFile.hidden = true;
+      hiddenFile.accept = '.zip,.exe,.msi,.dmg,.deb,.appimage,.tar.gz,.tgz';
+      pickBtn.addEventListener('click', () => hiddenFile.click());
+      hiddenFile.addEventListener('change', async () => {
+        const f = hiddenFile.files?.[0];
+        if (!f) return;
+        pickBtn.disabled = true;
+        pickBtn.textContent = 'Upload en cours...';
+        const res = await uploadFile(f);
+        if (!res) {
+          pickBtn.disabled = false;
+          pickBtn.textContent = d.file ? 'Remplacer le fichier' : 'Choisir le fichier (ZIP, EXE, DMG…)';
+          showFlash('Upload du fichier impossible.', false);
+          return;
+        }
+        const detected = detectFromFilename(res.filename);
+        downloads[idx].file = res.id;
+        downloads[idx].size_bytes = res.size;
+        downloads[idx]._filename = res.filename;
+        downloads[idx].format = detected.format;
+        if (detected.suggestedOs) downloads[idx].os = detected.suggestedOs;
+        syncDownloadsJson();
+        renderDownloads();
+      });
+      fileWrap.appendChild(pickBtn);
+      fileWrap.appendChild(hiddenFile);
+
+      if (d.file) {
+        const fname = document.createElement('span');
+        fname.className = 'filename';
+        fname.textContent = d._filename ? d._filename : '✓ Fichier sauvegardé';
+        fileWrap.appendChild(fname);
+        if (d.size_bytes) {
+          const sz = document.createElement('span');
+          sz.className = 'size'; sz.textContent = formatBytes(d.size_bytes);
+          fileWrap.appendChild(sz);
+        }
+        if (d.format) {
+          const fmt = document.createElement('span');
+          fmt.className = 'format-chip';
+          fmt.textContent = FORMAT_LABELS[d.format] ?? d.format.toUpperCase();
+          fileWrap.appendChild(fmt);
+        }
+      }
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'remove-btn';
+      removeBtn.setAttribute('aria-label', 'Retirer ce téléchargement');
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', () => {
+        downloads.splice(idx, 1);
+        syncDownloadsJson();
+        renderDownloads();
+      });
+
+      li.appendChild(osSel);
+      li.appendChild(fileWrap);
+      li.appendChild(removeBtn);
+      downloadsListEl.appendChild(li);
+    });
+  }
+
+  if (addDlBtn) {
+    addDlBtn.addEventListener('click', () => {
+      downloads.push({ os: 'windows', format: 'exe', file: '', size_bytes: null });
+      syncDownloadsJson();
+      renderDownloads();
+    });
+  }
+  renderDownloads();
+
+  // ── State extension_links ──
+  let extLinks: ExtensionLink[] = [];
+  if (extJsonEl) {
+    try { extLinks = JSON.parse(extJsonEl.value) || []; } catch { extLinks = []; }
+  }
+  const syncExtJson = () => {
+    if (extJsonEl) extJsonEl.value = JSON.stringify(extLinks);
+  };
+
+  function renderExtLinks() {
+    if (!extListEl) return;
+    extListEl.innerHTML = '';
+    extLinks.forEach((e, idx) => {
+      const li = document.createElement('li');
+      li.className = 'ext-row';
+
+      const sel = document.createElement('select');
+      sel.setAttribute('aria-label', 'Navigateur');
+      BROWSER_OPTIONS.forEach((o) => {
+        const opt = document.createElement('option');
+        opt.value = o.v; opt.textContent = o.l;
+        if (o.v === e.browser) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', () => { extLinks[idx].browser = sel.value; syncExtJson(); });
+
+      const inp = document.createElement('input');
+      inp.type = 'url';
+      inp.value = e.url ?? '';
+      inp.placeholder = 'https://chromewebstore.google.com/...';
+      inp.setAttribute('aria-label', 'URL boutique');
+      inp.addEventListener('input', () => { extLinks[idx].url = inp.value; syncExtJson(); });
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'remove-btn';
+      removeBtn.setAttribute('aria-label', 'Retirer ce navigateur');
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', () => {
+        extLinks.splice(idx, 1);
+        syncExtJson(); renderExtLinks();
+      });
+
+      li.appendChild(sel); li.appendChild(inp); li.appendChild(removeBtn);
+      extListEl.appendChild(li);
+    });
+  }
+  if (addExtBtn) {
+    addExtBtn.addEventListener('click', () => {
+      extLinks.push({ browser: 'chrome', url: '' });
+      syncExtJson(); renderExtLinks();
+    });
+  }
+  renderExtLinks();
+
+  // ── State features ──
+  interface ToolFeature {
+    title_fr: string; title_en?: string;
+    description_fr?: string; description_en?: string;
+  }
+  const featuresJsonEl = document.getElementById('features-json') as HTMLInputElement | null;
+  const featuresListEl = document.getElementById('features-list') as HTMLElement | null;
+  const addFeatureBtn = document.getElementById('add-feature');
+
+  let features: ToolFeature[] = [];
+  if (featuresJsonEl) {
+    try { features = JSON.parse(featuresJsonEl.value) || []; } catch { features = []; }
+  }
+  const syncFeaturesJson = () => {
+    if (featuresJsonEl) featuresJsonEl.value = JSON.stringify(features.filter((f) => f.title_fr?.trim()));
+  };
+  function renderFeatures() {
+    if (!featuresListEl) return;
+    featuresListEl.innerHTML = '';
+    features.forEach((f, idx) => {
+      const li = document.createElement('li');
+      li.className = 'feature-row';
+
+      const num = document.createElement('span');
+      num.className = 'row-num'; num.textContent = String(idx + 1);
+      li.appendChild(num);
+
+      const remBtn = document.createElement('button');
+      remBtn.type = 'button'; remBtn.className = 'remove-btn';
+      remBtn.setAttribute('aria-label', 'Retirer cette caractéristique');
+      remBtn.textContent = '×';
+      remBtn.addEventListener('click', () => {
+        features.splice(idx, 1); syncFeaturesJson(); renderFeatures();
+      });
+      li.appendChild(remBtn);
+
+      const grid = document.createElement('div');
+      grid.className = 'row-grid';
+      const titleFrWrap = document.createElement('div');
+      titleFrWrap.innerHTML = '<span class="row-label">Titre · français</span>';
+      const titleFr = document.createElement('input');
+      titleFr.type = 'text'; titleFr.value = f.title_fr ?? '';
+      titleFr.placeholder = 'Sobre par exigence';
+      titleFr.addEventListener('input', () => { features[idx].title_fr = titleFr.value; syncFeaturesJson(); });
+      titleFrWrap.appendChild(titleFr);
+      const titleEnWrap = document.createElement('div');
+      titleEnWrap.innerHTML = '<span class="row-label">Titre · english (fallback FR)</span>';
+      const titleEn = document.createElement('input');
+      titleEn.type = 'text'; titleEn.value = f.title_en ?? '';
+      titleEn.placeholder = 'Sober by exigence';
+      titleEn.addEventListener('input', () => { features[idx].title_en = titleEn.value; syncFeaturesJson(); });
+      titleEnWrap.appendChild(titleEn);
+      grid.appendChild(titleFrWrap);
+      grid.appendChild(titleEnWrap);
+      li.appendChild(grid);
+
+      const descGrid = document.createElement('div');
+      descGrid.className = 'row-grid';
+      const descFrWrap = document.createElement('div');
+      descFrWrap.innerHTML = '<span class="row-label">Description · français</span>';
+      const descFr = document.createElement('textarea');
+      descFr.value = f.description_fr ?? '';
+      descFr.placeholder = 'Une note pèse moins de 80 ko installée.';
+      descFr.addEventListener('input', () => { features[idx].description_fr = descFr.value; syncFeaturesJson(); });
+      descFrWrap.appendChild(descFr);
+      const descEnWrap = document.createElement('div');
+      descEnWrap.innerHTML = '<span class="row-label">Description · english</span>';
+      const descEn = document.createElement('textarea');
+      descEn.value = f.description_en ?? '';
+      descEn.addEventListener('input', () => { features[idx].description_en = descEn.value; syncFeaturesJson(); });
+      descEnWrap.appendChild(descEn);
+      descGrid.appendChild(descFrWrap);
+      descGrid.appendChild(descEnWrap);
+      li.appendChild(descGrid);
+
+      featuresListEl.appendChild(li);
+    });
+  }
+  if (addFeatureBtn) {
+    addFeatureBtn.addEventListener('click', () => {
+      features.push({ title_fr: '', title_en: '', description_fr: '', description_en: '' });
+      syncFeaturesJson(); renderFeatures();
+    });
+  }
+  renderFeatures();
+
+  // ── State screenshots ──
+  interface ToolScreenshot {
+    file: string; caption_fr?: string; caption_en?: string;
+    _previewUrl?: string;
+  }
+  const ssJsonEl = document.getElementById('screenshots-json') as HTMLInputElement | null;
+  const ssListEl = document.getElementById('screenshots-list') as HTMLElement | null;
+  const addSsBtn = document.getElementById('add-screenshot');
+
+  let screenshots: ToolScreenshot[] = [];
+  if (ssJsonEl) {
+    try { screenshots = JSON.parse(ssJsonEl.value) || []; } catch { screenshots = []; }
+  }
+  const syncSsJson = () => {
+    if (ssJsonEl) ssJsonEl.value = JSON.stringify(screenshots
+      .filter((s) => s.file)
+      .map(({ _previewUrl, ...rest }) => rest));
+  };
+  function renderScreenshots() {
+    if (!ssListEl) return;
+    ssListEl.innerHTML = '';
+    screenshots.forEach((s, idx) => {
+      const li = document.createElement('li');
+      li.className = 'screenshot-row';
+
+      const num = document.createElement('span');
+      num.className = 'row-num'; num.textContent = String(idx + 1);
+      li.appendChild(num);
+
+      // Thumb (preview ou existing asset)
+      let thumb;
+      if (s._previewUrl) {
+        thumb = document.createElement('img');
+        thumb.src = s._previewUrl; thumb.className = 'screenshot-thumb'; thumb.alt = '';
+      } else if (s.file) {
+        thumb = document.createElement('img');
+        thumb.src = `${window.location.origin.replace(':3000', ':8055')}/assets/${s.file}?width=240&height=160&fit=cover`;
+        thumb.className = 'screenshot-thumb'; thumb.alt = '';
+      } else {
+        thumb = document.createElement('div');
+        thumb.className = 'screenshot-thumb-empty';
+        thumb.textContent = 'Aucune image';
+      }
+      li.appendChild(thumb);
+
+      const meta = document.createElement('div');
+      meta.className = 'ss-meta';
+
+      const pickBtn = document.createElement('button');
+      pickBtn.type = 'button'; pickBtn.className = 'pick-btn';
+      pickBtn.textContent = s.file ? 'Remplacer l\'image' : 'Choisir une image';
+      const hidden = document.createElement('input');
+      hidden.type = 'file'; hidden.hidden = true; hidden.accept = 'image/*';
+      pickBtn.addEventListener('click', () => hidden.click());
+      hidden.addEventListener('change', async () => {
+        const f = hidden.files?.[0];
+        if (!f) return;
+        pickBtn.disabled = true;
+        pickBtn.textContent = 'Upload en cours...';
+        const res = await uploadFile(f);
+        if (!res) {
+          pickBtn.disabled = false;
+          pickBtn.textContent = s.file ? 'Remplacer l\'image' : 'Choisir une image';
+          showFlash('Upload de la capture impossible.', false);
+          return;
+        }
+        screenshots[idx].file = res.id;
+        screenshots[idx]._previewUrl = URL.createObjectURL(f);
+        syncSsJson();
+        renderScreenshots();
+      });
+      meta.appendChild(pickBtn);
+      meta.appendChild(hidden);
+
+      const capFr = document.createElement('input');
+      capFr.type = 'text'; capFr.value = s.caption_fr ?? '';
+      capFr.placeholder = 'Légende française (facultative)';
+      capFr.addEventListener('input', () => { screenshots[idx].caption_fr = capFr.value; syncSsJson(); });
+      meta.appendChild(capFr);
+
+      const capEn = document.createElement('input');
+      capEn.type = 'text'; capEn.value = s.caption_en ?? '';
+      capEn.placeholder = 'Caption english (optional)';
+      capEn.addEventListener('input', () => { screenshots[idx].caption_en = capEn.value; syncSsJson(); });
+      meta.appendChild(capEn);
+
+      const remBtn = document.createElement('button');
+      remBtn.type = 'button'; remBtn.className = 'remove-btn';
+      remBtn.setAttribute('aria-label', 'Retirer cette capture');
+      remBtn.textContent = '×';
+      remBtn.addEventListener('click', () => {
+        screenshots.splice(idx, 1); syncSsJson(); renderScreenshots();
+      });
+      li.appendChild(remBtn);
+
+      li.appendChild(meta);
+      ssListEl.appendChild(li);
+    });
+  }
+  if (addSsBtn) {
+    addSsBtn.addEventListener('click', () => {
+      screenshots.push({ file: '', caption_fr: '', caption_en: '' });
+      syncSsJson(); renderScreenshots();
+    });
+  }
+  renderScreenshots();
+
+  // ── Cover upload ──
+  if (coverPickBtn && coverFileEl) {
+    coverPickBtn.addEventListener('click', () => coverFileEl.click());
+    coverFileEl.addEventListener('change', async () => {
+      const f = coverFileEl.files?.[0];
+      if (!f) return;
+      if (coverStatusEl) {
+        coverStatusEl.className = 'upload-status'; coverStatusEl.textContent = 'Upload en cours...';
+      }
+      const res = await uploadFile(f);
+      if (!res) {
+        if (coverStatusEl) {
+          coverStatusEl.className = 'upload-status error';
+          coverStatusEl.textContent = 'Upload impossible.';
+        }
+        return;
+      }
+      if (coverUuidEl) coverUuidEl.value = res.id;
+      if (coverStatusEl) {
+        coverStatusEl.className = 'upload-status ok';
+        coverStatusEl.textContent = `✓ ${res.filename} (${formatBytes(res.size)})`;
+      }
+      const existingPreview = document.getElementById('cover-preview') as HTMLImageElement | null;
+      if (existingPreview) {
+        existingPreview.src = URL.createObjectURL(f);
+      } else {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        img.alt = ''; img.className = 'cover-preview'; img.id = 'cover-preview';
+        document.getElementById('cover-block')?.prepend(img);
+      }
+      if (coverRemoveBtn) coverRemoveBtn.removeAttribute('hidden');
+    });
+  }
+  if (coverRemoveBtn) {
+    coverRemoveBtn.addEventListener('click', () => {
+      if (coverUuidEl) coverUuidEl.value = '';
+      if (coverStatusEl) {
+        coverStatusEl.className = 'upload-status'; coverStatusEl.textContent = '';
+      }
+      const img = document.getElementById('cover-preview');
+      if (img) img.remove();
+      coverRemoveBtn.setAttribute('hidden', '');
+    });
+  }
+
+  // ── Toolbars (changelog, wikis) ──
+  document.querySelectorAll<HTMLElement>('.editor-toolbar').forEach((tb) => {
+    const targetId = tb.dataset.target;
+    if (!targetId) return;
+    const ta = document.getElementById(targetId) as HTMLTextAreaElement | null;
+    if (!ta) return;
+    const wrap = (before: string, after: string) => {
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      const sel = ta.value.slice(start, end);
+      ta.value = ta.value.slice(0, start) + before + sel + after + ta.value.slice(end);
+      ta.focus();
+      ta.setSelectionRange(start + before.length, start + before.length + sel.length);
+    };
+    const wrapLine = (before: string, after: string) => {
+      const v = ta.value;
+      let s = ta.selectionStart, e = ta.selectionEnd;
+      while (s > 0 && v[s - 1] !== '\n') s--;
+      while (e < v.length && v[e] !== '\n') e++;
+      const sel = v.slice(s, e);
+      ta.value = v.slice(0, s) + before + sel + after + v.slice(e);
+      ta.focus();
+      ta.setSelectionRange(s + before.length, s + before.length + sel.length);
+    };
+    const list = (tag: string) => {
+      const v = ta.value;
+      let s = ta.selectionStart, e = ta.selectionEnd;
+      while (s > 0 && v[s - 1] !== '\n') s--;
+      while (e < v.length && v[e] !== '\n') e++;
+      const sel = v.slice(s, e).trim();
+      const lines = sel ? sel.split('\n').filter((l) => l.trim()) : ['Premier item'];
+      const wrapped = `<${tag}>\n` + lines.map((l) => `  <li>${l.trim()}</li>`).join('\n') + `\n</${tag}>`;
+      ta.value = v.slice(0, s) + wrapped + v.slice(e);
+      ta.focus();
+    };
+    const link = () => {
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      const sel = ta.value.slice(start, end) || 'texte du lien';
+      const url = prompt('URL du lien (ex: https://...) :', 'https://');
+      if (!url) return;
+      const before = `<a href="${url}">`, after = '</a>';
+      ta.value = ta.value.slice(0, start) + before + sel + after + ta.value.slice(end);
+      ta.focus();
+    };
+    tb.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.dataset.cmd;
+        if (cmd === 'wrap') wrap(btn.dataset.before ?? '', btn.dataset.after ?? '');
+        else if (cmd === 'wrap-line') wrapLine(btn.dataset.before ?? '', btn.dataset.after ?? '');
+        else if (cmd === 'list') list(btn.dataset.tag ?? 'ul');
+        else if (cmd === 'link') link();
+      });
+    });
+  });
+
+  // ── Submit ──
+  if (form && flash) {
+    const isEdit = form.dataset.edit === 'true';
+    const id = form.dataset.id;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      flash.setAttribute('hidden', '');
+      const data = new FormData(form);
+      const sortStr = String(data.get('sort') ?? '').trim();
+      const appType = String(data.get('app_type') ?? 'desktop');
+      let parsedDownloads: unknown[] = [];
+      try { parsedDownloads = JSON.parse(String(data.get('downloads') ?? '[]')); } catch {}
+      let parsedExt: unknown[] = [];
+      try { parsedExt = JSON.parse(String(data.get('extension_links') ?? '[]')); } catch {}
+
+      let parsedFeatures: unknown[] = [];
+      try { parsedFeatures = JSON.parse(String(data.get('features') ?? '[]')); } catch {}
+      let parsedScreenshots: unknown[] = [];
+      try { parsedScreenshots = JSON.parse(String(data.get('screenshots') ?? '[]')); } catch {}
+
+      const payload: Record<string, unknown> = {
+        app_type: appType,
+        name_fr: String(data.get('name_fr') ?? '').trim(),
+        tagline_fr: String(data.get('tagline_fr') ?? '').trim() || null,
+        tagline_en: String(data.get('tagline_en') ?? '').trim() || null,
+        version: String(data.get('version') ?? '').trim() || null,
+        license: String(data.get('license') ?? '').trim() || null,
+        description_fr: String(data.get('description_fr') ?? '').trim() || null,
+        description_en: String(data.get('description_en') ?? '').trim() || null,
+        cover: String(data.get('cover') ?? '').trim() || null,
+        screenshots: parsedScreenshots,
+        features: parsedFeatures,
+        downloads: parsedDownloads,
+        web_url: String(data.get('web_url') ?? '').trim() || null,
+        extension_links: parsedExt,
+        github_url: String(data.get('github_url') ?? '').trim() || null,
+        changelog: String(data.get('changelog') ?? '') || null,
+        usage_wiki_fr: String(data.get('usage_wiki_fr') ?? '') || null,
+        usage_wiki_en: String(data.get('usage_wiki_en') ?? '') || null,
+        status: String(data.get('status') ?? 'draft'),
+        sort: sortStr ? Number(sortStr) : null,
+      };
+
+      const url = isEdit ? `/api/admin/tools/${id}` : '/api/admin/tools';
+      const method = isEdit ? 'PATCH' : 'POST';
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const r = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json();
+        if (r.ok && j.ok) {
+          if (!isEdit && j.id) {
+            window.location.href = `/admin/tools/${j.id}?ok=created`;
+          } else {
+            showFlash('Enregistré.', true);
+          }
+        } else {
+          showFlash(j.error ?? "Erreur lors de l'enregistrement.", false);
+        }
+      } catch {
+        showFlash('Connexion impossible.', false);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async () => {
+        if (!confirm('Supprimer cet outil définitivement ?')) return;
+        try {
+          const r = await fetch(`/api/admin/tools/${id}`, { method: 'DELETE' });
+          if (r.ok) window.location.href = '/admin/tools?ok=deleted';
+          else showFlash('Suppression impossible.', false);
+        } catch {
+          showFlash('Connexion impossible.', false);
+        }
+      });
+    }
+  }
+
+  // Copier FR → EN sur tous les boutons .copy-btn
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fromId = btn.dataset.copyFrom;
+      const toId = btn.dataset.copyTo;
+      if (!fromId || !toId) return;
+      const from = document.getElementById(fromId) as HTMLInputElement | HTMLTextAreaElement | null;
+      const to = document.getElementById(toId) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (!from || !to) return;
+      if (to.value && !confirm("Le champ EN contient déjà du texte. L'écraser ?")) return;
+      to.value = from.value;
+      to.dispatchEvent(new Event('input', { bubbles: true }));
+      to.focus();
+    });
+  });
+</script>

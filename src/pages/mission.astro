@@ -1,0 +1,380 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { buildHreflang } from '~/lib/i18n';
+---
+
+<BaseLayout
+  title="Notre mission · Le Geai Informatique"
+  description="Le Geai Informatique est la branche numérique de la maison Le Geai. Une vision : minimaliste, sécurisée, tournée vers l'expérience et la beauté. Un modèle qui finance l'art et accueille des stagiaires dans un cadre humain."
+  hreflang={buildHreflang('/mission', 'fr')}
+>
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Une idée, une mystique</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="motto">
+          <em>Obscuritas nutrit flammam.</em>
+          <span class="motto-fr">L'obscurité nourrit la flamme.</span>
+        </p>
+      </Reveal>
+      <Reveal delay={300}>
+        <p class="lead">
+          Le Geai Informatique n'est pas une agence web. C'est l'atelier numérique
+          d'une maison plus vaste, fondé sur une exigence simple : faire bien,
+          pour servir l'art et celles et ceux qui passent par là.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Une branche, un atelier</h2>
+        <p>
+          Le Geai Informatique est la branche numérique de Le Geai, maison
+          d'éditions. Ce que nous bâtissons en code, en interfaces, en outils,
+          ne sert pas uniquement le client qui nous mandate ; cela soutient un
+          dessein plus large que la prestation, et que vous trouverez décrit plus
+          bas.
+        </p>
+        <p>
+          Nous avons des outils, des compétences et du temps. Mais nous portons
+          surtout une vision et une empathie pour ceux que nous accompagnons,
+          ainsi qu'un dégoût pour les sites conventionnels, ces grandes vitrines
+          fades qui se ressemblent toutes. Nous proposons donc notre vision de
+          l'informatique.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-soft">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Notre vision</h2>
+        <p class="lead">
+          Quatre exigences traversent chacun de nos ouvrages.
+        </p>
+      </Reveal>
+      <div class="pillars">
+        <Reveal delay={100}>
+          <div class="pillar">
+            <p class="pillar-num">I</p>
+            <h3>Minimaliste</h3>
+            <p>
+              Chaque ligne de code, chaque pixel, chaque mot doit avoir sa raison
+              d'être. Le superflu encombre, alourdit, brouille. Nous l'écartons.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={150}>
+          <div class="pillar">
+            <p class="pillar-num">II</p>
+            <h3>Sécurisé</h3>
+            <p>
+              Vos données et celles de vos clients sont une responsabilité, pas
+              une marchandise. Nous bâtissons sobrement, sans dépendances inutiles,
+              dans le respect du RGPD.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={200}>
+          <div class="pillar">
+            <p class="pillar-num">III</p>
+            <h3>Tourné vers l'usage</h3>
+            <p>
+              Un outil n'a de sens que s'il sert quelqu'un. Nous concevons nos
+              ouvrages à partir de votre activité réelle, jamais à partir d'un
+              modèle abstrait.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={250}>
+          <div class="pillar">
+            <p class="pillar-num">IV</p>
+            <h3>Beau</h3>
+            <p>
+              Car la beauté n'est pas un luxe, c'est une condition. Nous prêtons
+              à chaque ouvrage l'attention qu'il mérite, dans la lignée de ce que
+              Dostoïevski écrivait : la beauté sauvera le monde.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Le pacte</h2>
+        <p>
+          Nous travaillons l'informatique pour financer ce que nous portons par
+          ailleurs : la maison d'éditions, l'impression de nos livres, les
+          illustrateurs et les artistes que nous rémunérons. C'est aussi pour
+          cette raison que nos tarifs restent raisonnables, là où d'autres
+          gonflent les leurs.
+        </p>
+        <p>
+          Devenir notre client, ce n'est pas seulement avoir un site. C'est
+          obtenir un outil viable, pensé pour vous, et financer en même temps
+          de l'art, des emplois et des projets d'avenir à échelle humaine.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-soft">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Celles et ceux qui rejoignent l'atelier</h2>
+        <p>
+          Le fondateur a connu la galère du stage non trouvé, du temps gâché
+          à frapper aux mauvaises portes. Nous accueillons donc régulièrement
+          des stagiaires et, lorsque le cadre s'y prête, des alternants. Notre
+          objectif est de les conserver en CDI lorsque la mission s'achève bien.
+        </p>
+        <p>
+          Le cadre que nous offrons est pensé pour permettre un travail vrai et
+          une vie humaine en même temps :
+        </p>
+        <ul class="list-clean">
+          <li>Télétravail majoritaire, présentiel possible quand le besoin s'en fait sentir.</li>
+          <li>Pas d'horaire fixe imposé, tant que le travail est livré à temps et bien fait.</li>
+          <li>Possibilité de prendre des vacances, y compris pour les stagiaires.</li>
+          <li>Souplesse menstruelle : congé pris sans incidence sur la mission ni sur les jours de repos.</li>
+          <li>Une amicalité qui prime sur la hiérarchie, et un cadre de travail fluide.</li>
+        </ul>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>L'horizon</h2>
+        <p>
+          À terme, nous souhaitons ouvrir une boutique tenue par la maison Le Geai.
+          On y vendrait nos livres, des objets anciens choisis pour leur tenue
+          esthétique, et l'on y ouvrirait tard le soir pour offrir un refuge à
+          celles et ceux qui en ont besoin. Un lieu où la lumière reste allumée.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="mystique">
+    <div class="container-narrow">
+      <Reveal>
+        <p class="mystique-text">
+          Le Geai Informatique n'est pas une boîte de web. C'est, pour reprendre
+          le mot de Charles Péguy, une <em>mystique</em> : une idée vivante que
+          nous essayons de maintenir sans la faire tomber.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Le premier rendez-vous est offert</h2>
+        <p class="lead">
+          Décrivez votre activité, ce que vous cherchez à construire, ce qui
+          mérite d'être repris. Nous reviendrons avec une proposition juste.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href="/contact" class="btn-primary">Échanger sur votre projet</a>
+          <a href="/portfolio" class="btn-ghost">Voir les réalisations</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 8rem 1.5rem 4rem;
+    text-align: center;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+  }
+  .motto {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .motto em {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    font-style: italic;
+    color: var(--color-dore);
+    letter-spacing: 0.04em;
+  }
+  .motto-fr {
+    font-size: 0.9rem;
+    color: var(--color-text-dim);
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+  .lead {
+    max-width: 620px;
+    margin: 2rem auto 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .block {
+    padding: 5rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .block-soft {
+    background: var(--color-surface-raised);
+  }
+  .block h2 {
+    text-align: center;
+    font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+    margin-bottom: 2rem;
+  }
+  .block p {
+    color: var(--color-text-muted);
+    line-height: 1.85;
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+  }
+  .block p em {
+    color: var(--color-dore);
+    font-style: italic;
+  }
+  .block .lead {
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem;
+    margin-top: 1.5rem;
+  }
+  .pillar {
+    padding: 1.8rem 1.6rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .pillar-num {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--color-dore);
+    opacity: 0.7;
+    margin-bottom: 0.4rem;
+  }
+  .pillar h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.7rem;
+  }
+  .pillar p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+
+  .list-clean {
+    list-style: none;
+    margin: 1rem 0;
+  }
+  .list-clean li {
+    padding: 0.6rem 0 0.6rem 1.6rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    position: relative;
+  }
+  .list-clean li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.2rem;
+    width: 10px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+
+  .mystique {
+    padding: 6rem 1.5rem;
+    text-align: center;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mystique-text {
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    color: var(--color-text);
+    line-height: 1.7;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+  .mystique-text em {
+    color: var(--color-dore);
+    font-weight: 700;
+  }
+
+  .cta {
+    padding: 6rem 1.5rem;
+    text-align: center;
+  }
+  .cta h2 {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+  }
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+
+  @media (max-width: 700px) {
+    .pillars { grid-template-columns: 1fr; }
+  }
+</style>

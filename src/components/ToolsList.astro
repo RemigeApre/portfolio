@@ -1,0 +1,373 @@
+---
+import { assetUrl, type Tool } from '~/lib/directus';
+
+interface Props {
+  tools: Tool[];
+  lang: 'fr' | 'en';
+  toolBaseHref: string; // ex: '/nos-outils' ou '/en/our-tools'
+}
+
+const { tools, lang, toolBaseHref } = Astro.props;
+
+const t = lang === 'en'
+  ? {
+      noTools: 'No tools published yet. The first ones are coming soon.',
+      total: 'Total downloads',
+      filterAll: 'All',
+      filterDesktop: 'Desktop apps',
+      filterWeb: 'Web apps',
+      filterExtension: 'Browser extensions',
+      osAll: 'All OS',
+      osWindows: 'Windows',
+      osMacos: 'macOS',
+      osLinux: 'Linux',
+      learnMore: 'See details',
+      noResults: 'No tool matches the selected filters.',
+      typeDesktop: 'Desktop',
+      typeWeb: 'Web',
+      typeExtension: 'Extension',
+      downloads: 'downloads',
+    }
+  : {
+      noTools: 'Aucun outil publié pour le moment. Les premiers paraîtront bientôt.',
+      total: 'Téléchargements au total',
+      filterAll: 'Tout',
+      filterDesktop: 'Applications bureau',
+      filterWeb: 'Applications web',
+      filterExtension: 'Extensions navigateur',
+      osAll: 'Tous OS',
+      osWindows: 'Windows',
+      osMacos: 'macOS',
+      osLinux: 'Linux',
+      learnMore: 'Voir le détail',
+      noResults: 'Aucun outil ne correspond aux filtres sélectionnés.',
+      typeDesktop: 'Bureau',
+      typeWeb: 'Web',
+      typeExtension: 'Extension',
+      downloads: 'téléchargements',
+    };
+
+const totalDownloads = tools.reduce((sum, x) => sum + (x.download_count ?? 0), 0);
+
+const platformsForTool = (tool: Tool): string[] => {
+  if (tool.app_type === 'desktop') {
+    return Array.from(new Set((tool.downloads ?? []).map((d) => d.os)));
+  }
+  return [];
+};
+
+const TYPE_BADGES: Record<string, string> = {
+  desktop: t.typeDesktop,
+  web: t.typeWeb,
+  extension: t.typeExtension,
+};
+---
+
+{tools.length === 0 ? (
+  <p class="empty">{t.noTools}</p>
+) : (
+  <>
+    <nav class="tools-filters" aria-label="Filtres">
+      <div class="filter-group" data-filter-group="type">
+        <button type="button" class="filter-btn is-active" data-filter-type="all">{t.filterAll}</button>
+        <button type="button" class="filter-btn" data-filter-type="desktop">{t.filterDesktop}</button>
+        <button type="button" class="filter-btn" data-filter-type="web">{t.filterWeb}</button>
+        <button type="button" class="filter-btn" data-filter-type="extension">{t.filterExtension}</button>
+      </div>
+      <div class="filter-group" data-filter-group="os" id="os-filter-group">
+        <button type="button" class="filter-btn is-active" data-filter-os="all">{t.osAll}</button>
+        <button type="button" class="filter-btn" data-filter-os="windows">{t.osWindows}</button>
+        <button type="button" class="filter-btn" data-filter-os="macos">{t.osMacos}</button>
+        <button type="button" class="filter-btn" data-filter-os="linux">{t.osLinux}</button>
+      </div>
+    </nav>
+
+    <p class="no-results" id="no-results" hidden>{t.noResults}</p>
+
+    <ul class="tools-list" id="tools-list">
+      {tools.map((tool, idx) => {
+        const name = tool.name_fr;
+        const tagline = lang === 'en' ? (tool.tagline_en || tool.tagline_fr) : tool.tagline_fr;
+        const description = lang === 'en' ? (tool.description_en || tool.description_fr) : tool.description_fr;
+        const cover = assetUrl(tool.cover) ?? (tool.screenshots?.[0]?.file ? assetUrl(tool.screenshots[0].file) : null);
+        const platforms = platformsForTool(tool);
+        const isFeatured = idx === 0 && (tool.download_count ?? 0) > 0;
+        return (
+          <li
+            class="tool-item"
+            data-app-type={tool.app_type}
+            data-platforms={platforms.join(',')}
+          >
+            <article class={`tool-card${isFeatured ? ' tool-card-featured' : ''}`}>
+              <a href={`${toolBaseHref}/${tool.slug}`} class="tool-link">
+                {cover && <img src={cover} alt="" class="tool-cover" loading="lazy" />}
+                <div class="tool-body">
+                  {isFeatured && (
+                    <p class="featured-badge">{lang === 'en' ? '★ Most downloaded' : '★ Le plus téléchargé'}</p>
+                  )}
+                  <header class="tool-head">
+                    <h2>{name}</h2>
+                    <span class={`type-badge type-${tool.app_type}`}>{TYPE_BADGES[tool.app_type] ?? tool.app_type}</span>
+                  </header>
+                  {tagline && <p class="tool-tagline">{tagline}</p>}
+                  {tool.version && <p class="tool-version">v{tool.version}</p>}
+                  {description && !tagline && <p class="tool-description">{description}</p>}
+                  {platforms.length > 0 && (
+                    <ul class="tool-platforms" aria-label="Plateformes">
+                      {platforms.map((p) => <li class="plat-tag">{p}</li>)}
+                    </ul>
+                  )}
+                  <footer class="tool-foot">
+                    <span class="tool-stat">
+                      <strong>{(tool.download_count ?? 0).toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR')}</strong>
+                      {' '}{t.downloads}
+                    </span>
+                    <span class="tool-cta" aria-hidden="true">{t.learnMore} →</span>
+                  </footer>
+                </div>
+              </a>
+            </article>
+          </li>
+        );
+      })}
+    </ul>
+  </>
+)}
+
+<script>
+  // ── Filtres : combinaison type + OS ──
+  let activeType = 'all';
+  let activeOs = 'all';
+
+  const items = document.querySelectorAll<HTMLLIElement>('#tools-list .tool-item');
+  const noResults = document.getElementById('no-results');
+  const osGroup = document.getElementById('os-filter-group');
+
+  const applyFilters = () => {
+    let visible = 0;
+    items.forEach((li) => {
+      const type = li.dataset.appType ?? '';
+      const platforms = (li.dataset.platforms ?? '').split(',').filter(Boolean);
+      const matchesType = activeType === 'all' || type === activeType;
+      const matchesOs = activeOs === 'all' ||
+        (type === 'desktop' && (platforms.includes(activeOs) || platforms.includes('any')));
+      const show = matchesType && (activeType !== 'desktop' ? true : matchesOs);
+      // Sauf si on filtre par OS, on n'applique pas le filtre OS
+      const finalShow = activeOs === 'all' ? matchesType : matchesType && (type === 'desktop' && (platforms.includes(activeOs) || platforms.includes('any')));
+      li.style.display = finalShow ? '' : 'none';
+      if (finalShow) visible++;
+    });
+    if (noResults) {
+      if (visible === 0) noResults.removeAttribute('hidden');
+      else noResults.setAttribute('hidden', '');
+    }
+    // Afficher / masquer les filtres OS selon le type sélectionné
+    if (osGroup) {
+      if (activeType === 'all' || activeType === 'desktop') {
+        osGroup.style.display = '';
+      } else {
+        osGroup.style.display = 'none';
+        activeOs = 'all'; // reset
+        osGroup.querySelectorAll<HTMLButtonElement>('.filter-btn').forEach((b) => {
+          b.classList.toggle('is-active', b.dataset.filterOs === 'all');
+        });
+      }
+    }
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-filter-type]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeType = btn.dataset.filterType ?? 'all';
+      btn.parentElement?.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      applyFilters();
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-filter-os]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeOs = btn.dataset.filterOs ?? 'all';
+      btn.parentElement?.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      applyFilters();
+    });
+  });
+</script>
+
+<style>
+  .empty {
+    text-align: center;
+    padding: 4rem 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .tools-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .filter-group {
+    display: flex; gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 0.45rem 1rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .filter-btn:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+  .filter-btn.is-active {
+    background: rgba(201, 169, 97, 0.1);
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .tools-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.4rem;
+  }
+  .tool-card {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    height: 100%;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .tool-card:hover {
+    border-color: var(--color-dore);
+    transform: translateY(-2px);
+  }
+  .tool-card-featured {
+    border-color: var(--color-dore);
+    background: linear-gradient(180deg, rgba(201, 169, 97, 0.06) 0%, var(--color-surface-raised) 30%);
+  }
+  .featured-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    margin-bottom: 0.4rem;
+  }
+  .tool-tagline {
+    font-style: italic;
+    color: var(--color-text);
+    line-height: 1.55;
+    font-size: 1rem;
+  }
+  .tool-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+  }
+  .tool-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tool-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+  }
+  .tool-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .tool-head h2 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+  }
+  .type-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+  .type-desktop { color: var(--color-dore); border-color: rgba(201, 169, 97, 0.4); background: rgba(201, 169, 97, 0.06); }
+  .type-web { color: #a3c9a3; border-color: rgba(140, 175, 130, 0.4); background: rgba(140, 175, 130, 0.06); }
+  .type-extension { color: #b8aee0; border-color: rgba(150, 140, 200, 0.4); background: rgba(150, 140, 200, 0.06); }
+
+  .tool-version {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+  }
+  .tool-description {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+  .tool-platforms {
+    list-style: none;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .plat-tag {
+    padding: 0.18rem 0.55rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    border: 1px solid var(--color-border);
+  }
+  .tool-foot {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  .tool-stat strong {
+    color: var(--color-dore);
+    font-style: italic;
+    font-size: 1rem;
+  }
+  .tool-cta {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+  .tool-card:hover .tool-cta { color: var(--color-dore); }
+</style>

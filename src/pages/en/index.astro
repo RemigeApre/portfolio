@@ -1,0 +1,677 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import HeroScene from '~/components/HeroScene.astro';
+import FriezeLine from '~/components/FriezeLine.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+const tarifs = [
+  { label: 'Showcase website', value: '€900' },
+  { label: 'Website with management area', value: 'from €2,800' },
+  { label: 'E-commerce website', value: 'from €6,500' },
+  { label: 'Custom software', value: 'on quote' },
+  { label: 'Web maintenance', value: 'from €39 / month' },
+];
+
+const realisations = [
+  {
+    title: 'Bergfrid',
+    sub: 'Editorial platform',
+    body: 'Publication architecture, information hierarchy, navigation between contents, sense of duration.',
+    href: 'https://bergfrid.com',
+    cta: 'Visit the project',
+    accent: 'cinder',
+  },
+  {
+    title: 'Gaio Polart',
+    sub: 'Field commerce',
+    body: 'Commercial presence, daily uses, shared lists, progressive logic.',
+    href: 'https://gaio-polart.legeai-informatique.fr/',
+    cta: 'Visit the project',
+    accent: 'moss',
+  },
+  {
+    title: 'Le Geai Informatique',
+    sub: 'Our own showcase',
+    body: 'Hierarchy, matter, rhythm, legibility, contact: a demonstration applied to our own house.',
+    here: true,
+    accent: 'amethyst',
+  },
+];
+
+const hreflang = buildHreflang('/en', 'en');
+---
+
+<BaseLayout
+  title="Le Geai Informatique · Bespoke websites and software"
+  description="Digital craftsmanship for independents, artisans and small firms. Bespoke websites and lasting maintenance. The first conversation is offered."
+  lang="en"
+  hreflang={hreflang}
+>
+  <HeroScene lang="en" />
+
+  <section class="serve">
+    <div class="serve-inner container">
+      <Reveal>
+        <h2>Serving your activity over time</h2>
+        <p class="lead">
+          Each intervention respects the reality of your clients, your teams and
+          your partners. It accords with your uses, your constraints and your
+          rhythm. Our work follows four simple lines: clarify, lighten, connect,
+          extend.
+        </p>
+      </Reveal>
+
+      <div class="serve-grid">
+        <Reveal delay={100}>
+          <article class="card card-warm">
+            <h3>Bespoke for your activity</h3>
+            <p>
+              Tools and support tailored to your reality. Each solution accords
+              with your uses, your teams, your clients and the trajectory proper
+              to your activity.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={150}>
+          <article class="card card-cool">
+            <h3>Lasting follow-through</h3>
+            <p>
+              Each intervention leaves behind a clear handover, a reasonable
+              availability and occasional support. For those who wish, this
+              foundation extends into a partnership over time.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={200}>
+          <article class="card card-warm">
+            <h3>True simplicity of use</h3>
+            <p>
+              Our compositions are chosen for their precision, their field
+              intelligence and their clarity. Solutions gain in legibility, in
+              fluidity, and complexity stays at a distance from your daily uses.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={250}>
+          <article class="card card-deep">
+            <h3>A clear line of exchange</h3>
+            <p>
+              Several channels bring the necessary suppleness. A short chain
+              refines understanding, tightens decisions and supports a firmer
+              continuity.
+            </p>
+          </article>
+        </Reveal>
+      </div>
+
+      <Reveal delay={300}>
+        <aside class="serve-aside">
+          <h3>An attention paid to reality</h3>
+          <p>
+            Tense periods exist. Depending on the need, scope can adjust,
+            payments can be staged, certain recurring formulas can breathe for a
+            while. A lasting relationship calls for this intelligence of
+            circumstance too.
+          </p>
+        </aside>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="works">
+    <div class="works-inner container">
+      <Reveal>
+        <h2>Three works, three real uses</h2>
+        <p class="lead">
+          Three different settings, one same exigence: making a use clearer,
+          more fluid, more lasting.
+        </p>
+      </Reveal>
+
+      <div class="works-grid">
+        {realisations.map((r, i) => (
+          <Reveal delay={100 + i * 100}>
+            <article class={`work work-${r.accent}`}>
+              <p class="work-sub">{r.sub}</p>
+              <h3>{r.title}</h3>
+              <p class="work-body">{r.body}</p>
+              {r.href ? (
+                <a href={r.href} target="_blank" rel="noopener" class="work-link">
+                  {r.cta}
+                </a>
+              ) : (
+                <span class="work-here">You are here</span>
+              )}
+            </article>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={400}>
+        <p class="works-tail">
+          More works in the <a href="/en/portfolio">complete portfolio</a>.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="method">
+    <div class="container">
+      <Reveal>
+        <h2 class="method-title">A method</h2>
+      </Reveal>
+
+      <div class="frieze">
+        <FriezeLine />
+        <div class="frieze-steps">
+          <Reveal delay={100}>
+            <div class="step">
+              <span class="step-num">1</span>
+              <h3>Listen</h3>
+              <p>Uses, constraints, irritants, rhythm, real needs.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={150}>
+            <div class="step">
+              <span class="step-num">2</span>
+              <h3>Frame</h3>
+              <p>The right answer, at the right scale, for the right use.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={200}>
+            <div class="step">
+              <span class="step-num">3</span>
+              <h3>Craft</h3>
+              <p>A legible, reliable, workable tool, ready to last.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={250}>
+            <div class="step">
+              <span class="step-num">4</span>
+              <h3>Sustain</h3>
+              <p>Handover, follow-up, adjustments, continuity.</p>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      <Reveal delay={350}>
+        <div class="method-exit">
+          <div class="method-exit-bar" aria-hidden="true"></div>
+          <a href="/en/contact" class="method-exit-link">Begin the conversation</a>
+          <p>
+            Describe your situation, or leave an address to be contacted at the
+            right moment.
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="pricing">
+    <div class="pricing-inner">
+      <Reveal>
+        <h2>Pricing markers</h2>
+        <p class="lead">
+          Behind each engagement: real listening, a fair scope, careful
+          execution, and an interlocutor available over time.
+        </p>
+      </Reveal>
+
+      <Reveal delay={150}>
+        <div class="pricing-table">
+          {tarifs.map((t) => (
+            <div class="pricing-row">
+              <span class="pricing-label">{t.label}</span>
+              <span class="pricing-value">{t.value}</span>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={250}>
+        <div class="pricing-tail">
+          <p class="pricing-note">
+            The four web-design packages and the four maintenance levels are
+            detailed on their dedicated pages.
+          </p>
+          <div class="pricing-actions">
+            <a href="/en/web-design" class="btn-line">View design packages</a>
+            <a href="/en/web-maintenance" class="btn-line">View maintenance levels</a>
+          </div>
+          <p class="pricing-doc">
+            Sales brochure (in French):
+            <a
+              href="/documents/plaquette_le_geai_informatique.pdf"
+              download
+            >
+              download the PDF
+            </a>
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="contact-home">
+    <div class="contact-inner container">
+      <Reveal>
+        <h2>Let us discuss your activity</h2>
+        <p class="lead">
+          The right tool answers a real need, integrates fairly, and holds over
+          time.
+        </p>
+      </Reveal>
+
+      <div class="contact-options">
+        <Reveal delay={100}>
+          <div class="contact-card">
+            <h3>First contact</h3>
+            <p>A direct question, a simple need, an opening exchange.</p>
+            <ProtectedEmail user="administration" domain="legeai-editions.com" lang="en" class="contact-data" />
+            <ProtectedTel number="+33482532564" display="+33 4 82 53 25 64" class="contact-data" />
+          </div>
+        </Reveal>
+        <Reveal delay={200}>
+          <div class="contact-card">
+            <h3>Structured scoping</h3>
+            <p>
+              Describe your activity, the tools already in place, and the points
+              to revisit. We shall come back with a clear scope.
+            </p>
+            <a href="/en/contact" class="btn-primary">Describe the need</a>
+          </div>
+        </Reveal>
+      </div>
+
+      <Reveal delay={300}>
+        <p class="contact-bottom">
+          Reply within 48 working hours. The first conversation is offered.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h2 {
+    font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+    text-align: center;
+  }
+
+  .lead {
+    max-width: 580px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .serve { padding: 6rem 1.5rem 4rem; }
+  .serve-inner { max-width: 920px; }
+  .serve-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 3rem;
+  }
+  .card {
+    padding: 1.6rem 1.8rem;
+    border: 1px solid transparent;
+    transition: all 0.6s ease;
+    height: 100%;
+  }
+  .card-warm { background: rgba(46, 38, 24, 0.45); }
+  .card-cool { background: rgba(28, 38, 34, 0.45); }
+  .card-deep { background: rgba(28, 28, 42, 0.45); }
+  .card:hover {
+    border-color: var(--color-border);
+    background: rgba(58, 50, 36, 0.55);
+  }
+  .card h3 {
+    font-size: 1.15rem;
+    color: var(--color-text);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.5rem;
+    position: relative;
+  }
+  .card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 24px;
+    height: 1px;
+    background: rgba(201, 169, 97, 0.4);
+    transition: width 0.4s ease;
+  }
+  .card:hover h3::after { width: 36px; }
+  .card p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .serve-aside {
+    margin-top: 2.5rem;
+    padding: 1.6rem 2rem;
+    text-align: center;
+    max-width: 640px;
+    margin-inline: auto;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .serve-aside h3 {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--color-dore);
+    font-weight: 400;
+    margin-bottom: 0.7rem;
+  }
+  .serve-aside p {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+
+  .works { padding: 5rem 1.5rem 4rem; }
+  .works-inner { max-width: 1100px; }
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 3rem;
+  }
+  .work {
+    display: flex;
+    flex-direction: column;
+    padding: 2.4rem 2rem 2rem;
+    border: 1px solid var(--color-border);
+    transition: all 0.5s ease;
+    height: 100%;
+  }
+  .work:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+  .work-cinder { background: rgba(38, 28, 18, 0.5); border-left: 2px solid rgba(160, 120, 50, 0.3); }
+  .work-moss   { background: rgba(20, 32, 26, 0.5); border-left: 2px solid rgba(60, 140, 90, 0.18); }
+  .work-amethyst { background: rgba(24, 20, 36, 0.5); border-left: 2px solid rgba(120, 100, 170, 0.18); }
+
+  .work-sub {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+  .work h3 {
+    font-size: 1.6rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+  }
+  .work-body {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+  .work-link {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    opacity: 0.75;
+    transition: opacity 0.4s ease;
+  }
+  .work-link:hover { opacity: 1; }
+  .work-here {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    font-style: italic;
+    color: var(--color-text-dim);
+  }
+
+  .works-tail {
+    text-align: center;
+    margin-top: 2.5rem;
+    color: var(--color-text-muted);
+  }
+  .works-tail a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .works-tail a:hover { border-bottom-color: var(--color-dore); }
+
+  .method {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem;
+  }
+  .method-title { margin-bottom: 4rem; }
+  .frieze {
+    width: 100%;
+    max-width: 1060px;
+    margin-inline: auto;
+  }
+  .frieze-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 1.5rem;
+  }
+  .step {
+    padding: 0 1.6rem;
+    text-align: center;
+  }
+  .step-num {
+    display: block;
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--color-dore);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .step h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .step p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .method-exit {
+    max-width: 500px;
+    margin: 4rem auto 0;
+    text-align: center;
+  }
+  .method-exit-bar {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(to bottom, rgba(201, 169, 97, 0.35), rgba(201, 169, 97, 0.05));
+    margin: 0 auto 1.5rem;
+  }
+  .method-exit-link {
+    display: inline-block;
+    padding: 0.85rem 2.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+    margin-bottom: 1rem;
+  }
+  .method-exit-link:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .method-exit p {
+    color: var(--color-text-dim);
+    max-width: 400px;
+    margin-inline: auto;
+  }
+
+  .pricing { padding: 7rem 1.5rem; }
+  .pricing-inner { max-width: 620px; margin-inline: auto; }
+  .pricing-table {
+    margin-top: 3rem;
+    border: 1px solid var(--color-border);
+  }
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1.1rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.3s ease;
+  }
+  .pricing-row:last-child { border-bottom: none; }
+  .pricing-row:hover { background: var(--color-surface-raised); }
+  .pricing-label { color: var(--color-text); }
+  .pricing-value {
+    font-style: italic;
+    color: var(--color-dore);
+    white-space: nowrap;
+  }
+
+  .pricing-tail { margin-top: 2rem; text-align: center; }
+  .pricing-note {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .pricing-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .pricing-doc {
+    margin-top: 2rem;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+  }
+  .pricing-doc a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .pricing-doc a:hover { border-bottom-color: var(--color-dore); }
+
+  .btn-line {
+    display: inline-block;
+    padding: 0.75rem 1.6rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-line:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+
+  .contact-home {
+    padding: 7rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+  }
+  .contact-inner { max-width: 880px; }
+  .contact-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .contact-card {
+    padding: 2.4rem 2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: border-color 0.4s ease;
+  }
+  .contact-card:hover { border-color: var(--color-border-hover); }
+  .contact-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .contact-card p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+  .contact-data {
+    display: block;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--color-dore);
+    margin-bottom: 0.4rem;
+    transition: opacity 0.3s ease;
+  }
+  .contact-data:hover { opacity: 0.7; }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  .contact-bottom {
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--color-text-dim);
+    font-size: 0.95rem;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-dore);
+    border: 0;
+    opacity: 0.3;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .works-grid { grid-template-columns: 1fr; }
+    .frieze-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+    .step { padding: 0; }
+    .contact-options { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .serve-grid { grid-template-columns: 1fr; }
+    .pricing-row { padding: 1rem 1.2rem; }
+  }
+</style>

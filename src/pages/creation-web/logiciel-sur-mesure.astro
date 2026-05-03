@@ -1,0 +1,19 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'logiciel-sur-mesure')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+---
+
+<BaseLayout
+  title="Logiciel sur mesure · Sur devis"
+  description="Application web ou logiciel de bureau conçu sur cahier des charges, développé par phases avec validations intermédiaires, documentation et formation."
+  hreflang={buildHreflang('/creation-web/logiciel-sur-mesure', 'fr')}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} />
+</BaseLayout>

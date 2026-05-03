@@ -1,0 +1,131 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ToolDetail from '~/components/ToolDetail.astro';
+import { getToolBySlug, assetUrl, setCacheHeaders, type Tool } from '~/lib/directus';
+
+setCacheHeaders(Astro.response.headers);
+
+const SITE = 'https://www.legeai-informatique.fr';
+const slug = Astro.params.slug;
+if (!slug) return Astro.redirect('/en/our-tools', 307);
+
+let tool: Tool | null = null;
+let error = false;
+try {
+  tool = await getToolBySlug(slug);
+} catch (e) {
+  console.error('Tool fetch failed', e);
+  error = true;
+}
+
+if (!error && !tool) {
+  return new Response(null, { status: 404 });
+}
+
+const url = tool ? `${SITE}/en/our-tools/${tool.slug}` : SITE;
+const cover = tool ? assetUrl(tool.cover) : null;
+const ogImage = cover ?? '/LeGeai_logo_monochrome.svg';
+
+const APP_CATEGORY: Record<string, string> = {
+  desktop: 'UtilitiesApplication',
+  web: 'WebApplication',
+  extension: 'BrowserApplication',
+};
+
+const screenshotUrls = (tool?.screenshots ?? [])
+  .filter((s) => s.file)
+  .map((s) => assetUrl(s.file))
+  .filter((u): u is string => Boolean(u));
+
+const featureList = (tool?.features ?? [])
+  .filter((f) => f.title_fr)
+  .map((f) => (f.title_en || f.title_fr))
+  .join(', ');
+
+const firstDownloadSize = tool?.downloads?.find((d) => d.size_bytes)?.size_bytes;
+
+const softwareJsonLd = tool ? {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  '@id': `${url}#app`,
+  name: tool.name_fr,
+  description: (tool.tagline_en || tool.tagline_fr || tool.description_en || tool.description_fr) ?? undefined,
+  applicationCategory: APP_CATEGORY[tool.app_type] ?? 'UtilitiesApplication',
+  operatingSystem: tool.app_type === 'desktop'
+    ? Array.from(new Set((tool.downloads ?? []).map((d) => d.os))).join(', ') || 'Windows, macOS, Linux'
+    : 'Web',
+  softwareVersion: tool.version ?? undefined,
+  ...(tool.license ? { license: tool.license } : {}),
+  ...(featureList ? { featureList } : {}),
+  ...(screenshotUrls.length > 0 ? { screenshot: screenshotUrls } : (cover ? { screenshot: cover } : {})),
+  ...(firstDownloadSize ? { fileSize: `${Math.round(firstDownloadSize / 1024)}KB` } : {}),
+  ...(tool.github_url ? { codeRepository: tool.github_url } : {}),
+  ...(tool.usage_wiki_en || tool.usage_wiki_fr ? { softwareHelp: `${url}#wiki` } : {}),
+  ...(tool.changelog ? { releaseNotes: `${url}#changelog` } : {}),
+  ...(tool.date_updated ? { dateModified: tool.date_updated } : {}),
+  url,
+  inLanguage: 'en-GB',
+  isAccessibleForFree: true,
+  publisher: { '@id': `${SITE}/#organization` },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
+  interactionStatistic: {
+    '@type': 'InteractionCounter',
+    interactionType: { '@type': 'DownloadAction' },
+    userInteractionCount: tool.download_count ?? 0,
+  },
+} : null;
+
+const breadcrumbJsonLd = tool ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+    { '@type': 'ListItem', position: 2, name: 'Our tools', item: `${SITE}/en/our-tools` },
+    { '@type': 'ListItem', position: 3, name: tool.name_fr, item: url },
+  ],
+} : null;
+---
+
+<BaseLayout
+  title={tool ? `${tool.name_fr} · Free tool` : 'Tool unavailable'}
+  description={tool ? (tool.description_en || tool.description_fr) ?? 'Free tool by Le Geai Informatique.' : 'Free tool by Le Geai Informatique.'}
+  canonical={url}
+  ogImage={ogImage}
+  lang="en"
+  hreflang={tool ? [
+    { lang: 'fr', href: `/nos-outils/${tool.slug}` },
+    { lang: 'en', href: `/en/our-tools/${tool.slug}` },
+    { lang: 'x-default', href: `/nos-outils/${tool.slug}` },
+  ] : undefined}
+>
+  {softwareJsonLd && <script type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} slot="head" />}
+  {breadcrumbJsonLd && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} slot="head" />}
+
+  {error && (
+    <section class="container-narrow message">
+      <h1>Tool temporarily unavailable</h1>
+      <p>An error occurred. Please come back in a moment.</p>
+      <a href="/en/our-tools" class="btn-ghost">Back</a>
+    </section>
+  )}
+
+  {tool && <ToolDetail tool={tool} lang="en" toolBaseHref="/en/our-tools" />}
+</BaseLayout>
+
+<style>
+  .message { padding: 8rem 1.5rem 6rem; text-align: center; }
+  .message h1 { margin-bottom: 1rem; }
+  .message p { color: var(--color-text-muted); margin-bottom: 2rem; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 1.8rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+</style>

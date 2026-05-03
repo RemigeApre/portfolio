@@ -1,0 +1,35 @@
+# Override de production pour le VPS.
+#
+# - Branche directus et web sur le reseau Docker "proxy" (Nginx Proxy Manager).
+# - Pour web, build l'image via le Dockerfile (target=runner) au lieu de l'image node:alpine.
+#
+# Lancer sur le VPS : docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Prerequis : le reseau "proxy" doit deja exister (cree par le stack Nginx Proxy Manager).
+
+services:
+  directus:
+    networks:
+      - default
+      - proxy
+
+  web:
+    image: legeai-web:latest
+    build:
+      context: .
+      target: runner
+    command: ["node", "./dist/server/entry.mjs"]
+    volumes: []
+    environment:
+      NODE_ENV: production
+      DIRECTUS_INTERNAL_URL: ${DIRECTUS_INTERNAL_URL}
+      DIRECTUS_PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+      DIRECTUS_ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      DIRECTUS_ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+    networks:
+      - default
+      - proxy
+
+networks:
+  proxy:
+    external: true

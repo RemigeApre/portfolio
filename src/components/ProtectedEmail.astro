@@ -1,0 +1,36 @@
+---
+// Email protégé du scraping : aucun "user@domain" ni "mailto:" en clair dans le HTML.
+// Les caractères sont encodés en codes décimaux dans des data-attributes,
+// puis recomposés en mailto: + texte lisible par le script révélateur dans BaseLayout.
+//
+// Avant JS : affiche un texte de fallback (ex: "Contact via le formulaire →"),
+// pointe vers la page contact. Après JS : devient un mailto: cliquable.
+
+import type { Lang } from '~/i18n/routes';
+
+interface Props {
+  user: string;
+  domain: string;
+  lang?: Lang;
+  class?: string;
+  // Texte affiché avant que le JS ne révèle l'adresse (fallback no-JS et anti-scraping).
+  fallback?: string;
+  // URL de repli vers laquelle le lien pointe avant révélation JS (par défaut : page contact).
+  fallbackHref?: string;
+}
+
+const { user, domain, lang = 'fr', class: className = '', fallback, fallbackHref } = Astro.props;
+
+const encode = (s: string) => s.split('').map((c) => c.charCodeAt(0)).join(',');
+
+const defaultFallback = lang === 'en' ? 'Contact via the form →' : 'Contact via le formulaire →';
+const defaultHref = lang === 'en' ? '/en/contact' : '/contact';
+---
+
+<a
+  class:list={['protected-email', className]}
+  href={fallbackHref ?? defaultHref}
+  data-u={encode(user)}
+  data-d={encode(domain)}
+  rel="nofollow"
+>{fallback ?? defaultFallback}</a>

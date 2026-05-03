@@ -1,0 +1,241 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+
+const filter = Astro.url.searchParams.get('filter') ?? 'all';
+const filterMap: Record<string, string> = {
+  all: '',
+  new: '&filter[status][_eq]=new',
+  read: '&filter[status][_eq]=read',
+  processed: '&filter[status][_eq]=processed',
+  archived: '&filter[status][_eq]=archived',
+};
+const filterQuery = filterMap[filter] ?? '';
+
+interface Message {
+  id: string | number;
+  status: string;
+  date_created: string;
+  last_name: string;
+  first_name: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_postal: string | null;
+  subject: string;
+  service_interest: string | null;
+  message: string | null;
+}
+
+const path = `/items/contact_messages?sort=-date_created&limit=200${filterQuery}`;
+let messages: Message[] = [];
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: Message[] }>(token, path);
+  messages = r.data ?? [];
+} catch (e) {
+  error = String(e);
+}
+
+const fmtDate = (iso: string) => {
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+};
+
+const SERVICE_LABELS: Record<string, string> = {
+  'creation-vitrine': 'Création · Vitrine',
+  'creation-gestion': 'Création · Gestion',
+  'creation-e-commerce': 'Création · E-commerce',
+  'creation-logiciel': 'Création · Logiciel sur mesure',
+  'maintenance-essentiel': 'Maintenance · Essentiel',
+  'maintenance-pro': 'Maintenance · Pro',
+  'maintenance-premium': 'Maintenance · Premium',
+  'maintenance-legendaire': 'Maintenance · Légendaire',
+  hesite: "J'hésite encore",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  new: 'Nouveau',
+  read: 'Lu',
+  processed: 'Traité',
+  archived: 'Archivé',
+};
+---
+
+<AdminLayout title="Messages" active="messages">
+  <h1 class="admin-h1">Messages reçus</h1>
+  <p class="admin-sub">Demandes envoyées via le formulaire de contact du site.</p>
+
+  <nav class="filters" aria-label="Filtrer par statut">
+    {[
+      { k: 'all', l: 'Tous' },
+      { k: 'new', l: 'Nouveaux' },
+      { k: 'read', l: 'Lus' },
+      { k: 'processed', l: 'Traités' },
+      { k: 'archived', l: 'Archivés' },
+    ].map((f) => (
+      <a
+        href={`/admin/messages?filter=${f.k}`}
+        class:list={['filter', { 'is-active': filter === f.k }]}
+      >
+        {f.l}
+      </a>
+    ))}
+  </nav>
+
+  {error && <div class="admin-flash error">Erreur de chargement : {error}</div>}
+  {!error && messages.length === 0 && <p class="empty">Aucun message pour ce filtre.</p>}
+
+  {messages.length > 0 && (
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>De</th>
+          <th>Joindre par</th>
+          <th>Sujet</th>
+          <th>Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {messages.map((m) => (
+          <tr data-id={m.id}>
+            <td>{fmtDate(m.date_created)}</td>
+            <td>
+              <strong>{m.last_name}</strong>{m.first_name && ` ${m.first_name}`}
+            </td>
+            <td>
+              {m.contact_email && <div><a href={`mailto:${m.contact_email}`}>{m.contact_email}</a></div>}
+              {m.contact_phone && <div><a href={`tel:${m.contact_phone}`}>{m.contact_phone}</a></div>}
+              {m.contact_postal && <div class="postal">{m.contact_postal}</div>}
+            </td>
+            <td>
+              <strong>{m.subject === 'service' ? 'Service' : 'Divers'}</strong>
+              {m.service_interest && <div class="service-hint">{SERVICE_LABELS[m.service_interest] ?? m.service_interest}</div>}
+              {m.message && (
+                <details class="msg-details">
+                  <summary>Voir le message</summary>
+                  <p class="msg-content">{m.message}</p>
+                </details>
+              )}
+            </td>
+            <td>
+              <span class={`badge badge-${m.status}`}>{STATUS_LABELS[m.status] ?? m.status}</span>
+            </td>
+            <td class="status-actions" data-id={m.id}>
+              <select class="status-select" data-id={m.id}>
+                {Object.entries(STATUS_LABELS).map(([k, l]) => (
+                  <option value={k} selected={m.status === k}>{l}</option>
+                ))}
+              </select>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>
+
+<script>
+  const selects = document.querySelectorAll<HTMLSelectElement>('.status-select');
+  for (const sel of selects) {
+    let prev = sel.value;
+    sel.addEventListener('change', async () => {
+      const id = sel.dataset.id;
+      const newStatus = sel.value;
+      sel.disabled = true;
+      try {
+        const r = await fetch(`/api/admin/messages/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus }),
+        });
+        if (!r.ok) throw new Error('fail');
+        prev = newStatus;
+        const row = sel.closest('tr');
+        if (row) {
+          const badge = row.querySelector('.badge');
+          if (badge) {
+            badge.className = `badge badge-${newStatus}`;
+            badge.textContent = sel.options[sel.selectedIndex].text;
+          }
+        }
+      } catch {
+        sel.value = prev;
+        alert('Mise à jour impossible. Réessayez.');
+      } finally {
+        sel.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .filter {
+    padding: 0.45rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
+  }
+  .filter:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+  .filter.is-active {
+    background: rgba(201, 169, 97, 0.1);
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+  .empty {
+    text-align: center;
+    padding: 3rem 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+  .postal { white-space: pre-wrap; font-size: 0.85rem; color: var(--color-text-muted); }
+  .service-hint { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+  .msg-details { margin-top: 0.5rem; }
+  .msg-details summary {
+    font-size: 0.78rem;
+    color: var(--color-dore);
+    cursor: pointer;
+    list-style: none;
+  }
+  .msg-details summary::-webkit-details-marker { display: none; }
+  .msg-details[open] summary::after { content: ' ↑'; }
+  .msg-details:not([open]) summary::after { content: ' ↓'; }
+  .msg-content {
+    margin-top: 0.6rem;
+    padding: 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    white-space: pre-wrap;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  .status-select {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .status-select:focus { outline: none; border-color: var(--color-dore); }
+</style>

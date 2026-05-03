@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'showcase', 'en')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+const hreflang = buildHreflang('/en/web-design/showcase', 'en');
+---
+
+<BaseLayout
+  title="Showcase website · €900 in 3 weeks"
+  description="Showcase package: 2 to 3 bespoke pages, local search optimisation, mobile adaptation, GDPR, training and documentation. €900 net, delivered in 3 weeks."
+  lang="en"
+  hreflang={hreflang}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} lang="en" />
+</BaseLayout>

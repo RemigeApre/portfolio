@@ -1,0 +1,149 @@
+---
+import '~/styles/global.css';
+import { getAccessToken } from '~/lib/admin';
+
+const token = await getAccessToken(Astro.cookies);
+if (token) return Astro.redirect('/admin', 302);
+
+const error = Astro.url.searchParams.get('error');
+const errorMessage = error === 'invalid'
+  ? 'Identifiants invalides.'
+  : error === 'blocked'
+  ? 'Trop de tentatives. Réessayez dans 15 minutes.'
+  : error === 'missing'
+  ? 'Email et mot de passe requis.'
+  : error
+  ? 'Connexion impossible. Réessayez.'
+  : null;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Connexion · Administration</title>
+    <link rel="icon" type="image/svg+xml" href="/LeGeai_logo_monochrome.svg" />
+  </head>
+  <body>
+    <main class="login-screen">
+      <section class="login-card">
+        <img src="/LeGeai_logo_monochrome.svg" alt="" aria-hidden="true" class="emblem" />
+        <h1>Administration</h1>
+        <p class="sub">Connectez-vous avec votre compte Directus.</p>
+
+        {errorMessage && <p class="error" role="alert">{errorMessage}</p>}
+
+        <form method="POST" action="/api/admin/login" class="form">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" required autocomplete="username" autofocus />
+          </label>
+          <label class="field">
+            <span>Mot de passe</span>
+            <input type="password" name="password" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn">Entrer</button>
+        </form>
+
+        <p class="back"><a href="/">← Retour au site</a></p>
+      </section>
+    </main>
+
+    <style>
+      body {
+        background: var(--color-surface);
+        color: var(--color-text);
+        font-family: var(--font-serif);
+      }
+      .login-screen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+      }
+      .login-card {
+        max-width: 380px;
+        width: 100%;
+        padding: 2.4rem 2rem;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface-raised);
+        text-align: center;
+      }
+      .emblem {
+        width: 60px;
+        margin: 0 auto 1.4rem;
+        filter: brightness(2.2);
+        opacity: 0.85;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+      }
+      .sub {
+        font-style: italic;
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.8rem;
+      }
+      .error {
+        padding: 0.7rem 1rem;
+        margin-bottom: 1.4rem;
+        border: 1px solid #c66;
+        background: rgba(170, 60, 60, 0.12);
+        color: #f0c4c4;
+        font-style: italic;
+        font-size: 0.9rem;
+      }
+      .form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+      .field { display: flex; flex-direction: column; gap: 0.35rem; }
+      .field span {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+      }
+      .field input {
+        padding: 0.7rem 0.9rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+      .field input:focus { outline: none; border-color: var(--color-dore); }
+      .btn {
+        margin-top: 0.6rem;
+        padding: 0.85rem;
+        background: var(--color-dore);
+        color: var(--color-noir);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+      .btn:hover { opacity: 0.88; }
+      .back {
+        margin-top: 2rem;
+        font-size: 0.78rem;
+        font-style: italic;
+        color: var(--color-text-dim);
+      }
+      .back a {
+        color: var(--color-text-dim);
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+      }
+      .back a:hover {
+        color: var(--color-dore);
+        border-bottom-color: var(--color-dore);
+      }
+    </style>
+  </body>
+</html>

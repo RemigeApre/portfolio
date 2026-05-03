@@ -1,0 +1,19 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'vitrine')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+---
+
+<BaseLayout
+  title="Site web Vitrine · 900 € en 3 semaines"
+  description="Formule Vitrine : 2 à 3 pages personnalisées, référencement local, adaptation mobile, RGPD, formation et documentation. 900 € net, livré en 3 semaines."
+  hreflang={buildHreflang('/creation-web/vitrine', 'fr')}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} />
+</BaseLayout>

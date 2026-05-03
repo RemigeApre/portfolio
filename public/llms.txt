@@ -1,47 +1,47 @@
 # Le Geai Informatique
-> Création de sites web sur mesure, maintenance, Microsoft 365, outils numériques. Basé à Lyon, disponible à Annecy, Clermont-Ferrand et partout en France.
+> Artisanat numérique pour indépendants, artisans et PME. Création de sites web sur mesure et maintenance web durable. Disponible partout en France.
 
 ## À propos
-Le Geai Informatique est une entreprise française de services numériques basée à Lyon (69007). Elle conçoit des sites web sur mesure (sans template, sans WordPress), assure leur maintenance dans la durée, structure des environnements Microsoft 365, et développe des outils numériques adaptés aux besoins réels de chaque activité.
+Le Geai Informatique est la branche numérique de la maison Le Geai, maison d'éditions (devise : Obscuritas nutrit flammam, l'obscurité nourrit la flamme). Statut : micro-entreprise, TVA non applicable, art. 293 B du CGI. L'atelier conçoit des sites web sur mesure et assure leur maintenance dans la durée pour des indépendants, artisans et PME. Le travail informatique finance également l'édition et l'art (livres, illustrateurs, impressions). Premier rendez-vous offert, paiement par paliers, accompagnement durable.
 
-## Services
-- Création de site de présentation (dès 800 €)
-- Création de site avec espace de gestion (dès 2 500 €)
-- Création de boutique en ligne (dès 6 000 €)
-- Maintenance et suivi web (dès 39 €/mois)
-- Microsoft 365 : mise en place, formation, support (dès 29 €/utilisateur/mois)
-- Développement d'outils sur mesure (sur devis)
-- Data Engineering
-- Formation informatique
+## Services proposés (deux catégories actuellement)
 
-## Zone d'intervention
-Lyon, Villeurbanne, Annecy, Chambéry, Clermont-Ferrand, Grenoble, Saint-Étienne, Valence, et partout en France en distanciel.
+### Création web
+- Vitrine : 900 €, livré en 3 semaines. 2 à 3 pages personnalisées, référencement local, adaptation mobile, RGPD, formation et documentation, 2 allers-retours.
+- Gestion : dès 2 800 €, 6 à 8 semaines. Vitrine + espace administrateur sécurisé, 1 à 3 fonctionnalités interactives (réservations, planning, espace client, stocks), formation administrateur.
+- E-commerce : dès 6 500 €, 10 semaines. Gestion + catalogue produits, panier sur mesure, paiement sécurisé via PayPal/Stripe, gestion commandes et livraisons, tableau de bord ventes.
+- Logiciel sur mesure : sur devis, selon le projet. Application web ou logiciel de bureau, conçu sur cahier des charges, développement par phases avec validations intermédiaires, documentation et formation.
+
+### Maintenance web
+- Essentiel : 39 €/mois. Domaine, hébergement, SSL, sauvegarde mensuelle de la structure, surveillance, correction des incidents bloquants.
+- Pro : 149 €/mois. Essentiel + 2 h d'amélioration mensuelle sur demande (design, fonctionnalités, contenu, SEO).
+- Premium : 299 €/mois. Pro + sauvegarde complète + 4 h supplémentaires + 1 h de formation utilisateur + intervention sous 24 h ouvrées.
+- Légendaire : 499 €/mois. Premium + 1 h par semaine de gestion active du contenu + priorité maximale.
+
+Hébergement et nom de domaine inclus dans toutes les formules de maintenance. Engagement 12 mois, tacite reconduction.
 
 ## Spécificités
-- Code sur mesure uniquement (pas de template, pas de WordPress)
-- Accompagnement durable, pas de prestation abandonnée après livraison
-- Interlocuteur unique et joignable
-- Approche métier : chaque outil est pensé à partir de l'activité réelle du client
-- Tarifs de lancement inférieurs au marché
+- Code sur mesure, sans template prêt à l'emploi.
+- Accompagnement durable : transmission claire, disponibilité raisonnable, suivi possible dans le temps.
+- Interlocuteur unique et joignable.
+- Approche métier : chaque outil est pensé à partir de l'activité réelle du client.
 
 ## Contact
 - Site : https://www.legeai-informatique.fr
 - Email : administration@legeai-editions.com
 - Téléphone : +33 4 82 53 25 64
-- Adresse : 31 rue Pasteur, 69007 Lyon
-
-## Réalisations
-- Bergfrid (bergfrid.com) : plateforme éditoriale et journalistique
-- Gaio Polart (gaio-polart.legeai-informatique.fr) : site métier pour commerce de terrain
-- Le Geai Informatique (legeai-informatique.fr) : site vitrine haut de gamme
+- Réponse sous 48 heures ouvrées. Premier rendez-vous offert.
 
 ## Pages du site
-- Accueil : https://www.legeai-informatique.fr
-- Création de site web : https://www.legeai-informatique.fr/creation-site-web
-- Maintenance web : https://www.legeai-informatique.fr/maintenance-web
-- Microsoft 365 : https://www.legeai-informatique.fr/microsoft-365
-- Logiciel sur mesure : https://www.legeai-informatique.fr/logiciel-sur-mesure
-- Data engineering et formation : https://www.legeai-informatique.fr/data-engineering
-- Tarifs : https://www.legeai-informatique.fr/tarifs
-- Contact : https://www.legeai-informatique.fr/contact
+- Accueil : https://www.legeai-informatique.fr/
+- Création web (page mère + 4 formules) : https://www.legeai-informatique.fr/creation-web
+- Maintenance web (page mère + 4 niveaux) : https://www.legeai-informatique.fr/maintenance-web
+- Mission : https://www.legeai-informatique.fr/mission
+- Portfolio : https://www.legeai-informatique.fr/portfolio
+- Blog : https://www.legeai-informatique.fr/blog
 - FAQ : https://www.legeai-informatique.fr/faq
+- Contact : https://www.legeai-informatique.fr/contact
+- Liens : https://www.legeai-informatique.fr/liens
+- Mentions légales : https://www.legeai-informatique.fr/mentions-legales
+- Politique de confidentialité : https://www.legeai-informatique.fr/confidentialite
+- Plaquette commerciale (PDF) : https://www.legeai-informatique.fr/documents/plaquette_le_geai_informatique.pdf

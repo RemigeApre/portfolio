@@ -1,0 +1,19 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'e-commerce')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+---
+
+<BaseLayout
+  title="Boutique en ligne dès 6 500 €"
+  description="Formule E-commerce : catalogue produits, panier sur mesure, paiement PayPal ou Stripe, gestion commandes et livraisons, tableau de bord ventes. Dès 6 500 €, 10 semaines."
+  hreflang={buildHreflang('/creation-web/e-commerce', 'fr')}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} />
+</BaseLayout>

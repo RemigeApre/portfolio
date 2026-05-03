@@ -1,0 +1,252 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+const hreflang = buildHreflang('/en/privacy', 'en');
+---
+
+<BaseLayout
+  title="Privacy policy · Le Geai Informatique"
+  description="Privacy policy of legeai-informatique.fr: data processing, cookies, anonymous statistics, likes, comments, GDPR rights."
+  noindex={true}
+  lang="en"
+  hreflang={hreflang}
+>
+  <article class="legal">
+    <div class="container-narrow">
+      <header class="head">
+        <h1>Privacy policy</h1>
+        <p class="lead">
+          This page describes what we do, or do not, with the data that passes
+          through this site. The principle is simple: we collect as little as
+          possible, and we tell you precisely what is kept.
+        </p>
+      </header>
+
+      <section>
+        <h2>Data controller</h2>
+        <p>
+          The data controller is Le Geai Informatique, a micro-entreprise
+          whose details appear on the
+          <a href="/en/legal-notice">legal notice</a> page.
+        </p>
+      </section>
+
+      <section>
+        <h2>What we do not do</h2>
+        <p>
+          The site uses <strong>no advertising network</strong>, drops
+          <strong>no third-party tracking cookie</strong> (no Google Analytics,
+          no Facebook pixel, no Hotjar). No data is resold, shared with
+          commercial third parties, or used for profiling.
+        </p>
+      </section>
+
+      <section>
+        <h2>What we collect</h2>
+
+        <h3>1. Technical server logs</h3>
+        <p>
+          Like any web server, ours keeps technical journals: IP address,
+          browser, page consulted, response code, timestamp. These logs are
+          kept for at most <strong>30 days</strong>, for security, diagnostics
+          and the prevention of abuse.
+        </p>
+
+        <h3>2. Anonymous traffic statistics</h3>
+        <p>
+          We measure the audience of our pages, in particular journal
+          articles, to understand what interests our readers. These statistics
+          are <strong>strictly anonymous</strong>: we record the URL
+          consulted, the rounded timestamp, the device type (mobile or
+          desktop) and the entry source (search engine, direct link, etc.).
+          No identifying data is kept. No cookie, no persistent identifier.
+        </p>
+
+        <h3>3. Contact form</h3>
+        <p>
+          When you write to us via the <a href="/en/contact">contact form</a>,
+          we keep what you have entered: surname, optionally first name, the
+          means of contact you indicate (email, telephone or postal address),
+          subject and message. This data is stored in our administration
+          interface and kept for the time required to answer and follow up
+          your enquiry (generally 3 years, the minimum legal duration for
+          commercial documents).
+        </p>
+
+        <h3>4. Likes and comments (forthcoming)</h3>
+        <p>
+          We plan to add the ability to react to articles soon: a system of
+          <strong>anonymous likes</strong> and a system of
+          <strong>comments</strong>. When these are active, this policy will
+          be clarified. By anticipation:
+        </p>
+        <ul>
+          <li>
+            <strong>Likes</strong>: we shall record only the article
+            identifier and the date of the like. No personal data is
+            associated.
+          </li>
+          <li>
+            <strong>Comments</strong>: we shall ask for a name (which may be
+            a pseudonym), optionally an email (never published, used only to
+            notify you of a reply if you wish), and the comment. Comments are
+            moderated before publication.
+          </li>
+        </ul>
+
+        <h3>5. Minimal anti-spam fingerprint</h3>
+        <p>
+          To prevent massive automated submissions (contact form, future
+          likes and comments), we compute a technical fingerprint from your
+          IP address, your browser and a secret salt proper to our site.
+          This fingerprint is:
+        </p>
+        <ul>
+          <li>
+            <strong>hashed</strong> irreversibly (SHA-256), which means it
+            does not allow tracing back to your IP or your identity;
+          </li>
+          <li>
+            <strong>kept for at most 90 days</strong>, the time to detect
+            suspicious repeated submissions;
+          </li>
+          <li>
+            used <strong>only</strong> for moderation and rate limiting. It
+            is never cross-referenced with other data to identify you.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Cookies</h2>
+        <p>
+          The site uses <strong>no audience or advertising cookie</strong>.
+          It may set strictly technical cookies necessary for the proper
+          functioning of the interface (display preferences, session). These
+          cookies do not require your consent, in accordance with article 82
+          of the French Data Protection Act.
+        </p>
+      </section>
+
+      <section>
+        <h2>Data recipients</h2>
+        <p>
+          The data is not transmitted to any third party, nor sold, nor
+          rented. It is accessible only to Le Geai Informatique, in its
+          internal administration interface, for managing relationships with
+          those who contact us and for improving the site.
+        </p>
+      </section>
+
+      <section>
+        <h2>Hosting and location</h2>
+        <p>
+          The data is hosted in France, on a virtual private server operated
+          by OVH SAS. No transfer of data outside the European Union is made.
+        </p>
+      </section>
+
+      <section>
+        <h2>Your rights</h2>
+        <p>
+          Under the GDPR and the French Data Protection Act, you have the
+          following rights over your personal data:
+        </p>
+        <ul>
+          <li>right of access to your data;</li>
+          <li>right of rectification;</li>
+          <li>right to erasure;</li>
+          <li>right to restriction of processing;</li>
+          <li>right to portability;</li>
+          <li>right to object.</li>
+        </ul>
+        <p>
+          To exercise these rights, write to
+          <ProtectedEmail user="administration" domain="legeai-editions.com" lang="en" />
+          stating your request. We shall reply within one month.
+        </p>
+        <p>
+          For entirely anonymous data (traffic statistics, hashed anti-spam
+          fingerprints), it is technically not possible to find yours in
+          particular, so the rights of access and erasure cannot be applied
+          individually.
+        </p>
+        <p>
+          If you consider that your rights are not respected, you may lodge
+          a complaint with the CNIL:
+          <a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Updates to this policy</h2>
+        <p>
+          This policy may be updated to reflect legal, technical or
+          functional changes (in particular the opening of likes and
+          comments). The last significant update is from May 2026.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal { padding-top: 8rem; padding-bottom: 5rem; }
+  .head { text-align: center; margin-bottom: 3rem; padding: 0 1.5rem; }
+  h1 { margin-top: 1rem; font-size: clamp(2rem, 4vw, 2.8rem); }
+  .lead {
+    max-width: 620px;
+    margin: 1.5rem auto 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  section { padding: 0 1.5rem; margin-bottom: 3rem; }
+  section h2 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  section h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+    color: var(--color-dore);
+    font-style: italic;
+    font-weight: 500;
+  }
+  section h3:first-of-type { margin-top: 0.5rem; }
+  section p { color: var(--color-text-muted); line-height: 1.8; margin-bottom: 1rem; }
+  section ul {
+    list-style: none;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+  section li {
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+    line-height: 1.7;
+  }
+  section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.05rem;
+    width: 8px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+  section a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  section a:hover { border-bottom-color: var(--color-dore); }
+  section strong { color: var(--color-text); font-weight: 700; }
+</style>

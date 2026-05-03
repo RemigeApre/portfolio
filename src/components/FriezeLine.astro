@@ -1,0 +1,140 @@
+---
+const id = `frieze-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<canvas id={id} class="frieze-canvas" aria-hidden="true" data-frieze></canvas>
+
+<script>
+  const init = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let raf = 0;
+    let progress = 0;
+    let time = 0;
+    const stations = [0.125, 0.375, 0.625, 0.875];
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const ease = (t: number) => {
+      const c = Math.max(0, Math.min(1, t));
+      return c * c * (3 - 2 * c);
+    };
+
+    const draw = () => {
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      const cy = h / 2;
+      ctx.clearRect(0, 0, w, h);
+      time += 0.014;
+
+      const startX = w * stations[0];
+      const endX = w * stations[3];
+      const trackLen = endX - startX;
+
+      progress += 0.0012;
+      if (progress > 1.5) progress = -0.5;
+
+      const headT = ease(progress);
+      const tailT = ease(progress - 0.3);
+      const headX = startX + headT * trackLen;
+      const tailX = startX + tailT * trackLen;
+
+      ctx.beginPath();
+      ctx.moveTo(startX, cy);
+      ctx.lineTo(endX, cy);
+      ctx.strokeStyle = 'rgba(201, 169, 97, 0.10)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      if (headX > tailX + 1) {
+        const segments = 32;
+        ctx.beginPath();
+        for (let i = 0; i <= segments; i++) {
+          const frac = i / segments;
+          const x = tailX + frac * (headX - tailX);
+          const breath = Math.sin(time * 2 + frac * Math.PI * 4) * 0.6;
+          const drift = Math.sin(time * 0.8 + frac * Math.PI) * 0.3;
+          const y = cy + (breath + drift);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        const grad = ctx.createLinearGradient(tailX, 0, headX, 0);
+        grad.addColorStop(0, 'rgba(201, 169, 97, 0)');
+        grad.addColorStop(0.15, 'rgba(201, 169, 97, 0.55)');
+        grad.addColorStop(0.5, 'rgba(201, 169, 97, 0.7)');
+        grad.addColorStop(0.85, 'rgba(201, 169, 97, 0.5)');
+        grad.addColorStop(1, 'rgba(201, 169, 97, 0)');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      for (const frac of stations) {
+        const x = w * frac;
+        const segCenter = (headX + tailX) / 2;
+        const segHalf = (headX - tailX) / 2 + 30;
+        const dist = Math.abs(x - segCenter);
+        const proximity = Math.max(0, 1 - dist / segHalf);
+
+        const radius = 4 + proximity * 2;
+        const borderAlpha = 0.25 + proximity * 0.5;
+        const fillAlpha = proximity * 0.12;
+
+        ctx.beginPath();
+        ctx.arc(x, cy, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 169, 97, ${fillAlpha})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(201, 169, 97, ${borderAlpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    if (reduceMotion) {
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      const cy = h / 2;
+      ctx.beginPath();
+      ctx.moveTo(w * stations[0], cy);
+      ctx.lineTo(w * stations[3], cy);
+      ctx.strokeStyle = 'rgba(201, 169, 97, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      for (const frac of stations) {
+        ctx.beginPath();
+        ctx.arc(w * frac, cy, 4, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(201, 169, 97, 0.5)';
+        ctx.stroke();
+      }
+    } else {
+      raf = requestAnimationFrame(draw);
+    }
+  };
+
+  for (const c of document.querySelectorAll<HTMLCanvasElement>('canvas[data-frieze]')) {
+    init(c);
+  }
+</script>
+
+<style>
+  .frieze-canvas {
+    display: block;
+    width: 100%;
+    height: 24px;
+  }
+</style>

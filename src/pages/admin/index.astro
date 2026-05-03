@@ -1,0 +1,179 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+
+interface Counts {
+  total: number;
+  byStatus: Record<string, number>;
+}
+
+async function countCollection(collection: string, statuses: string[]): Promise<Counts> {
+  try {
+    const total = await directusFetch<{ data: { count: string }[] }>(
+      token,
+      `/items/${collection}?aggregate[count]=*`
+    );
+    const totalNum = Number(total.data?.[0]?.count ?? 0);
+
+    const byStatus: Record<string, number> = {};
+    for (const s of statuses) {
+      const r = await directusFetch<{ data: { count: string }[] }>(
+        token,
+        `/items/${collection}?aggregate[count]=*&filter[status][_eq]=${encodeURIComponent(s)}`
+      );
+      byStatus[s] = Number(r.data?.[0]?.count ?? 0);
+    }
+    return { total: totalNum, byStatus };
+  } catch {
+    return { total: 0, byStatus: Object.fromEntries(statuses.map((s) => [s, 0])) };
+  }
+}
+
+const [messages, articles, faq, tools] = await Promise.all([
+  countCollection('contact_messages', ['new', 'read', 'processed']),
+  countCollection('articles', ['draft', 'published']),
+  countCollection('faq', ['draft', 'published']),
+  countCollection('tools', ['draft', 'published']),
+]);
+
+// Total téléchargements (somme du compteur sur tous les outils)
+let totalDownloads = 0;
+try {
+  const r = await directusFetch<{ data: { sum: { download_count: string | number } }[] }>(
+    token,
+    '/items/tools?aggregate[sum]=download_count'
+  );
+  totalDownloads = Number(r.data?.[0]?.sum?.download_count ?? 0);
+} catch {
+  totalDownloads = 0;
+}
+---
+
+<AdminLayout title="Tableau" active="dashboard">
+  <h1 class="admin-h1">Bienvenue</h1>
+  <p class="admin-sub">Vue d'ensemble du contenu et des demandes en attente.</p>
+
+  <div class="cards">
+    <a href="/admin/messages" class="card">
+      <p class="card-label">Messages reçus</p>
+      <p class="card-big">{messages.byStatus.new ?? 0}</p>
+      <p class="card-meta">
+        nouveau{(messages.byStatus.new ?? 0) > 1 ? 'x' : ''} sur {messages.total} au total
+      </p>
+      <p class="card-cta">Voir les messages →</p>
+    </a>
+
+    <a href="/admin/articles" class="card">
+      <p class="card-label">Articles du blog</p>
+      <p class="card-big">{articles.byStatus.published ?? 0}</p>
+      <p class="card-meta">
+        publié{(articles.byStatus.published ?? 0) > 1 ? 's' : ''}
+        {(articles.byStatus.draft ?? 0) > 0 && ` · ${articles.byStatus.draft} brouillon${articles.byStatus.draft > 1 ? 's' : ''}`}
+      </p>
+      <p class="card-cta">Gérer les articles →</p>
+    </a>
+
+    <a href="/admin/faq" class="card">
+      <p class="card-label">FAQ</p>
+      <p class="card-big">{faq.byStatus.published ?? 0}</p>
+      <p class="card-meta">
+        publiée{(faq.byStatus.published ?? 0) > 1 ? 's' : ''}
+        {(faq.byStatus.draft ?? 0) > 0 && ` · ${faq.byStatus.draft} brouillon${faq.byStatus.draft > 1 ? 's' : ''}`}
+      </p>
+      <p class="card-cta">Gérer la FAQ →</p>
+    </a>
+
+    <a href="/admin/tools" class="card">
+      <p class="card-label">Outils</p>
+      <p class="card-big">{tools.byStatus.published ?? 0}</p>
+      <p class="card-meta">
+        publié{(tools.byStatus.published ?? 0) > 1 ? 's' : ''}
+        {totalDownloads > 0 && ` · ${totalDownloads.toLocaleString('fr-FR')} téléchargement${totalDownloads > 1 ? 's' : ''}`}
+      </p>
+      <p class="card-cta">Gérer les outils →</p>
+    </a>
+  </div>
+
+  <section class="links">
+    <h2>Actions rapides</h2>
+    <div class="links-row">
+      <a href="/admin/articles/new" class="btn-primary-sm">+ Nouvel article</a>
+      <a href="/admin/faq/new" class="btn-link">+ Nouvelle question FAQ</a>
+      <a href="/admin/tools/new" class="btn-link">+ Nouvel outil</a>
+      <a href="http://localhost:8055" target="_blank" rel="noopener" class="btn-link">Ouvrir Directus (avancé)</a>
+    </div>
+  </section>
+</AdminLayout>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  @media (max-width: 1100px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  .card {
+    display: block;
+    padding: 1.6rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: inherit;
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    border-color: var(--color-dore);
+    transform: translateY(-2px);
+  }
+  .card-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+  .card-big {
+    margin-top: 0.8rem;
+    font-size: 3rem;
+    font-style: italic;
+    color: var(--color-dore);
+    line-height: 1;
+  }
+  .card-meta {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  .card-cta {
+    margin-top: 1.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+  .card:hover .card-cta { color: var(--color-dore); }
+
+  .links h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+  .links-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 700px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>

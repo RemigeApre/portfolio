@@ -1,0 +1,340 @@
+---
+import '~/styles/global.css';
+import { getCurrentUser } from '~/lib/admin';
+
+interface Props {
+  title: string;
+  active?: 'dashboard' | 'messages' | 'articles' | 'faq' | 'tools';
+}
+
+const { title, active } = Astro.props;
+const token = Astro.locals.adminToken!;
+const user = await getCurrentUser(token);
+
+const links = [
+  { key: 'dashboard', href: '/admin', label: 'Tableau' },
+  { key: 'messages', href: '/admin/messages', label: 'Messages' },
+  { key: 'articles', href: '/admin/articles', label: 'Articles' },
+  { key: 'faq', href: '/admin/faq', label: 'FAQ' },
+  { key: 'tools', href: '/admin/tools', label: 'Outils' },
+] as const;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{title} · Administration</title>
+    <link rel="icon" type="image/svg+xml" href="/LeGeai_logo_monochrome.svg" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-header">
+      <a href="/admin" class="brand">
+        <img src="/LeGeai_logo_monochrome.svg" alt="" class="brand-mark" />
+        <span class="brand-name">Le Geai</span>
+        <span class="brand-sub">Administration</span>
+      </a>
+
+      <nav class="admin-nav" aria-label="Sections">
+        {links.map((l) => (
+          <a
+            href={l.href}
+            class:list={['nav-link', { 'is-active': active === l.key }]}
+            aria-current={active === l.key ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="admin-user">
+        {user && <span class="user-email">{user.email}</span>}
+        <form method="POST" action="/api/admin/logout" class="logout-form">
+          <button type="submit" class="logout-btn">Se déconnecter</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <slot />
+    </main>
+
+    <style is:global>
+      .admin-body {
+        background: var(--color-surface);
+        color: var(--color-text);
+        min-height: 100vh;
+      }
+
+      .admin-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 2rem;
+        padding: 1rem 1.5rem;
+        background: var(--color-surface-raised);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--color-text);
+      }
+      .brand-mark { width: 26px; height: auto; filter: brightness(2.4); }
+      .brand-name { font-style: italic; font-size: 1rem; }
+      .brand-sub {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-text-dim);
+        padding-left: 0.6rem;
+        margin-left: 0.4rem;
+        border-left: 1px solid var(--color-border);
+      }
+
+      .admin-nav {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+      }
+      .nav-link {
+        position: relative;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        transition: color 0.3s ease;
+      }
+      .nav-link:hover { color: var(--color-text); }
+      .nav-link.is-active { color: var(--color-dore); }
+      .nav-link.is-active::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -8px;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 1px;
+        background: var(--color-dore);
+      }
+
+      .admin-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .user-email {
+        font-size: 0.82rem;
+        font-style: italic;
+        color: var(--color-text-muted);
+      }
+      .logout-form { display: inline; }
+      .logout-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+        background: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .logout-btn:hover {
+        border-color: var(--color-dore);
+        color: var(--color-dore);
+      }
+
+      .admin-main {
+        padding: 2rem 1.5rem 4rem;
+        max-width: 1280px;
+        margin-inline: auto;
+      }
+
+      /* Composants partagés admin */
+      .admin-h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.4rem;
+      }
+      .admin-sub {
+        color: var(--color-text-muted);
+        font-style: italic;
+        margin-bottom: 2rem;
+      }
+
+      .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 0.85rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+        vertical-align: top;
+      }
+      .admin-table thead th {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-text-dim);
+        background: rgba(201, 169, 97, 0.05);
+      }
+      .admin-table tbody tr:last-child th,
+      .admin-table tbody tr:last-child td { border-bottom: none; }
+      .admin-table tbody tr:hover { background: rgba(201, 169, 97, 0.04); }
+      .admin-table a { color: var(--color-dore); border-bottom: 1px dotted transparent; }
+      .admin-table a:hover { border-bottom-color: var(--color-dore); }
+
+      .badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-radius: 2px;
+      }
+      .badge-new       { background: rgba(46, 205, 167, 0.15); color: #6ad8b3; }
+      .badge-read      { background: rgba(162, 181, 205, 0.15); color: #b0c2db; }
+      .badge-processed { background: rgba(102, 68, 255, 0.18); color: #ad9bff; }
+      .badge-archived  { background: rgba(162, 181, 205, 0.10); color: #888c8f; }
+      .badge-published { background: rgba(46, 205, 167, 0.15); color: #6ad8b3; }
+      .badge-draft     { background: rgba(162, 181, 205, 0.15); color: #b0c2db; }
+
+      .admin-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .btn-link {
+        display: inline-block;
+        padding: 0.55rem 1.2rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        background: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .btn-link:hover { border-color: var(--color-dore); color: var(--color-dore); }
+      .btn-primary-sm {
+        display: inline-block;
+        padding: 0.55rem 1.2rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        background: var(--color-dore);
+        color: var(--color-noir);
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+      .btn-primary-sm:hover { opacity: 0.85; }
+      .btn-danger {
+        display: inline-block;
+        padding: 0.55rem 1.2rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        background: none;
+        border: 1px solid #c66;
+        color: #f0a4a4;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .btn-danger:hover { background: rgba(192, 102, 102, 0.12); }
+
+      .admin-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        max-width: 760px;
+      }
+      .admin-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
+      }
+      .admin-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+      .admin-field { display: flex; flex-direction: column; gap: 0.4rem; }
+      .admin-field label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+      }
+      .admin-field input,
+      .admin-field textarea,
+      .admin-field select {
+        padding: 0.7rem 0.9rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+      .admin-field input:focus,
+      .admin-field textarea:focus,
+      .admin-field select:focus {
+        outline: none;
+        border-color: var(--color-dore);
+      }
+      .admin-field textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+      .admin-field textarea.long { min-height: 320px; font-family: ui-monospace, "Courier New", monospace; font-size: 0.9rem; }
+      .admin-field .hint {
+        font-size: 0.78rem;
+        color: var(--color-text-dim);
+        font-style: italic;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0.02em;
+      }
+
+      .admin-form-actions {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .admin-form-actions .right { margin-left: auto; }
+
+      .admin-flash {
+        padding: 0.9rem 1.2rem;
+        border: 1px solid var(--color-border);
+        font-style: italic;
+        margin-bottom: 1.5rem;
+      }
+      .admin-flash.error { border-color: #c66; background: rgba(170, 60, 60, 0.10); color: #f0c4c4; }
+      .admin-flash.ok { border-color: var(--color-dore); background: rgba(201, 169, 97, 0.07); color: var(--color-dore); }
+
+      @media (max-width: 800px) {
+        .admin-header { grid-template-columns: auto auto; row-gap: 0.6rem; }
+        .admin-nav { grid-column: 1 / -1; gap: 1.2rem; }
+        .admin-row { grid-template-columns: 1fr; }
+        .admin-row.cols-3 { grid-template-columns: 1fr; }
+      }
+    </style>
+  </body>
+</html>

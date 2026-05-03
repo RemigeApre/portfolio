@@ -1,0 +1,56 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import ToolForm from '~/components/admin/ToolForm.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+const id = Astro.params.id;
+
+if (!id) return Astro.redirect('/admin/tools', 302);
+
+interface Tool {
+  id: string | number;
+  status: string;
+  name_fr: string;
+  name_en: string | null;
+  slug: string;
+  version: string | null;
+  description_fr: string | null;
+  description_en: string | null;
+  cover: string | null;
+  downloads: { os: string; format: string; file: string; size_bytes?: number | null }[] | null;
+  download_count: number | null;
+  sort: number | null;
+}
+
+let tool: Tool | null = null;
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: Tool }>(
+    token,
+    `/items/tools/${encodeURIComponent(id)}`
+  );
+  tool = r.data;
+} catch (e) {
+  error = String(e);
+}
+
+const ok = Astro.url.searchParams.get('ok');
+---
+
+<AdminLayout title={tool?.name_fr ?? 'Outil'} active="tools">
+  {error && <div class="admin-flash error">Erreur : {error} <a href="/admin/tools">Retour</a></div>}
+
+  {tool && (
+    <>
+      <h1 class="admin-h1">{tool.name_fr}</h1>
+      <p class="admin-sub"><a href="/admin/tools">← Tous les outils</a></p>
+
+      {ok === 'created' && <div class="admin-flash ok">Outil créé. Vous pouvez maintenant ajouter des téléchargements.</div>}
+
+      <ToolForm tool={tool} />
+    </>
+  )}
+</AdminLayout>

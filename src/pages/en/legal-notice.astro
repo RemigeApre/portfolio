@@ -1,0 +1,127 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+const hreflang = buildHreflang('/en/legal-notice', 'en');
+---
+
+<BaseLayout
+  title="Legal notice · Le Geai Informatique"
+  description="Legal notice of legeai-informatique.fr: publisher, host, intellectual property."
+  noindex={true}
+  lang="en"
+  hreflang={hreflang}
+>
+  <article class="legal">
+    <div class="container-narrow">
+      <header class="head">
+        <h1>Legal notice</h1>
+      </header>
+
+      <section>
+        <h2>Site publisher</h2>
+        <p>
+          This site, accessible at <a href="https://www.legeai-informatique.fr">legeai-informatique.fr</a>,
+          is published by <strong>Le Geai Informatique</strong>, the digital branch of the Le Geai house.
+        </p>
+        <ul>
+          <li>Status: micro-entreprise (French sole trader regime)</li>
+          <li>VAT not applicable, art. 293 B of the French General Tax Code</li>
+          <li>Email: <ProtectedEmail user="administration" domain="legeai-editions.com" lang="en" /></li>
+          <li>Telephone: <ProtectedTel number="+33482532564" display="+33 4 82 53 25 64" /></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Publication director</h2>
+        <p>The publication director is the legal representative of the Le Geai micro-entreprise.</p>
+      </section>
+
+      <section>
+        <h2>Hosting</h2>
+        <p>
+          The site is hosted on a virtual private server operated by <strong>OVH SAS</strong>,
+          2 rue Kellermann, 59100 Roubaix, France. Telephone: +33 9 72 10 10 07.
+          Site: <a href="https://www.ovhcloud.com" target="_blank" rel="noopener">ovhcloud.com</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Intellectual property</h2>
+        <p>
+          The whole of the contents present on this site (texts, images, logo, code) is the
+          property of Le Geai, save where indicated otherwise. Any reproduction, distribution
+          or modification without prior written authorisation is forbidden.
+        </p>
+        <p>
+          The Le Geai logo and brand are protected. The motto
+          <em>Obscuritas nutrit flammam</em> is attached to the Le Geai house.
+        </p>
+      </section>
+
+      <section>
+        <h2>Credits</h2>
+        <p>
+          Conception, design and development: Le Geai Informatique. Typeface:
+          <em>EB Garamond</em>, distributed under the SIL Open Font Licence.
+        </p>
+      </section>
+
+      <section>
+        <h2>Personal data</h2>
+        <p>
+          The conditions for processing personal data are described in the
+          <a href="/en/privacy">privacy policy</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Applicable law</h2>
+        <p>
+          The present legal notice is governed by French law. In the event of a dispute and
+          failing an amicable agreement, the French courts shall have sole jurisdiction.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal { padding-top: 8rem; padding-bottom: 5rem; }
+  .head { text-align: center; margin-bottom: 3rem; padding: 0 1.5rem; }
+  h1 { margin-top: 1rem; font-size: clamp(2rem, 4vw, 2.8rem); }
+  section { padding: 0 1.5rem; margin-bottom: 3rem; }
+  section h2 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  section p { color: var(--color-text-muted); line-height: 1.8; margin-bottom: 1rem; }
+  section ul { list-style: none; color: var(--color-text-muted); }
+  section li {
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+  }
+  section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.05rem;
+    width: 8px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+  section a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  section a:hover { border-bottom-color: var(--color-dore); }
+  section em { color: var(--color-dore); font-style: italic; }
+</style>

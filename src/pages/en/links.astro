@@ -1,0 +1,120 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+type LinkItem =
+  | { kind: 'link'; label: string; href: string; external?: boolean }
+  | { kind: 'email'; user: string; domain: string }
+  | { kind: 'tel'; number: string; display: string };
+
+const liens: LinkItem[] = [
+  { kind: 'link', label: 'Official site', href: 'https://www.legeai-informatique.fr/en' },
+  { kind: 'link', label: 'Web design: see packages', href: '/en/web-design' },
+  { kind: 'link', label: 'Web maintenance: see levels', href: '/en/web-maintenance' },
+  { kind: 'link', label: 'Portfolio of works', href: '/en/portfolio' },
+  { kind: 'link', label: 'The journal (blog)', href: '/en/blog' },
+  { kind: 'email', user: 'administration', domain: 'legeai-editions.com' },
+  { kind: 'tel', number: '+33482532564', display: 'Telephone: +33 4 82 53 25 64' },
+  { kind: 'link', label: 'The parent house, Le Geai Éditions', href: 'https://www.legeai-editions.com', external: true },
+];
+
+const hreflang = buildHreflang('/en/links', 'en');
+---
+
+<BaseLayout
+  title="Links · Le Geai Informatique"
+  description="All entry points to Le Geai Informatique: services, contact, works, journal."
+  noindex={true}
+  hideNav={true}
+  lang="en"
+  hreflang={hreflang}
+>
+  <section class="liens">
+    <div class="container-narrow">
+      <Reveal>
+        <img src="/LeGeai_logo_monochrome.svg" alt="" aria-hidden="true" class="emblem" />
+      </Reveal>
+      <Reveal delay={120}>
+        <h1>Le Geai Informatique</h1>
+      </Reveal>
+      <Reveal delay={200}>
+        <p class="tagline">Digital craftsmanship for independents, artisans and small firms.</p>
+      </Reveal>
+
+      <ul class="links">
+        {liens.map((l, i) => (
+          <Reveal delay={300 + i * 60}>
+            <li>
+              {l.kind === 'link' && (
+                <a
+                  href={l.href}
+                  target={l.external ? '_blank' : undefined}
+                  rel={l.external ? 'noopener' : undefined}
+                >{l.label}</a>
+              )}
+              {l.kind === 'email' && (
+                <ProtectedEmail user={l.user} domain={l.domain} lang="en" fallback="Write to us via email →" />
+              )}
+              {l.kind === 'tel' && (
+                <ProtectedTel number={l.number} display={l.display} />
+              )}
+            </li>
+          </Reveal>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .liens {
+    min-height: 100vh;
+    padding: 7rem 1.5rem 4rem;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .emblem {
+    width: 80px;
+    height: auto;
+    margin: 0 auto 1.5rem;
+    filter: brightness(2);
+    opacity: 0.9;
+  }
+  h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+  .tagline {
+    margin-top: 0.6rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+  .links {
+    list-style: none;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .links a {
+    display: block;
+    padding: 1rem 1.4rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    transition: all 0.4s ease;
+  }
+  .links a:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+    color: var(--color-dore);
+  }
+</style>

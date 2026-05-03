@@ -1,0 +1,418 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { maintenanceFormules, fName, fSlug, fTarifLong, fTarifShort, fDelai } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const SITE = 'https://www.legeai-informatique.fr';
+const lang = 'en' as const;
+
+const offerCatalog = {
+  '@context': 'https://schema.org',
+  '@type': 'OfferCatalog',
+  '@id': `${SITE}/en/web-maintenance#catalog`,
+  name: 'Web maintenance levels by Le Geai Informatique',
+  url: `${SITE}/en/web-maintenance`,
+  inLanguage: 'en-GB',
+  provider: { '@id': `${SITE}/#organization` },
+  itemListElement: maintenanceFormules.map((f) => {
+    const priceNum = f.tarifShort.match(/\d[\d ]*/)?.[0]?.replace(/\s/g, '');
+    return {
+      '@type': 'Offer',
+      '@id': `${SITE}/en/web-maintenance/${f.slug_en}#service`,
+      name: f.name_en,
+      url: `${SITE}/en/web-maintenance/${f.slug_en}`,
+      description: f.compositionShort_en,
+      ...(priceNum ? {
+        price: priceNum,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: priceNum,
+          priceCurrency: 'EUR',
+          billingIncrement: 1,
+          unitCode: 'MON',
+        },
+      } : {}),
+    };
+  }),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/en` },
+    { '@type': 'ListItem', position: 2, name: 'Web maintenance', item: `${SITE}/en/web-maintenance` },
+  ],
+};
+
+type Cell = boolean | string;
+interface Group {
+  title: string;
+  rows: { feature: string; cells: [Cell, Cell, Cell, Cell] }[];
+}
+
+const groups: Group[] = [
+  {
+    title: 'Technical foundation',
+    rows: [
+      { feature: 'Domain name', cells: [true, true, true, true] },
+      { feature: 'Hosting', cells: [true, true, true, true] },
+      { feature: 'SSL certificate', cells: [true, true, true, true] },
+      { feature: 'Continuous monitoring', cells: [true, true, true, true] },
+      { feature: 'Fixing of blocking incidents', cells: [true, true, true, true] },
+    ],
+  },
+  {
+    title: 'Backups',
+    rows: [
+      { feature: 'Structure backup', cells: ['monthly', 'monthly', 'monthly', 'monthly'] },
+      { feature: 'Content backup', cells: [false, false, true, true] },
+    ],
+  },
+  {
+    title: 'On-request improvements',
+    rows: [
+      { feature: 'Hours included each month', cells: [false, '2 h', '6 h', '6 h'] },
+      { feature: 'Scope covered', cells: [false, 'design, features, content, SEO', 'design, features, content, SEO', 'design, features, content, SEO'] },
+    ],
+  },
+  {
+    title: 'Support',
+    rows: [
+      { feature: 'User training', cells: [false, false, '1 h / month', '1 h / month'] },
+      { feature: 'Active content management', cells: [false, false, false, '1 h / week'] },
+      { feature: 'Intervention time', cells: ['standard', 'standard', '24 working h', 'maximum priority'] },
+    ],
+  },
+];
+
+const renderCell = (c: Cell) => {
+  if (c === true) return { mark: '✓', text: '', cls: 'cell-yes' };
+  if (c === false) return { mark: '—', text: '', cls: 'cell-no' };
+  return { mark: '', text: c, cls: 'cell-text' };
+};
+
+const hreflang = buildHreflang('/en/web-maintenance', 'en');
+---
+
+<BaseLayout
+  title="Monthly web maintenance"
+  description="Web maintenance with hosting and domain included. Four levels: Essential €39, Pro €149, Premium €299, Legendary €499 per month."
+  lang="en"
+  hreflang={hreflang}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(offerCatalog)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} slot="head" />
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Your site stays alive, secure and current</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="lead">
+          The technical side stays with us. Four levels of engagement, from the
+          essential foundation to weekly active management.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="formules-row">
+    <h2 class="sr-only">The four maintenance levels</h2>
+    <div class="container">
+      <div class="cards-grid">
+        {maintenanceFormules.map((f, i) => (
+          <Reveal delay={80 + i * 60}>
+            <a href={`/en/web-maintenance/${fSlug(f, lang)}`} class="card-link">
+              <article class="card">
+                <h3>{fName(f, lang)}</h3>
+                <p class="card-tarif">{fTarifLong(f, lang)}</p>
+                <p class="card-meta">{fDelai(f, lang)}</p>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </article>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="comparator-section">
+    <div class="container">
+      <Reveal>
+        <h2 class="comparator-title">Comparison</h2>
+        <p class="comparator-hint" aria-hidden="true">
+          Click a level name to see the detail.
+        </p>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <div class="table-wrap">
+          <table class="comparator">
+            <thead>
+              <tr>
+                <th class="feature-col" scope="col"><span class="sr-only">Feature</span></th>
+                {maintenanceFormules.map((f) => (
+                  <th class="formule-col" scope="col">
+                    <a href={`/en/web-maintenance/${fSlug(f, lang)}`} class="formule-link">
+                      <span class="formule-name">{fName(f, lang)}</span>
+                      <span class="formule-tarif">{fTarifShort(f, lang)}</span>
+                    </a>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {groups.map((g) => (
+                <>
+                  <tr class="group-row">
+                    <th colspan={5} scope="colgroup">{g.title}</th>
+                  </tr>
+                  {g.rows.map((r) => (
+                    <tr>
+                      <th scope="row" class="feature">{r.feature}</th>
+                      {r.cells.map((c) => {
+                        const v = renderCell(c);
+                        return (
+                          <td class={v.cls}>
+                            {v.mark && <span class="cell-mark" aria-hidden="true">{v.mark}</span>}
+                            {v.text && <span class="cell-value">{v.text}</span>}
+                            <span class="sr-only">
+                              {c === true ? 'included' : c === false ? 'not included' : c}
+                            </span>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </>
+              ))}
+
+              <tr class="summary-row">
+                <th scope="row" class="feature">Monthly price</th>
+                {maintenanceFormules.map((f) => (
+                  <td class="cell-tarif">{fTarifShort(f, lang)}</td>
+                ))}
+              </tr>
+              <tr class="link-row">
+                <th scope="row" class="sr-only">Detail page</th>
+                {maintenanceFormules.map((f) => (
+                  <td>
+                    <a href={`/en/web-maintenance/${fSlug(f, lang)}`} class="detail-link">
+                      See detail
+                    </a>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="conditions">
+    <div class="container-narrow">
+      <Reveal>
+        <p class="conditions-text">
+          Hosting and domain name included in all our web maintenance packages.
+          12-month engagement, tacit renewal. Net prices, VAT not applicable,
+          art. 293 B of the French CGI.
+        </p>
+        <p class="conditions-doc">
+          Sales brochure (in French):
+          <a href="/documents/plaquette_le_geai_informatique.pdf" download>
+            download the PDF
+          </a>
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>A question, a site to take over</h2>
+        <p class="lead">
+          Describe your current site, what works, what deserves to be reworked.
+          We shall come back with a fair scope.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href="/en/contact" class="btn-primary">Request a scope</a>
+          <a href="/en/web-design" class="btn-ghost">View design</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+
+  .page-head { padding: 8rem 1.5rem 3rem; text-align: center; }
+  h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
+  h2 { font-size: clamp(1.6rem, 3vw, 2rem); text-align: center; }
+  .lead {
+    max-width: 600px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .formules-row { padding: 2rem 1.5rem 4rem; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .card-link { display: block; color: inherit; height: 100%; }
+  .card {
+    position: relative;
+    height: 100%;
+    padding: 1.8rem 1.6rem 2.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .card-link:hover .card { border-color: var(--color-dore); transform: translateY(-3px); }
+  .card h3 { font-size: 1.4rem; color: var(--color-text); margin-bottom: 0.4rem; }
+  .card-tarif { font-style: italic; font-size: 1.4rem; color: var(--color-dore); line-height: 1.2; }
+  .card-meta { font-size: 0.85rem; color: var(--color-text-muted); }
+  .card-arrow {
+    position: absolute; bottom: 1rem; right: 1.2rem;
+    font-size: 1.4rem; color: var(--color-text-muted);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .card-link:hover .card-arrow { color: var(--color-dore); transform: translateX(4px); }
+
+  .comparator-section { padding: 4rem 1.5rem; border-top: 1px solid var(--color-border); }
+  .comparator-title { margin-bottom: 0.8rem; }
+  .comparator-hint {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+  }
+  .comparator { width: 100%; min-width: 720px; border-collapse: collapse; }
+
+  .formule-col {
+    padding: 1.2rem 0.8rem 1.4rem;
+    text-align: center;
+    background: rgba(201, 169, 97, 0.08);
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+  }
+  .formule-link {
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    color: inherit; transition: color 0.3s ease;
+  }
+  .formule-link:hover { color: var(--color-dore); }
+  .formule-name {
+    font-size: 1.2rem; font-style: italic; color: var(--color-dore);
+    border-bottom: 1px dotted transparent; padding-bottom: 2px;
+    transition: border-color 0.3s ease;
+  }
+  .formule-link:hover .formule-name { border-bottom-color: var(--color-dore); }
+  .formule-tarif { font-size: 0.82rem; letter-spacing: 0.06em; color: var(--color-text-muted); }
+
+  .feature-col { background: rgba(201, 169, 97, 0.04); border-bottom: 1px solid var(--color-border); }
+  .feature {
+    text-align: left; padding: 0.95rem 1rem;
+    color: var(--color-text); font-weight: 500;
+    border-bottom: 1px solid var(--color-border);
+    background: rgba(201, 169, 97, 0.03);
+    width: 28%;
+  }
+
+  .group-row th {
+    text-align: left; padding: 1rem 1rem 0.6rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--color-dore);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.95rem 0.8rem; text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .cell-yes .cell-mark { color: var(--color-dore); font-size: 1.2rem; font-weight: 700; }
+  .cell-no .cell-mark { color: var(--color-text-dim); font-size: 1.1rem; }
+  .cell-text .cell-value, .cell-text { color: var(--color-text-muted); font-size: 0.95rem; font-style: italic; }
+
+  .summary-row .feature {
+    text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.16em; color: var(--color-dore);
+  }
+  .summary-row td { background: var(--color-surface); }
+  .cell-tarif { font-style: italic; color: var(--color-dore); font-size: 1.05rem; white-space: nowrap; }
+
+  .link-row td { background: var(--color-surface); padding: 1rem 0.5rem 1.4rem; }
+  .link-row { border-top: 2px solid var(--color-border); }
+  .detail-link {
+    display: inline-block; padding: 0.55rem 1rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-text); border: 1px solid var(--color-border);
+    transition: all 0.3s ease;
+  }
+  .detail-link:hover { border-color: var(--color-dore); color: var(--color-dore); background: rgba(201, 169, 97, 0.06); }
+
+  .conditions { padding: 4rem 1.5rem 2rem; text-align: center; }
+  .conditions-text { font-style: italic; color: var(--color-text-muted); line-height: 1.8; }
+  .conditions-doc { margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-text-dim); }
+  .conditions-doc a { color: var(--color-dore); border-bottom: 1px solid var(--color-border); transition: border-color 0.3s ease; }
+  .conditions-doc a:hover { border-bottom-color: var(--color-dore); }
+
+  .cta {
+    padding: 6rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+  .btn-primary {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-noir); background: var(--color-dore); transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-text); border: 1px solid var(--color-border); transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  @media (max-width: 1024px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .comparator { font-size: 0.88rem; }
+    .feature { padding: 0.7rem 0.7rem; }
+    td { padding: 0.7rem 0.5rem; }
+    .formule-name { font-size: 1rem; }
+  }
+</style>

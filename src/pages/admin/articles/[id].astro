@@ -1,0 +1,59 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import ArticleForm from '~/components/admin/ArticleForm.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+const id = Astro.params.id;
+
+if (!id) return Astro.redirect('/admin/articles', 302);
+
+interface Article {
+  id: string | number;
+  status: string;
+  title: string;
+  title_en: string | null;
+  slug: string;
+  author: string | null;
+  date_published: string | null;
+  tags: string[] | null;
+  excerpt: string | null;
+  excerpt_en: string | null;
+  content: string | null;
+  content_en: string | null;
+  cover: string | null;
+}
+
+let article: Article | null = null;
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: Article }>(
+    token,
+    `/items/articles/${encodeURIComponent(id)}`
+  );
+  article = r.data;
+} catch (e) {
+  error = String(e);
+}
+
+const ok = Astro.url.searchParams.get('ok');
+---
+
+<AdminLayout title={article?.title ?? 'Article'} active="articles">
+  {error && <div class="admin-flash error">Erreur : {error} <a href="/admin/articles">Retour à la liste</a></div>}
+
+  {article && (
+    <>
+      <h1 class="admin-h1">{article.title}</h1>
+      <p class="admin-sub">
+        <a href="/admin/articles">← Tous les articles</a>
+      </p>
+
+      {ok === 'created' && <div class="admin-flash ok">Article créé. Vous pouvez maintenant l'éditer.</div>}
+
+      <ArticleForm article={article} />
+    </>
+  )}
+</AdminLayout>

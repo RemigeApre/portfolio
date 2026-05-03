@@ -1,0 +1,13 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import ArticleForm from '~/components/admin/ArticleForm.astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Nouvel article" active="articles">
+  <h1 class="admin-h1">Nouvel article</h1>
+  <p class="admin-sub">Le statut « brouillon » garde l'article privé jusqu'à publication.</p>
+
+  <ArticleForm />
+</AdminLayout>

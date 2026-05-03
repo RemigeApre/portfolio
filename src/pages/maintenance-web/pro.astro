@@ -1,0 +1,19 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, maintenanceFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('maintenance', 'pro')!;
+const index = maintenanceFormules.findIndex((f) => f.slug === formule.slug) + 1;
+---
+
+<BaseLayout
+  title="Pro · Maintenance web 149 € par mois"
+  description="Maintenance Pro : Essentiel + 2 h d'amélioration mensuelle sur demande (design, fonctionnalités, contenu, SEO). 149 € par mois, engagement 12 mois."
+  hreflang={buildHreflang('/maintenance-web/pro', 'fr')}
+>
+  <FormuleDetail formule={formule} index={index} total={maintenanceFormules.length} />
+</BaseLayout>

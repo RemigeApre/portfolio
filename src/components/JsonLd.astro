@@ -1,0 +1,52 @@
+---
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
+      '@id': 'https://www.legeai-informatique.fr/#organization',
+      name: 'Le Geai Informatique',
+      alternateName: ['Le Geai Info'],
+      url: 'https://www.legeai-informatique.fr',
+      description:
+        "Artisanat numérique pour indépendants, artisans et PME. Création de sites web sur mesure et maintenance durable.",
+      telephone: '+33482532564',
+      foundingDate: '2025',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'FR',
+      },
+      areaServed: { '@type': 'Country', name: 'France' },
+      serviceType: ['Création de sites web', 'Maintenance web'],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Services Le Geai Informatique',
+        itemListElement: [
+          { '@type': 'Offer', name: 'Site vitrine', price: '900', priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
+          { '@type': 'Offer', name: 'Site avec espace de gestion', price: '2800', priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
+          { '@type': 'Offer', name: 'Site e-commerce', price: '6500', priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
+          { '@type': 'Offer', name: 'Maintenance Essentiel', price: '39', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', unitCode: 'MON' } },
+          { '@type': 'Offer', name: 'Maintenance Pro', price: '149', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', unitCode: 'MON' } },
+          { '@type': 'Offer', name: 'Maintenance Premium', price: '299', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', unitCode: 'MON' } },
+          { '@type': 'Offer', name: 'Maintenance Légendaire', price: '499', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', unitCode: 'MON' } },
+        ],
+      },
+      priceRange: '€-€€€',
+      paymentAccepted: 'Virement bancaire',
+      currenciesAccepted: 'EUR',
+      knowsLanguage: ['fr'],
+      slogan: 'Artisanat numérique pour indépendants, artisans et PME',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.legeai-informatique.fr/#website',
+      url: 'https://www.legeai-informatique.fr',
+      name: 'Le Geai Informatique',
+      publisher: { '@id': 'https://www.legeai-informatique.fr/#organization' },
+      inLanguage: 'fr-FR',
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

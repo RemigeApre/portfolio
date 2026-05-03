@@ -1,0 +1,162 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+const ok = Astro.url.searchParams.get('ok');
+
+interface Article {
+  id: string | number;
+  status: string;
+  title: string;
+  title_en: string | null;
+  content_en: string | null;
+  slug: string;
+  author: string | null;
+  date_published: string | null;
+}
+
+let articles: Article[] = [];
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: Article[] }>(
+    token,
+    '/items/articles?fields=id,status,title,title_en,content_en,slug,author,date_published&sort=-date_published,-id&limit=200'
+  );
+  articles = r.data ?? [];
+} catch (e) {
+  error = String(e);
+}
+
+// Indicateur de complétude EN : titre EN + contenu EN tous deux remplis = traduit
+function isTranslated(a: Article): boolean {
+  return Boolean(a.title_en?.trim() && a.content_en?.trim());
+}
+const translatedCount = articles.filter(isTranslated).length;
+
+const STATUS_LABEL: Record<string, string> = {
+  draft: 'Brouillon',
+  published: 'Publié',
+  archived: 'Archivé',
+};
+
+const fmtDate = (iso: string | null) => {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+---
+
+<AdminLayout title="Articles" active="articles">
+  <h1 class="admin-h1">Articles du blog</h1>
+  <p class="admin-sub">
+    Création, publication, archivage.
+    {articles.length > 0 && (
+      <span class="trans-summary">
+        · {translatedCount} / {articles.length} traduit{translatedCount > 1 ? 's' : ''} en anglais
+      </span>
+    )}
+  </p>
+
+  {ok === 'deleted' && <div class="admin-flash ok">Article supprimé.</div>}
+
+  <div class="admin-actions">
+    <a href="/admin/articles/new" class="btn-primary-sm">+ Nouvel article</a>
+  </div>
+
+  {error && <div class="admin-flash error">Erreur de chargement : {error}</div>}
+  {!error && articles.length === 0 && <p class="empty">Aucun article. Cliquez sur « Nouvel article » pour commencer.</p>}
+
+  {articles.length > 0 && (
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Langues</th>
+          <th>Auteur</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {articles.map((a) => {
+          const translated = isTranslated(a);
+          return (
+            <tr>
+              <td>
+                <a href={`/admin/articles/${a.id}`}>{a.title || '(sans titre)'}</a>
+                <div class="slug">/blog/{a.slug}</div>
+              </td>
+              <td>
+                <span class="lang-tag lang-fr" title="Français présent">FR</span>
+                <span
+                  class:list={['lang-tag', translated ? 'lang-en-on' : 'lang-en-off']}
+                  title={translated ? 'Anglais présent' : 'Anglais à compléter'}
+                >EN</span>
+              </td>
+              <td>{a.author ?? '—'}</td>
+              <td>{fmtDate(a.date_published)}</td>
+              <td><span class={`badge badge-${a.status}`}>{STATUS_LABEL[a.status] ?? a.status}</span></td>
+              <td>
+                <a href={`/admin/articles/${a.id}`} class="row-action">Modifier</a>
+                {a.status === 'published' && (
+                  <a href={`/blog/${a.slug}`} target="_blank" rel="noopener" class="row-action">Voir</a>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>
+
+<style>
+  .empty { text-align: center; padding: 3rem 0; font-style: italic; color: var(--color-text-muted); }
+  .slug { font-size: 0.78rem; color: var(--color-text-dim); margin-top: 0.2rem; font-style: italic; }
+  .row-action {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    margin-right: 0.4rem;
+    transition: all 0.3s ease;
+  }
+  .row-action:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  /* Tag de langue : montre d'un coup d'œil ce qui est traduit */
+  .lang-tag {
+    display: inline-block;
+    padding: 0.18rem 0.5rem;
+    margin-right: 0.3rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    border: 1px solid var(--color-border);
+  }
+  .lang-tag.lang-fr {
+    color: var(--color-dore);
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .lang-tag.lang-en-on {
+    color: var(--color-dore);
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .lang-tag.lang-en-off {
+    color: var(--color-text-dim);
+    opacity: 0.55;
+    border-style: dashed;
+  }
+  .trans-summary {
+    color: var(--color-text-dim);
+    font-style: italic;
+  }
+</style>

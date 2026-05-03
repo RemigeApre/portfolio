@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'e-commerce', 'en')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+const hreflang = buildHreflang('/en/web-design/e-commerce', 'en');
+---
+
+<BaseLayout
+  title="E-commerce website · from €6,500 in 10 weeks"
+  description="E-commerce package: management + product catalogue, bespoke cart, secure payment via PayPal or Stripe, order handling, sales dashboard. From €6,500 net."
+  lang="en"
+  hreflang={hreflang}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} lang="en" />
+</BaseLayout>

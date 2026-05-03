@@ -1,0 +1,141 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+---
+
+<BaseLayout
+  title="Mentions légales · Le Geai Informatique"
+  description="Mentions légales du site legeai-informatique.fr : éditeur, hébergeur, propriété intellectuelle."
+  noindex={true}
+  hreflang={buildHreflang('/mentions-legales', 'fr')}
+>
+  <article class="legal">
+    <div class="container-narrow">
+      <header class="head">
+        <h1>Mentions légales</h1>
+      </header>
+
+      <section>
+        <h2>Éditeur du site</h2>
+        <p>
+          Le présent site, accessible à l'adresse <a href="https://www.legeai-informatique.fr">legeai-informatique.fr</a>,
+          est édité par <strong>Le Geai Informatique</strong>, branche numérique de la maison Le Geai.
+        </p>
+        <ul>
+          <li>Statut : micro-entreprise</li>
+          <li>TVA non applicable, art. 293 B du Code général des impôts</li>
+          <li>Email : <ProtectedEmail user="administration" domain="legeai-editions.com" lang="fr" /></li>
+          <li>Téléphone : <ProtectedTel number="+33482532564" display="04 82 53 25 64" /></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Directeur de la publication</h2>
+        <p>Le directeur de la publication est le représentant légal de la micro-entreprise Le Geai.</p>
+      </section>
+
+      <section>
+        <h2>Hébergement</h2>
+        <p>
+          Le site est hébergé sur un serveur privé virtuel opéré par <strong>OVH SAS</strong>,
+          2 rue Kellermann, 59100 Roubaix, France. Téléphone : 09 72 10 10 07.
+          Site : <a href="https://www.ovhcloud.com" target="_blank" rel="noopener">ovhcloud.com</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Propriété intellectuelle</h2>
+        <p>
+          L'ensemble des contenus présents sur ce site (textes, images, logo, code) est la propriété
+          de Le Geai, sauf mention contraire. Toute reproduction, distribution ou modification sans
+          autorisation écrite préalable est interdite.
+        </p>
+        <p>
+          Le logo et la marque Le Geai sont protégés. La devise
+          <em>Obscuritas nutrit flammam</em> est attachée à la maison Le Geai.
+        </p>
+      </section>
+
+      <section>
+        <h2>Crédits</h2>
+        <p>
+          Conception, design et développement : Le Geai Informatique. Police de caractères :
+          <em>Cormorant Garamond</em>, distribuée sous licence libre par l'OFL.
+        </p>
+      </section>
+
+      <section>
+        <h2>Données personnelles</h2>
+        <p>
+          Les conditions de traitement des données personnelles sont décrites dans la
+          <a href="/confidentialite">politique de confidentialité</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Droit applicable</h2>
+        <p>
+          Les présentes mentions légales sont régies par le droit français. En cas de litige, et à
+          défaut d'accord amiable, les tribunaux français seront seuls compétents.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal { padding-top: 8rem; padding-bottom: 5rem; }
+  .head { text-align: center; margin-bottom: 3rem; padding: 0 1.5rem; }
+  .kicker {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+  }
+  h1 { margin-top: 1rem; font-size: clamp(2rem, 4vw, 2.8rem); }
+  section {
+    padding: 0 1.5rem;
+    margin-bottom: 3rem;
+  }
+  section h2 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  section p {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  section ul {
+    list-style: none;
+    color: var(--color-text-muted);
+  }
+  section li {
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+  }
+  section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.05rem;
+    width: 8px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+  section a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  section a:hover { border-bottom-color: var(--color-dore); }
+  section em { color: var(--color-dore); font-style: italic; }
+</style>

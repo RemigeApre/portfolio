@@ -1,0 +1,853 @@
+---
+import { assetUrl, type Tool } from '~/lib/directus';
+
+interface Props {
+  tool: Tool;
+  lang: 'fr' | 'en';
+  toolBaseHref: string;
+}
+
+const { tool, lang, toolBaseHref } = Astro.props;
+
+const t = lang === 'en'
+  ? {
+      back: '← All tools',
+      typeDesktop: 'Desktop application',
+      typeWeb: 'Web application',
+      typeExtension: 'Browser extension',
+      version: 'Version',
+      license: 'License',
+      size: 'Size',
+      lastUpdated: 'Last updated',
+      downloadsLabel: 'downloads',
+      officialCounter: 'Official download counter',
+      featuresTitle: 'What it does',
+      screenshotsTitle: 'In pictures',
+      downloadSection: 'Get the application',
+      desktopHint: 'Choose your operating system below.',
+      primaryDl: 'Download for',
+      otherDl: 'Other operating systems',
+      openWebApp: 'Open the web application',
+      browserHint: 'Pick your browser to open the dedicated store page.',
+      changelog: 'Release notes',
+      usageWiki: 'How to use it',
+      sourceCode: 'Source code',
+      sourceCodeLink: 'View on GitHub',
+      sourceCodeText: "Full source code is available. Inspect, audit, fork, modify.",
+      free: 'Free, no account, no connection',
+      sinceLaunch: 'since launch',
+      empty: 'Tools temporarily unavailable.',
+    }
+  : {
+      back: '← Tous les outils',
+      typeDesktop: 'Application bureau',
+      typeWeb: 'Application web',
+      typeExtension: 'Extension navigateur',
+      version: 'Version',
+      license: 'Licence',
+      size: 'Taille',
+      lastUpdated: 'Mise à jour',
+      downloadsLabel: 'téléchargements',
+      officialCounter: 'Compteur officiel de téléchargements',
+      featuresTitle: 'Ce que cet outil fait',
+      screenshotsTitle: 'En images',
+      downloadSection: 'Obtenir l\'application',
+      desktopHint: 'Choisissez votre système d\'exploitation ci-dessous.',
+      primaryDl: 'Télécharger pour',
+      otherDl: 'Autres systèmes d\'exploitation',
+      openWebApp: 'Ouvrir l\'application web',
+      browserHint: 'Choisissez votre navigateur.',
+      changelog: 'Journal des versions',
+      usageWiki: 'Comment l\'utiliser',
+      sourceCode: 'Code source',
+      sourceCodeLink: 'Voir sur GitHub',
+      sourceCodeText: "Code source ouvert : inspectez, auditez, modifiez, recompilez.",
+      free: 'Gratuit, sans compte, sans connexion',
+      sinceLaunch: 'depuis le lancement',
+      empty: 'Outils temporairement indisponibles.',
+    };
+
+const TYPE_LABELS: Record<string, string> = {
+  desktop: t.typeDesktop, web: t.typeWeb, extension: t.typeExtension,
+};
+
+const OS_LABELS: Record<string, string> = {
+  windows: 'Windows', macos: 'macOS', linux: 'Linux',
+  any: lang === 'en' ? 'All platforms' : 'Toutes plateformes',
+};
+const FORMAT_LABELS: Record<string, string> = {
+  exe: 'EXE', msi: 'MSI', zip: 'ZIP', dmg: 'DMG',
+  appimage: 'AppImage', deb: 'DEB', targz: 'TAR.GZ',
+};
+const BROWSER_LABELS: Record<string, string> = {
+  chrome: 'Chrome', firefox: 'Firefox', edge: 'Microsoft Edge',
+  safari: 'Safari', brave: 'Brave', opera: 'Opera',
+};
+
+const tagline = lang === 'en' ? (tool.tagline_en || tool.tagline_fr) : tool.tagline_fr;
+const description = lang === 'en' ? (tool.description_en || tool.description_fr) : tool.description_fr;
+const wiki = lang === 'en' ? (tool.usage_wiki_en || tool.usage_wiki_fr) : tool.usage_wiki_fr;
+const cover = assetUrl(tool.cover);
+const screenshots = (tool.screenshots ?? []).filter((s) => s.file);
+const features = (tool.features ?? []).filter((f) => f.title_fr);
+const downloads = tool.downloads ?? [];
+const totalDownloads = tool.download_count ?? 0;
+
+const formatBytes = (bytes?: number | null) => {
+  if (!bytes || bytes <= 0) return '';
+  const u = lang === 'en' ? ['B', 'KB', 'MB', 'GB'] : ['o', 'Ko', 'Mo', 'Go'];
+  let i = 0; let n = bytes;
+  while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+  return `${n.toFixed(n >= 100 ? 0 : 1)} ${u[i]}`;
+};
+
+const formatDate = (iso?: string | null) => {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
+};
+
+// Estimer la "taille typique" du logiciel (premier download)
+const firstDownloadSize = downloads.find((d) => d.size_bytes)?.size_bytes;
+---
+
+<article class="tool-detail">
+  <!-- ── Hero produit ── -->
+  <header class="hero">
+    <div class="container hero-inner">
+      <nav class="breadcrumb" aria-label="Fil d'Ariane">
+        <a href={toolBaseHref} class="back-link">{t.back}</a>
+      </nav>
+
+      <p class="type-line">
+        <span class={`type-badge type-${tool.app_type}`}>{TYPE_LABELS[tool.app_type] ?? tool.app_type}</span>
+      </p>
+
+      <h1>{tool.name_fr}</h1>
+
+      {tagline && <p class="tagline">{tagline}</p>}
+
+      <!-- Stats officielles en bandeau -->
+      <div class="stat-bar" role="group" aria-label={t.officialCounter}>
+        <div class="stat stat-counter">
+          <span class="stat-value">{totalDownloads.toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR')}</span>
+          <span class="stat-label">{t.downloadsLabel} · {t.sinceLaunch}</span>
+        </div>
+        {tool.version && (
+          <div class="stat">
+            <span class="stat-value">v{tool.version}</span>
+            <span class="stat-label">{t.version}</span>
+          </div>
+        )}
+        {firstDownloadSize && (
+          <div class="stat">
+            <span class="stat-value">{formatBytes(firstDownloadSize)}</span>
+            <span class="stat-label">{t.size}</span>
+          </div>
+        )}
+        {tool.license && (
+          <div class="stat">
+            <span class="stat-value lic">{tool.license}</span>
+            <span class="stat-label">{t.license}</span>
+          </div>
+        )}
+        {tool.date_updated && (
+          <div class="stat">
+            <span class="stat-value">{formatDate(tool.date_updated)}</span>
+            <span class="stat-label">{t.lastUpdated}</span>
+          </div>
+        )}
+      </div>
+
+      <!-- CTA principal (OS auto-détecté pour desktop) -->
+      <div class="hero-cta">
+        {tool.app_type === 'desktop' && downloads.length > 0 && (
+          <div id="primary-cta" class="primary-cta-wrap" data-downloads={JSON.stringify(downloads.map((d, i) => ({ os: d.os, format: d.format, idx: i, size: d.size_bytes })))} data-base-href={`/api/download/${tool.slug}`} data-label-prefix={t.primaryDl}>
+            <!-- Rempli côté client par detectOS() -->
+            <a href={`#downloads`} class="big-btn">↓ {t.downloadSection}</a>
+          </div>
+        )}
+        {tool.app_type === 'web' && tool.web_url && (
+          <a href={tool.web_url} target="_blank" rel="noopener" class="big-btn">
+            {t.openWebApp} →
+          </a>
+        )}
+        {tool.app_type === 'extension' && tool.extension_links && tool.extension_links.length > 0 && (
+          <a href={tool.extension_links[0].url} target="_blank" rel="noopener" class="big-btn">
+            {t.primaryDl} {BROWSER_LABELS[tool.extension_links[0].browser] ?? tool.extension_links[0].browser} →
+          </a>
+        )}
+      </div>
+
+      <p class="free-line">{t.free}</p>
+    </div>
+  </header>
+
+  <!-- ── Hero image / screenshot principal ── -->
+  {(cover || screenshots[0]) && (
+    <figure class="hero-visual">
+      <img src={cover ?? assetUrl(screenshots[0].file)} alt={tool.name_fr} loading="eager" />
+    </figure>
+  )}
+
+  <!-- ── Description / pitch ── -->
+  {description && (
+    <section class="pitch">
+      <div class="container-narrow">
+        <p class="pitch-text">{description}</p>
+      </div>
+    </section>
+  )}
+
+  <!-- ── Features grid ── -->
+  {features.length > 0 && (
+    <section class="features-section">
+      <div class="container">
+        <h2>{t.featuresTitle}</h2>
+        <ul class="features-grid">
+          {features.map((f, i) => {
+            const title = lang === 'en' ? (f.title_en || f.title_fr) : f.title_fr;
+            const desc = lang === 'en' ? (f.description_en || f.description_fr) : f.description_fr;
+            return (
+              <li class="feature-card">
+                <span class="feature-num">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{title}</h3>
+                {desc && <p>{desc}</p>}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- ── Screenshots gallery ── -->
+  {screenshots.length > 0 && (
+    <section class="screenshots-section">
+      <div class="container">
+        <h2>{t.screenshotsTitle}</h2>
+        <ul class="screenshots-grid">
+          {screenshots.map((s) => {
+            const caption = lang === 'en' ? (s.caption_en || s.caption_fr) : s.caption_fr;
+            return (
+              <li>
+                <figure class="screenshot">
+                  <img src={assetUrl(s.file)} alt={caption ?? tool.name_fr} loading="lazy" />
+                  {caption && <figcaption>{caption}</figcaption>}
+                </figure>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- ── Downloads section ── -->
+  <section class="get-section" id="downloads">
+    <div class="container-narrow">
+      <h2>{t.downloadSection}</h2>
+
+      {tool.app_type === 'desktop' && (
+        <>
+          <p class="get-hint">{t.desktopHint}</p>
+          {downloads.length > 0 ? (
+            <ul class="downloads-grid">
+              {downloads.map((d, idx) => (
+                <li>
+                  <a
+                    href={`/api/download/${tool.slug}/${idx}`}
+                    class="dl-card"
+                    rel="nofollow noopener"
+                    download
+                    data-os={d.os}
+                  >
+                    <span class="dl-os">{OS_LABELS[d.os] ?? d.os}</span>
+                    <span class="dl-format">{FORMAT_LABELS[d.format] ?? d.format.toUpperCase()}</span>
+                    {d.size_bytes && d.size_bytes > 0 && (
+                      <span class="dl-size">{formatBytes(d.size_bytes)}</span>
+                    )}
+                    <span class="dl-arrow" aria-hidden="true">↓</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="empty-section">{lang === 'en' ? 'No downloads available yet.' : 'Aucun téléchargement disponible pour le moment.'}</p>
+          )}
+        </>
+      )}
+
+      {tool.app_type === 'web' && tool.web_url && (
+        <div class="web-cta">
+          <a href={tool.web_url} target="_blank" rel="noopener" class="big-btn">{t.openWebApp} →</a>
+        </div>
+      )}
+
+      {tool.app_type === 'extension' && (
+        <>
+          <p class="get-hint">{t.browserHint}</p>
+          {tool.extension_links && tool.extension_links.length > 0 ? (
+            <ul class="ext-grid">
+              {tool.extension_links.map((e) => (
+                <li>
+                  <a href={e.url} target="_blank" rel="noopener" class="ext-card">
+                    <span class="ext-browser">{BROWSER_LABELS[e.browser] ?? e.browser}</span>
+                    <span class="ext-arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="empty-section">{lang === 'en' ? 'No browser links yet.' : 'Aucun lien navigateur pour le moment.'}</p>
+          )}
+        </>
+      )}
+    </div>
+  </section>
+
+  {wiki && (
+    <section class="wiki-section" id="wiki">
+      <div class="container-narrow">
+        <h2>{t.usageWiki}</h2>
+        <div class="wiki-content" set:html={wiki}></div>
+      </div>
+    </section>
+  )}
+
+  {tool.changelog && (
+    <section class="changelog-section" id="changelog">
+      <div class="container-narrow">
+        <h2>{t.changelog}</h2>
+        <div class="changelog-content" set:html={tool.changelog}></div>
+      </div>
+    </section>
+  )}
+
+  {tool.github_url && (
+    <section class="github-section">
+      <div class="container-narrow">
+        <h2>{t.sourceCode}</h2>
+        <p class="github-text">{t.sourceCodeText}</p>
+        <a href={tool.github_url} target="_blank" rel="noopener" class="github-btn">
+          <span aria-hidden="true">{`{ }`}</span> {t.sourceCodeLink}
+        </a>
+      </div>
+    </section>
+  )}
+
+  <footer class="detail-foot">
+    <div class="container-narrow">
+      <a href={toolBaseHref} class="btn-ghost">{t.back}</a>
+    </div>
+  </footer>
+</article>
+
+<script>
+  // ── Détection OS pour le CTA principal ──
+  function detectOS(): 'windows' | 'macos' | 'linux' | null {
+    const ua = navigator.userAgent.toLowerCase();
+    const platform = ((navigator as any).platform || '').toLowerCase();
+    if (platform.includes('win') || ua.includes('windows')) return 'windows';
+    if (platform.includes('mac') || ua.includes('mac os')) return 'macos';
+    if (platform.includes('linux') || ua.includes('linux')) return 'linux';
+    return null;
+  }
+
+  const wrap = document.getElementById('primary-cta');
+  if (wrap) {
+    const downloadsAttr = wrap.dataset.downloads;
+    const baseHref = wrap.dataset.baseHref ?? '';
+    const labelPrefix = wrap.dataset.labelPrefix ?? 'Télécharger pour';
+    let downloads: { os: string; format: string; idx: number; size?: number | null }[] = [];
+    try { downloads = JSON.parse(downloadsAttr ?? '[]'); } catch {}
+
+    const detected = detectOS();
+    const match = detected ? downloads.find((d) => d.os === detected) : null;
+    const fallback = downloads.find((d) => d.os === 'any') ?? downloads[0];
+    const target = match ?? fallback;
+
+    if (target) {
+      const OS_NAME: Record<string, string> = { windows: 'Windows', macos: 'macOS', linux: 'Linux', any: '' };
+      wrap.innerHTML = '';
+      const link = document.createElement('a');
+      link.href = `${baseHref}/${target.idx}`;
+      link.className = 'big-btn';
+      link.setAttribute('rel', 'nofollow noopener');
+      link.setAttribute('download', '');
+      const osName = OS_NAME[target.os] ?? '';
+      const sizeStr = target.size ? ' · ' + formatBytesClient(target.size) : '';
+      link.innerHTML = `↓ ${labelPrefix} ${osName} <span class="cta-fmt">${target.format.toUpperCase()}${sizeStr}</span>`;
+      wrap.appendChild(link);
+
+      // Ligne secondaire : autres OS
+      const others = downloads.filter((d) => d !== target);
+      if (others.length > 0) {
+        const sub = document.createElement('p');
+        sub.className = 'cta-other';
+        sub.textContent = (document.documentElement.lang === 'en' ? 'Other systems: ' : 'Autres systèmes : ');
+        others.forEach((o, i) => {
+          if (i > 0) sub.appendChild(document.createTextNode(' · '));
+          const a = document.createElement('a');
+          a.href = `${baseHref}/${o.idx}`;
+          a.setAttribute('rel', 'nofollow noopener');
+          a.setAttribute('download', '');
+          a.textContent = `${OS_NAME[o.os] ?? o.os} ${o.format.toUpperCase()}`;
+          sub.appendChild(a);
+        });
+        wrap.appendChild(sub);
+      }
+    }
+  }
+
+  function formatBytesClient(n: number): string {
+    if (!n || n <= 0) return '';
+    const u = document.documentElement.lang === 'en' ? ['B', 'KB', 'MB', 'GB'] : ['o', 'Ko', 'Mo', 'Go'];
+    let i = 0; let v = n;
+    while (v >= 1024 && i < u.length - 1) { v /= 1024; i++; }
+    return `${v.toFixed(v >= 100 ? 0 : 1)} ${u[i]}`;
+  }
+</script>
+
+<style>
+  .tool-detail { padding-top: 7rem; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 0 1.5rem 2rem;
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; }
+  .breadcrumb {
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .back-link {
+    color: var(--color-dore);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  .back-link:hover { border-bottom-color: var(--color-dore); }
+
+  .type-line { margin-bottom: 1rem; }
+  .type-badge {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .type-desktop { color: var(--color-dore); border-color: rgba(201, 169, 97, 0.4); background: rgba(201, 169, 97, 0.06); }
+  .type-web { color: #a3c9a3; border-color: rgba(140, 175, 130, 0.4); background: rgba(140, 175, 130, 0.06); }
+  .type-extension { color: #b8aee0; border-color: rgba(150, 140, 200, 0.4); background: rgba(150, 140, 200, 0.06); }
+
+  h1 {
+    font-size: clamp(2.6rem, 5.5vw, 4rem);
+    line-height: 1.1;
+  }
+  .tagline {
+    margin-top: 1rem;
+    max-width: 660px;
+    margin-left: auto; margin-right: auto;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  /* Stat bar */
+  .stat-bar {
+    margin: 2.5rem auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    max-width: 800px;
+  }
+  .stat {
+    flex: 1 1 140px;
+    padding: 1.1rem 1.2rem;
+    text-align: center;
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-value {
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--color-dore);
+    line-height: 1;
+    font-weight: 500;
+  }
+  .stat-value.lic { font-size: 0.95rem; font-weight: 700; font-style: normal; }
+  .stat-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 0.4rem;
+  }
+  .stat-counter .stat-value {
+    font-size: 1.7rem;
+  }
+
+  /* Hero CTA */
+  .hero-cta {
+    margin: 2rem auto 1rem;
+  }
+  .primary-cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .big-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.1rem 2.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--color-dore);
+    color: var(--color-noir);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .big-btn :global(.cta-fmt) {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.5rem;
+    background: rgba(0, 0, 0, 0.18);
+  }
+  .big-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .primary-cta-wrap :global(.cta-other) {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+  .primary-cta-wrap :global(.cta-other a) {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .primary-cta-wrap :global(.cta-other a:hover) { border-bottom-color: var(--color-dore); }
+
+  .free-line {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* Hero visual */
+  .hero-visual {
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    padding: 0 1.5rem;
+  }
+  .hero-visual img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  /* Pitch */
+  .pitch {
+    padding: 4rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .pitch-text {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--color-text);
+    line-height: 1.65;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Features grid */
+  .features-section {
+    padding: 4rem 1.5rem;
+  }
+  .features-section h2 {
+    text-align: center;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-bottom: 3rem;
+  }
+  .features-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .feature-card {
+    padding: 2rem 1.8rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .feature-card:hover {
+    border-color: var(--color-dore);
+    transform: translateY(-2px);
+  }
+  .feature-num {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--color-dore);
+    opacity: 0.7;
+    margin-bottom: 0.7rem;
+  }
+  .feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.7rem;
+    color: var(--color-text);
+  }
+  .feature-card p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+
+  /* Screenshots */
+  .screenshots-section {
+    padding: 4rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .screenshots-section h2 {
+    text-align: center;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-bottom: 3rem;
+  }
+  .screenshots-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .screenshot {
+    margin: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  .screenshot img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .screenshot figcaption {
+    padding: 0.8rem 1rem;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  /* Section commune (get / wiki / changelog / github) */
+  .get-section, .wiki-section, .changelog-section, .github-section {
+    padding: 4rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .github-section { background: var(--color-surface-raised); text-align: center; }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .get-hint {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .downloads-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .dl-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.4rem;
+    align-items: center;
+    padding: 1.4rem 1.4rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    transition: all 0.3s ease;
+  }
+  .dl-card:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+    transform: translateY(-2px);
+  }
+  .dl-os {
+    grid-column: 1;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .dl-format {
+    grid-column: 1;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+  }
+  .dl-size {
+    grid-column: 1;
+    font-size: 0.78rem;
+    color: var(--color-text-dim);
+    font-style: italic;
+  }
+  .dl-arrow {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: center;
+    font-size: 1.8rem;
+    color: var(--color-dore);
+    line-height: 1;
+  }
+
+  .web-cta {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .ext-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .ext-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    transition: all 0.3s ease;
+  }
+  .ext-card:hover { border-color: var(--color-dore); background: rgba(201, 169, 97, 0.06); color: var(--color-dore); }
+  .ext-browser { font-weight: 700; }
+  .ext-arrow { font-size: 1.4rem; color: var(--color-dore); }
+
+  .empty-section {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  /* Wiki + Changelog content */
+  .wiki-content, .changelog-content {
+    max-width: 720px;
+    margin: 2rem auto 0;
+    color: var(--color-text);
+    line-height: 1.85;
+    font-size: 1.05rem;
+  }
+  .wiki-content :global(h2), .changelog-content :global(h2) {
+    margin-top: 2.5rem; margin-bottom: 0.8rem;
+    font-size: 1.4rem; color: var(--color-text); text-align: left;
+  }
+  .wiki-content :global(h3), .changelog-content :global(h3) {
+    margin-top: 2rem; margin-bottom: 0.6rem;
+    font-size: 1.15rem; color: var(--color-dore);
+  }
+  .wiki-content :global(p), .changelog-content :global(p) { margin-bottom: 1.2rem; color: var(--color-text-muted); }
+  .wiki-content :global(ul), .wiki-content :global(ol),
+  .changelog-content :global(ul), .changelog-content :global(ol) {
+    margin: 1rem 0 1.4rem 1.4rem; color: var(--color-text-muted);
+  }
+  .wiki-content :global(li), .changelog-content :global(li) { margin-bottom: 0.5rem; }
+  .wiki-content :global(a), .changelog-content :global(a) {
+    color: var(--color-dore); border-bottom: 1px solid var(--color-border);
+  }
+  .wiki-content :global(strong), .changelog-content :global(strong) { color: var(--color-text); }
+  .wiki-content :global(code), .changelog-content :global(code) {
+    padding: 0.1rem 0.4rem;
+    background: var(--color-surface);
+    font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+    font-size: 0.92em;
+  }
+
+  .github-text {
+    max-width: 540px;
+    margin: 0 auto 2rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.7;
+  }
+  .github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 2rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .github-btn:hover { border-color: var(--color-dore); color: var(--color-dore); }
+  .github-btn span[aria-hidden] {
+    font-family: ui-monospace, "Courier New", monospace;
+    color: var(--color-dore);
+  }
+
+  .detail-foot { padding: 3rem 1.5rem 6rem; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 1.8rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  @media (max-width: 700px) {
+    .stat { flex: 1 1 100%; border-right: none; border-bottom: 1px solid var(--color-border); }
+    .stat:last-child { border-bottom: none; }
+  }
+</style>

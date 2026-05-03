@@ -1,0 +1,13 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import FaqForm from '~/components/admin/FaqForm.astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Nouvelle question" active="faq">
+  <h1 class="admin-h1">Nouvelle question</h1>
+  <p class="admin-sub">Visible publiquement uniquement après passage en statut « publié ».</p>
+
+  <FaqForm />
+</AdminLayout>

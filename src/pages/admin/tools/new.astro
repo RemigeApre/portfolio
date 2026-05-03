@@ -1,0 +1,13 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import ToolForm from '~/components/admin/ToolForm.astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Nouvel outil" active="tools">
+  <h1 class="admin-h1">Nouvel outil</h1>
+  <p class="admin-sub">L'outil reste invisible tant qu'il est en brouillon.</p>
+
+  <ToolForm />
+</AdminLayout>

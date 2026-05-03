@@ -1,0 +1,122 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { detectLang } from '~/lib/i18n';
+
+// Le 404 doit deviner la langue depuis l'URL demandée pour offrir une cohérence linguistique.
+const lang = detectLang(Astro.url.pathname);
+
+const strings = lang === 'en'
+  ? {
+      title: 'Page not found · Le Geai Informatique',
+      description: 'The requested page does not exist or has been moved.',
+      kicker: '404',
+      h1: 'This door is closed',
+      lead: 'The page you are looking for does not exist, or has been moved. Return through the main door, or write to us if you think it is an error.',
+      home: 'Back to home',
+      contact: 'Get in touch',
+      homeHref: '/en',
+      contactHref: '/en/contact',
+    }
+  : {
+      title: 'Page introuvable · Le Geai Informatique',
+      description: "La page demandée n'existe pas ou a été déplacée.",
+      kicker: '404',
+      h1: 'Cette porte est close',
+      lead: "La page que vous cherchez n'existe pas, ou a été déplacée. Revenez par la porte principale, ou écrivez-nous si vous pensez qu'il s'agit d'une erreur.",
+      home: "Retour à l'accueil",
+      contact: 'Nous écrire',
+      homeHref: '/',
+      contactHref: '/contact',
+    };
+---
+
+<BaseLayout
+  title={strings.title}
+  description={strings.description}
+  noindex={true}
+  lang={lang}
+>
+  <section class="not-found">
+    <div class="container-narrow">
+      <img src="/LeGeai_logo_monochrome.svg" alt="" aria-hidden="true" class="emblem" />
+      <p class="kicker">{strings.kicker}</p>
+      <h1>{strings.h1}</h1>
+      <p class="lead">{strings.lead}</p>
+      <div class="cta-row">
+        <a href={strings.homeHref} class="btn-primary">{strings.home}</a>
+        <a href={strings.contactHref} class="btn-ghost">{strings.contact}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 80vh;
+    padding: 9rem 1.5rem 5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .emblem {
+    width: 90px;
+    height: auto;
+    margin: 0 auto 2rem;
+    filter: brightness(2);
+    opacity: 0.6;
+  }
+  .kicker {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--color-dore);
+    letter-spacing: 0.1em;
+  }
+  h1 {
+    margin-top: 0.6rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .lead {
+    max-width: 520px;
+    margin: 1.6rem auto 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+</style>

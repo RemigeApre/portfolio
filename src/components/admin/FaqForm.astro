@@ -1,0 +1,458 @@
+---
+interface FaqItem {
+  id?: string | number;
+  status?: string;
+  question?: string;
+  question_en?: string | null;
+  answer?: string;
+  answer_en?: string | null;
+  category?: string | null;
+  category_en?: string | null;
+  sort?: number | null;
+}
+
+interface Props {
+  item?: FaqItem;
+}
+
+const { item = {} } = Astro.props;
+const isEdit = Boolean(item.id);
+const initialPublished = (item.status ?? 'draft') === 'published';
+---
+
+<form id="faq-form" class="admin-form" data-edit={isEdit ? 'true' : 'false'} data-id={item.id ?? ''}>
+  <div id="form-flash" class="admin-flash" hidden></div>
+
+  <div class="admin-row cols-2">
+    <div class="admin-field">
+      <label for="f-question">
+        <span class="lf"><span class="lf-flag">FR</span> Question</span>
+        <span class="hint">requis</span>
+      </label>
+      <input type="text" id="f-question" name="question" value={item.question ?? ''} required maxlength="300" />
+    </div>
+    <div class="admin-field">
+      <label for="f-question-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Question</span>
+        <span class="hint">facultatif · fallback FR si vide</span>
+        <button type="button" class="copy-btn" data-copy-from="f-question" data-copy-to="f-question-en">↳ FR</button>
+      </label>
+      <input type="text" id="f-question-en" name="question_en" value={item.question_en ?? ''} maxlength="300" />
+    </div>
+  </div>
+
+  <div class="lang-tabs" role="tablist">
+    <button type="button" class="lang-tab is-active" data-lang="fr" role="tab" aria-selected="true">
+      <span class="lf-flag">FR</span> Réponse
+    </button>
+    <button type="button" class="lang-tab" data-lang="en" role="tab" aria-selected="false">
+      <span class="lf-flag lf-flag-en">EN</span> Answer
+      <span class="empty-dot" id="answer-empty-dot" hidden></span>
+    </button>
+    <button type="button" class="copy-btn copy-content" data-copy-from="f-answer" data-copy-to="f-answer-en">
+      ↳ Copier FR → EN
+    </button>
+  </div>
+
+  <div class="lang-pane" data-lang="fr">
+    <div class="admin-field">
+      <div class="editor-toolbar" role="toolbar" data-target="f-answer" aria-label="Mise en forme FR">
+        <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Gras"><b>B</b></button>
+        <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italique"><i>I</i></button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="link" title="Lien">Lien</button>
+      </div>
+      <textarea id="f-answer" name="answer" rows="8" required>{item.answer ?? ''}</textarea>
+    </div>
+  </div>
+
+  <div class="lang-pane" data-lang="en" hidden>
+    <div class="admin-field">
+      <div class="editor-toolbar" role="toolbar" data-target="f-answer-en" aria-label="Formatting EN">
+        <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Bold"><b>B</b></button>
+        <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italic"><i>I</i></button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="link" title="Link">Link</button>
+      </div>
+      <textarea id="f-answer-en" name="answer_en" rows="8">{item.answer_en ?? ''}</textarea>
+      <p class="hint">
+        Leave blank if you don't have an EN translation yet — the FR answer will be
+        shown on /en/faq with a small "FR" badge.
+      </p>
+    </div>
+  </div>
+
+  <div class="admin-row cols-3">
+    <div class="admin-field">
+      <label for="f-category">
+        <span class="lf"><span class="lf-flag">FR</span> Catégorie</span>
+        <span class="hint">optionnel</span>
+      </label>
+      <input type="text" id="f-category" name="category" value={item.category ?? ''} maxlength="80" placeholder="Création, Maintenance..." />
+    </div>
+    <div class="admin-field">
+      <label for="f-category-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Category</span>
+        <span class="hint">fallback FR si vide</span>
+        <button type="button" class="copy-btn" data-copy-from="f-category" data-copy-to="f-category-en">↳ FR</button>
+      </label>
+      <input type="text" id="f-category-en" name="category_en" value={item.category_en ?? ''} maxlength="80" placeholder="Design, Maintenance..." />
+    </div>
+    <div class="admin-field">
+      <label for="f-sort">Ordre <span class="hint">plus petit = plus haut</span></label>
+      <input type="number" id="f-sort" name="sort" value={item.sort ?? ''} step="1" />
+    </div>
+  </div>
+
+  <div class="admin-field">
+    <label>État de publication</label>
+    <div class="status-toggle">
+      <label class="toggle-opt">
+        <input type="radio" name="status" value="published" checked={initialPublished} />
+        <span class="opt-mark"></span>
+        <span class="opt-text">Publié</span>
+      </label>
+      <label class="toggle-opt">
+        <input type="radio" name="status" value="draft" checked={!initialPublished} />
+        <span class="opt-mark"></span>
+        <span class="opt-text">Brouillon</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="admin-form-actions">
+    <button type="submit" class="btn-primary-sm">{isEdit ? 'Enregistrer' : 'Créer la question'}</button>
+    <a href="/admin/faq" class="btn-link">Annuler</a>
+    {isEdit && (
+      <button type="button" id="delete-btn" class="btn-danger right">Supprimer</button>
+    )}
+  </div>
+</form>
+
+<style>
+  .lf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .lf-flag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--color-dore);
+    border: 1px solid var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .copy-btn {
+    margin-left: auto;
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .copy-btn:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+
+  .lang-tabs {
+    display: flex;
+    gap: 0;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--color-border);
+    margin-top: 1rem;
+  }
+  .lang-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: -1px;
+  }
+  .lang-tab + .lang-tab { border-left: none; }
+  .lang-tab:hover { color: var(--color-dore); }
+  .lang-tab.is-active {
+    background: var(--color-surface);
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-surface);
+  }
+  .lang-tab .lf-flag { margin: 0; }
+  .empty-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c66;
+    margin-left: 0.3rem;
+  }
+  .copy-content { margin-bottom: 0.5rem; }
+  .lang-pane { padding-top: 1rem; }
+
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+  }
+  .editor-toolbar button {
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .editor-toolbar button:hover {
+    border-color: var(--color-border);
+    background: rgba(201, 169, 97, 0.06);
+    color: var(--color-dore);
+  }
+  .editor-toolbar .sep {
+    width: 1px;
+    height: 18px;
+    background: var(--color-border);
+    margin: 0 0.3rem;
+  }
+  #f-answer, #f-answer-en { border-top: none; }
+
+  .status-toggle {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+  }
+  .toggle-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: all 0.3s ease;
+    flex: 1;
+  }
+  .toggle-opt input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .opt-mark {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease;
+  }
+  .opt-mark::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-dore);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+  }
+  .toggle-opt input:checked ~ .opt-mark {
+    border-color: var(--color-dore);
+  }
+  .toggle-opt input:checked ~ .opt-mark::after {
+    transform: scale(1);
+  }
+  .toggle-opt:has(input:checked) {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .opt-text {
+    font-size: 0.9rem;
+    color: var(--color-text);
+  }
+</style>
+
+<script>
+  const form = document.getElementById('faq-form') as HTMLFormElement | null;
+  const flash = document.getElementById('form-flash') as HTMLElement | null;
+  const deleteBtn = document.getElementById('delete-btn');
+
+  // Toolbar factorisée pour FR + EN
+  const setupToolbar = (toolbar: Element) => {
+    const targetId = (toolbar as HTMLElement).dataset.target;
+    if (!targetId) return;
+    const el = document.getElementById(targetId) as HTMLTextAreaElement | null;
+    if (!el) return;
+
+    const wrap = (before: string, after: string) => {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const sel = el.value.slice(start, end);
+      el.value = el.value.slice(0, start) + before + sel + after + el.value.slice(end);
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + sel.length);
+    };
+    const link = () => {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const sel = el.value.slice(start, end) || 'texte du lien';
+      const url = prompt('URL du lien (ex: https://...) :', 'https://');
+      if (!url) return;
+      const before = `<a href="${url}">`;
+      const after = '</a>';
+      el.value = el.value.slice(0, start) + before + sel + after + el.value.slice(end);
+      el.focus();
+    };
+    toolbar.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.dataset.cmd;
+        if (cmd === 'wrap') wrap(btn.dataset.before ?? '', btn.dataset.after ?? '');
+        else if (cmd === 'link') link();
+      });
+    });
+  };
+  document.querySelectorAll('.editor-toolbar').forEach(setupToolbar);
+
+  // Onglets langue
+  const langTabs = document.querySelectorAll<HTMLButtonElement>('.lang-tab');
+  const langPanes = document.querySelectorAll<HTMLElement>('.lang-pane');
+  langTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const lang = tab.dataset.lang;
+      langTabs.forEach((t) => {
+        const active = t.dataset.lang === lang;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      langPanes.forEach((p) => {
+        if (p.dataset.lang === lang) p.removeAttribute('hidden');
+        else p.setAttribute('hidden', '');
+      });
+    });
+  });
+
+  // Copier FR → EN
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fromId = btn.dataset.copyFrom;
+      const toId = btn.dataset.copyTo;
+      if (!fromId || !toId) return;
+      const from = document.getElementById(fromId) as HTMLInputElement | HTMLTextAreaElement | null;
+      const to = document.getElementById(toId) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (!from || !to) return;
+      if (to.value && !confirm("Le champ EN contient déjà du texte. L'écraser ?")) return;
+      to.value = from.value;
+      to.dispatchEvent(new Event('input', { bubbles: true }));
+      to.focus();
+    });
+  });
+
+  // Pastille "EN vide" sur l'onglet réponse
+  const answerEnEl = document.getElementById('f-answer-en') as HTMLTextAreaElement | null;
+  const emptyDot = document.getElementById('answer-empty-dot') as HTMLElement | null;
+  const updateEmptyDot = () => {
+    if (!answerEnEl || !emptyDot) return;
+    if (answerEnEl.value.trim()) emptyDot.setAttribute('hidden', '');
+    else emptyDot.removeAttribute('hidden');
+  };
+  answerEnEl?.addEventListener('input', updateEmptyDot);
+  updateEmptyDot();
+
+  if (form && flash) {
+    const isEdit = form.dataset.edit === 'true';
+    const id = form.dataset.id;
+
+    const showFlash = (msg: string, ok: boolean) => {
+      flash.textContent = msg;
+      flash.className = `admin-flash ${ok ? 'ok' : 'error'}`;
+      flash.removeAttribute('hidden');
+      flash.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      flash.setAttribute('hidden', '');
+      const data = new FormData(form);
+      const sortStr = String(data.get('sort') ?? '').trim();
+      const payload: Record<string, unknown> = {
+        question: String(data.get('question') ?? '').trim(),
+        question_en: String(data.get('question_en') ?? '').trim() || null,
+        answer: String(data.get('answer') ?? ''),
+        answer_en: String(data.get('answer_en') ?? '') || null,
+        status: String(data.get('status') ?? 'draft'),
+        category: String(data.get('category') ?? '').trim() || null,
+        category_en: String(data.get('category_en') ?? '').trim() || null,
+        sort: sortStr ? Number(sortStr) : null,
+      };
+
+      const url = isEdit ? `/api/admin/faq/${id}` : '/api/admin/faq';
+      const method = isEdit ? 'PATCH' : 'POST';
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const r = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json();
+        if (r.ok && j.ok) {
+          if (!isEdit && j.id) {
+            window.location.href = `/admin/faq/${j.id}?ok=created`;
+          } else {
+            showFlash('Enregistré.', true);
+          }
+        } else {
+          showFlash(j.error ?? 'Erreur.', false);
+        }
+      } catch {
+        showFlash('Connexion impossible.', false);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async () => {
+        if (!confirm('Supprimer cette question ?')) return;
+        try {
+          const r = await fetch(`/api/admin/faq/${id}`, { method: 'DELETE' });
+          if (r.ok) {
+            window.location.href = '/admin/faq?ok=deleted';
+          } else {
+            showFlash('Suppression impossible.', false);
+          }
+        } catch {
+          showFlash('Connexion impossible.', false);
+        }
+      });
+    }
+  }
+</script>

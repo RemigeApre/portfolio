@@ -1,0 +1,614 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const SITE = 'https://www.legeai-informatique.fr';
+
+// OfferCatalog : Google comprend que cette page est le catalogue,
+// les sous-pages portent les Service individuels. Hiérarchie claire = pas de cannibalisation.
+const offerCatalog = {
+  '@context': 'https://schema.org',
+  '@type': 'OfferCatalog',
+  '@id': `${SITE}/creation-web#catalog`,
+  name: 'Formules de création web Le Geai Informatique',
+  url: `${SITE}/creation-web`,
+  inLanguage: 'fr-FR',
+  provider: { '@id': `${SITE}/#organization` },
+  itemListElement: creationFormules.map((f) => {
+    const priceNum = f.tarifShort.match(/\d[\d ]*/)?.[0]?.replace(/\s/g, '');
+    return {
+      '@type': 'Offer',
+      '@id': `${SITE}/creation-web/${f.slug}#service`,
+      name: f.name,
+      url: `${SITE}/creation-web/${f.slug}`,
+      description: f.compositionShort,
+      ...(priceNum ? {
+        price: priceNum,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+      } : { priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'EUR' } }),
+    };
+  }),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE },
+    { '@type': 'ListItem', position: 2, name: 'Création web', item: `${SITE}/creation-web` },
+  ],
+};
+
+const tableFormules = creationFormules.filter((f) => f.slug !== 'logiciel-sur-mesure');
+const customFormule = creationFormules.find((f) => f.slug === 'logiciel-sur-mesure')!;
+
+type Cell = boolean | string;
+interface Group {
+  title: string;
+  rows: { feature: string; cells: [Cell, Cell, Cell] }[];
+}
+
+const groups: Group[] = [
+  {
+    title: 'Site web standard',
+    rows: [
+      { feature: 'Pages personnalisées', cells: ['2 à 3', '2 à 8', '10 ou plus'] },
+      { feature: 'Référencement local', cells: [true, true, true] },
+      { feature: 'Adaptation mobile', cells: [true, true, true] },
+      { feature: 'Conformité RGPD', cells: [true, true, true] },
+      { feature: 'Formation et documentation', cells: [true, true, true] },
+      { feature: 'Allers-retours de relecture', cells: ['2', '3', '5 max'] },
+    ],
+  },
+  {
+    title: 'Espace de gestion',
+    rows: [
+      { feature: 'Espace administrateur sécurisé', cells: [false, true, true] },
+      { feature: 'Fonctionnalités interactives au choix', cells: [false, '1 à 3', '1 à 3'] },
+      { feature: 'Formation administrateur', cells: [false, true, true] },
+    ],
+  },
+  {
+    title: 'Pages produits et e-commerce',
+    rows: [
+      { feature: 'Pages produits', cells: [false, 'présentation seule', 'catalogue complet'] },
+      { feature: 'Panier sur mesure', cells: [false, false, true] },
+      { feature: 'Paiement sécurisé (PayPal, Stripe)', cells: [false, false, true] },
+      { feature: 'Gestion commandes et livraisons', cells: [false, false, true] },
+      { feature: 'Tableau de bord des ventes', cells: [false, false, true] },
+    ],
+  },
+];
+
+const colCount = tableFormules.length + 1;
+
+const renderCell = (c: Cell) => {
+  if (c === true) return { mark: '✓', text: '', cls: 'cell-yes' };
+  if (c === false) return { mark: '—', text: '', cls: 'cell-no' };
+  return { mark: '', text: c, cls: 'cell-text' };
+};
+---
+
+<BaseLayout
+  title="Création de sites web sur mesure"
+  description="Quatre formules de création web pour indépendants et PME : Vitrine 900 €, Gestion dès 2 800 €, E-commerce dès 6 500 €, Logiciel sur mesure."
+  hreflang={buildHreflang('/creation-web', 'fr')}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(offerCatalog)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} slot="head" />
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Des sites et outils sur mesure</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="lead">
+          Clairs, durables, pensés pour vos clients. Trois formules cadrent les
+          besoins les plus courants ; au-delà, le sur mesure prend le relais.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="formules-row">
+    <h2 class="sr-only">Les quatre formules</h2>
+    <div class="container">
+      <div class="cards-grid">
+        {creationFormules.map((f, i) => (
+          <Reveal delay={80 + i * 60}>
+            <a href={`/creation-web/${f.slug}`} class="card-link">
+              <article class="card">
+                <h3>{f.name}</h3>
+                <p class="card-tarif">{f.tarifLong}</p>
+                <p class="card-meta">{f.delai}</p>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </article>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="comparator-section">
+    <div class="container">
+      <Reveal>
+        <h2 class="comparator-title">Comparatif</h2>
+        <p class="comparator-hint" aria-hidden="true">
+          Cliquez sur le nom d'une formule pour voir le détail.
+        </p>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <div class="comparator-layout">
+          <div class="table-wrap">
+            <table class="comparator">
+              <thead>
+                <tr>
+                  <th class="feature-col" scope="col"><span class="sr-only">Fonctionnalité</span></th>
+                  {tableFormules.map((f) => (
+                    <th class="formule-col" scope="col">
+                      <a href={`/creation-web/${f.slug}`} class="formule-link">
+                        <span class="formule-name">{f.name}</span>
+                        <span class="formule-tarif">{f.tarifShort}</span>
+                      </a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((g) => (
+                  <>
+                    <tr class="group-row">
+                      <th colspan={colCount} scope="colgroup">{g.title}</th>
+                    </tr>
+                    {g.rows.map((r) => (
+                      <tr>
+                        <th scope="row" class="feature">{r.feature}</th>
+                        {r.cells.map((c) => {
+                          const v = renderCell(c);
+                          return (
+                            <td class={v.cls}>
+                              {v.mark && <span class="cell-mark" aria-hidden="true">{v.mark}</span>}
+                              {v.text && <span class="cell-value">{v.text}</span>}
+                              <span class="sr-only">
+                                {c === true ? 'inclus' : c === false ? 'non inclus' : c}
+                              </span>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </>
+                ))}
+
+                <tr class="summary-row">
+                  <th scope="row" class="feature">Délai de livraison</th>
+                  {tableFormules.map((f) => (
+                    <td class="cell-text">{f.delai}</td>
+                  ))}
+                </tr>
+                <tr class="summary-row">
+                  <th scope="row" class="feature">Tarif</th>
+                  {tableFormules.map((f) => (
+                    <td class="cell-tarif">{f.tarifShort}</td>
+                  ))}
+                </tr>
+                <tr class="link-row">
+                  <th scope="row" class="sr-only">Page de détail</th>
+                  {tableFormules.map((f) => (
+                    <td>
+                      <a href={`/creation-web/${f.slug}`} class="detail-link">
+                        Voir le détail
+                      </a>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <a href={`/creation-web/${customFormule.slug}`} class="custom-panel" aria-label="Logiciel sur mesure, sur devis, voir le détail">
+            <span class="custom-vertical">Sur devis</span>
+            <span class="custom-label">{customFormule.name}</span>
+            <span class="custom-cta" aria-hidden="true">Voir le détail</span>
+          </a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="conditions">
+    <div class="container-narrow">
+      <Reveal>
+        <p class="conditions-text">
+          Acompte 30 % à la signature, paiement par paliers. Tarifs nets, TVA non
+          applicable, art. 293 B du CGI. Premier rendez-vous offert.
+        </p>
+        <p class="conditions-doc">
+          Plaquette commerciale :
+          <a href="/documents/plaquette_le_geai_informatique.pdf" download>
+            télécharger le PDF
+          </a>
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Une question, un projet à cadrer</h2>
+        <p class="lead">
+          Décrivez votre activité, les outils déjà en place, ce que vous cherchez à
+          construire. Nous reviendrons avec une proposition juste.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href="/contact" class="btn-primary">Demander un cadrage</a>
+          <a href="/maintenance-web" class="btn-ghost">Voir la maintenance</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .page-head {
+    padding: 8rem 1.5rem 3rem;
+    text-align: center;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+  }
+  h2 {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    text-align: center;
+  }
+  .lead {
+    max-width: 580px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── Module 1 : 4 cartes formules ── */
+  .formules-row {
+    padding: 2rem 1.5rem 4rem;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .card-link { display: block; color: inherit; height: 100%; }
+  .card {
+    position: relative;
+    height: 100%;
+    padding: 1.8rem 1.6rem 2.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .card-link:hover .card {
+    border-color: var(--color-dore);
+    transform: translateY(-3px);
+  }
+  .card h3 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+  }
+  .card-tarif {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--color-dore);
+    line-height: 1.2;
+  }
+  .card-meta {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  .card-arrow {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.2rem;
+    font-size: 1.4rem;
+    color: var(--color-text-muted);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .card-link:hover .card-arrow {
+    color: var(--color-dore);
+    transform: translateX(4px);
+  }
+
+  /* ── Module 2 : Comparator ── */
+  .comparator-section {
+    padding: 4rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .comparator-title {
+    margin-bottom: 0.8rem;
+  }
+  .comparator-hint {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .comparator-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.2rem;
+    align-items: stretch;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+  }
+  .comparator {
+    width: 100%;
+    min-width: 580px;
+    border-collapse: collapse;
+  }
+
+  .formule-col {
+    padding: 1.2rem 0.8rem 1.4rem;
+    text-align: center;
+    background: rgba(201, 169, 97, 0.08);
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+  }
+  .formule-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+  .formule-link:hover { color: var(--color-dore); }
+  .formule-name {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--color-dore);
+    border-bottom: 1px dotted transparent;
+    padding-bottom: 2px;
+    transition: border-color 0.3s ease;
+  }
+  .formule-link:hover .formule-name {
+    border-bottom-color: var(--color-dore);
+  }
+  .formule-tarif {
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .feature-col {
+    background: rgba(201, 169, 97, 0.04);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .feature {
+    text-align: left;
+    padding: 0.95rem 1rem;
+    color: var(--color-text);
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-border);
+    background: rgba(201, 169, 97, 0.03);
+    width: 32%;
+  }
+
+  .group-row th {
+    text-align: left;
+    padding: 1rem 1rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.95rem 0.8rem;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .cell-yes .cell-mark {
+    color: var(--color-dore);
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .cell-no .cell-mark {
+    color: var(--color-text-dim);
+    font-size: 1.1rem;
+  }
+  .cell-text .cell-value,
+  .cell-text {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  .summary-row .feature {
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--color-dore);
+  }
+  .summary-row td {
+    background: var(--color-surface);
+  }
+  .cell-tarif {
+    font-style: italic;
+    color: var(--color-dore);
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  .link-row td {
+    background: var(--color-surface);
+    padding: 1rem 0.5rem 1.4rem;
+  }
+  .link-row {
+    border-top: 2px solid var(--color-border);
+  }
+  .detail-link {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.3s ease;
+  }
+  .detail-link:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+
+  /* Panneau "Sur devis" vertical */
+  .custom-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 0.5rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: inherit;
+    text-align: center;
+    width: 110px;
+    transition: all 0.4s ease;
+  }
+  .custom-panel:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .custom-panel:hover .custom-vertical { color: var(--color-dore); }
+  .custom-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-style: italic;
+    color: var(--color-dore);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+  .custom-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0.8rem 0 0.4rem;
+    line-height: 1.3;
+  }
+  .custom-cta {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+  .custom-panel:hover .custom-cta { color: var(--color-dore); }
+
+  /* ── Conditions + CTA ── */
+  .conditions {
+    padding: 4rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .conditions-text { font-style: italic; color: var(--color-text-muted); line-height: 1.8; }
+  .conditions-doc { margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-text-dim); }
+  .conditions-doc a { color: var(--color-dore); border-bottom: 1px solid var(--color-border); transition: border-color 0.3s ease; }
+  .conditions-doc a:hover { border-bottom-color: var(--color-dore); }
+
+  .cta {
+    padding: 6rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+  .btn-primary {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-noir); background: var(--color-dore); transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-text); border: 1px solid var(--color-border); transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  @media (max-width: 1024px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .comparator-layout { grid-template-columns: 1fr; }
+    .custom-panel {
+      width: auto;
+      flex-direction: row;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      justify-content: flex-start;
+    }
+    .custom-vertical {
+      writing-mode: horizontal-tb;
+      transform: none;
+      font-size: 1.6rem;
+      flex: 0 0 auto;
+    }
+    .custom-label { margin: 0; flex: 1; text-align: left; }
+    .custom-cta { align-self: center; }
+  }
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .comparator { font-size: 0.88rem; }
+    .feature { padding: 0.7rem 0.7rem; }
+    td { padding: 0.7rem 0.5rem; }
+    .formule-name { font-size: 1rem; }
+  }
+</style>

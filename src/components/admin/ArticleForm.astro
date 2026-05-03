@@ -1,0 +1,722 @@
+---
+interface Article {
+  id?: string | number;
+  status?: string;
+  title?: string;
+  title_en?: string | null;
+  slug?: string;
+  author?: string | null;
+  date_published?: string | null;
+  tags?: string[] | null;
+  excerpt?: string | null;
+  excerpt_en?: string | null;
+  content?: string | null;
+  content_en?: string | null;
+  cover?: string | null;
+}
+
+interface Props {
+  article?: Article;
+}
+
+const { article = {} } = Astro.props;
+const isEdit = Boolean(article.id);
+
+const now = new Date();
+const datePub = article.date_published ? new Date(article.date_published) : null;
+let initialMode: 'draft' | 'now' | 'schedule' = 'now';
+let initialDate = '';
+if (article.status === 'draft') {
+  initialMode = 'draft';
+} else if (datePub && datePub.getTime() > now.getTime()) {
+  initialMode = 'schedule';
+  const parisStr = datePub.toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' });
+  initialDate = parisStr;
+} else {
+  initialMode = 'now';
+}
+
+const tagsJson = JSON.stringify(article.tags ?? []);
+---
+
+<form id="article-form" class="admin-form" data-edit={isEdit ? 'true' : 'false'} data-id={article.id ?? ''}>
+  <div id="form-flash" class="admin-flash" hidden></div>
+
+  <div class="admin-row cols-2">
+    <div class="admin-field">
+      <label for="f-title">
+        <span class="lf"><span class="lf-flag">FR</span> Titre</span>
+        <span class="hint">requis · le slug URL est généré automatiquement</span>
+      </label>
+      <input type="text" id="f-title" name="title" value={article.title ?? ''} required maxlength="200" />
+    </div>
+    <div class="admin-field">
+      <label for="f-title-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Title</span>
+        <span class="hint">facultatif · si vide, FR affiché sur /en/blog</span>
+        <button type="button" class="copy-btn" data-copy-from="f-title" data-copy-to="f-title-en">↳ FR</button>
+      </label>
+      <input type="text" id="f-title-en" name="title_en" value={article.title_en ?? ''} maxlength="200" />
+    </div>
+  </div>
+
+  <div class="admin-field">
+    <label>Étiquettes <span class="hint">Entrée, virgule ou # pour ajouter · communes aux deux langues</span></label>
+    <div class="tag-input">
+      <ul class="tag-chips" id="tag-chips"></ul>
+      <input type="text" id="tag-input" placeholder="Ajouter une étiquette..." autocomplete="off" />
+    </div>
+    <input type="hidden" id="tags-json" name="tags" value={tagsJson} />
+  </div>
+
+  <fieldset class="publish-mode">
+    <legend>Publication</legend>
+    <label class="pmode">
+      <input type="radio" name="publish_mode" value="now" checked={initialMode === 'now'} />
+      <span class="pmode-mark"></span>
+      <span class="pmode-text">Publier maintenant</span>
+    </label>
+    <label class="pmode">
+      <input type="radio" name="publish_mode" value="schedule" checked={initialMode === 'schedule'} />
+      <span class="pmode-mark"></span>
+      <span class="pmode-text">
+        Programmer pour le
+        <input type="date" name="publish_date" id="f-date" value={initialDate} />
+        à 18h00
+        <span class="hint">(heure de Paris)</span>
+      </span>
+    </label>
+    <label class="pmode">
+      <input type="radio" name="publish_mode" value="draft" checked={initialMode === 'draft'} />
+      <span class="pmode-mark"></span>
+      <span class="pmode-text">Garder en brouillon (privé)</span>
+    </label>
+  </fieldset>
+
+  <div class="admin-row cols-2">
+    <div class="admin-field">
+      <label for="f-excerpt">
+        <span class="lf"><span class="lf-flag">FR</span> Résumé</span>
+        <span class="hint">~160 caractères, méta-description</span>
+      </label>
+      <textarea id="f-excerpt" name="excerpt" rows="3" maxlength="300">{article.excerpt ?? ''}</textarea>
+      <p class="counter"><span id="excerpt-count">0</span> caractères</p>
+    </div>
+    <div class="admin-field">
+      <label for="f-excerpt-en">
+        <span class="lf"><span class="lf-flag lf-flag-en">EN</span> Excerpt</span>
+        <span class="hint">fallback FR si vide</span>
+        <button type="button" class="copy-btn" data-copy-from="f-excerpt" data-copy-to="f-excerpt-en">↳ FR</button>
+      </label>
+      <textarea id="f-excerpt-en" name="excerpt_en" rows="3" maxlength="300">{article.excerpt_en ?? ''}</textarea>
+      <p class="counter"><span id="excerpt-en-count">0</span> characters</p>
+    </div>
+  </div>
+
+  <div class="lang-tabs" role="tablist">
+    <button type="button" class="lang-tab is-active" data-lang="fr" role="tab" aria-selected="true">
+      <span class="lf-flag">FR</span> Contenu
+    </button>
+    <button type="button" class="lang-tab" data-lang="en" role="tab" aria-selected="false">
+      <span class="lf-flag lf-flag-en">EN</span> Content
+      <span class="empty-dot" id="content-empty-dot" hidden title="Aucun contenu EN pour l'instant"></span>
+    </button>
+    <button type="button" class="copy-btn copy-content" data-copy-from="f-content" data-copy-to="f-content-en">
+      ↳ Copier FR → EN
+    </button>
+  </div>
+
+  <div class="lang-pane" data-lang="fr">
+    <div class="admin-field">
+      <div class="editor-toolbar" role="toolbar" data-target="f-content" aria-label="Mise en forme FR">
+        <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Gras"><b>B</b></button>
+        <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italique"><i>I</i></button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="wrap-line" data-before="<h2>" data-after="</h2>" title="Titre">H2</button>
+        <button type="button" data-cmd="wrap-line" data-before="<h3>" data-after="</h3>" title="Sous-titre">H3</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="link" title="Lien">Lien</button>
+        <button type="button" data-cmd="wrap-line" data-before="<blockquote>" data-after="</blockquote>" title="Citation">Citation</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="list" data-tag="ul" title="Liste à puces">Liste •</button>
+        <button type="button" data-cmd="list" data-tag="ol" title="Liste numérotée">Liste 1.</button>
+      </div>
+      <textarea id="f-content" name="content" class="long" rows="22">{article.content ?? ''}</textarea>
+      <p class="hint">
+        Astuce : laissez une ligne vide entre vos paragraphes. Les balises HTML générées
+        par les boutons ci-dessus s'affichent telles quelles sur le site.
+      </p>
+    </div>
+  </div>
+
+  <div class="lang-pane" data-lang="en" hidden>
+    <div class="admin-field">
+      <div class="editor-toolbar" role="toolbar" data-target="f-content-en" aria-label="Formatting EN">
+        <button type="button" data-cmd="wrap" data-before="<strong>" data-after="</strong>" title="Bold"><b>B</b></button>
+        <button type="button" data-cmd="wrap" data-before="<em>" data-after="</em>" title="Italic"><i>I</i></button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="wrap-line" data-before="<h2>" data-after="</h2>" title="Heading">H2</button>
+        <button type="button" data-cmd="wrap-line" data-before="<h3>" data-after="</h3>" title="Subheading">H3</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="link" title="Link">Link</button>
+        <button type="button" data-cmd="wrap-line" data-before="<blockquote>" data-after="</blockquote>" title="Quote">Quote</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-cmd="list" data-tag="ul" title="Bullet list">List •</button>
+        <button type="button" data-cmd="list" data-tag="ol" title="Numbered list">List 1.</button>
+      </div>
+      <textarea id="f-content-en" name="content_en" class="long" rows="22">{article.content_en ?? ''}</textarea>
+      <p class="hint">
+        Leave blank if you don't have an EN version yet — readers on /en/blog will see
+        the French content with a small "FR" badge.
+      </p>
+    </div>
+  </div>
+
+  <div class="admin-form-actions">
+    <button type="submit" class="btn-primary-sm">{isEdit ? 'Enregistrer' : "Créer l'article"}</button>
+    <a href="/admin/articles" class="btn-link">Annuler</a>
+    {isEdit && (
+      <button type="button" id="delete-btn" class="btn-danger right">Supprimer</button>
+    )}
+  </div>
+</form>
+
+<style>
+  .tag-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    min-height: 50px;
+  }
+  .tag-input:focus-within { border-color: var(--color-dore); }
+  .tag-chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+  }
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(201, 169, 97, 0.15);
+    color: var(--color-dore);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+  .tag-chip .x {
+    background: none;
+    border: none;
+    color: var(--color-dore);
+    cursor: pointer;
+    padding: 0 0.2rem;
+    font-size: 1.1rem;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  .tag-chip .x:hover { opacity: 1; }
+  #tag-input {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.3rem 0.4rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+  #tag-input:focus { outline: none; }
+
+  .publish-mode {
+    border: 1px solid var(--color-border);
+    padding: 1rem 1.2rem;
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .publish-mode legend {
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .pmode {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    padding: 0.3rem 0;
+  }
+  .pmode input { position: absolute; opacity: 0; pointer-events: none; }
+  .pmode-mark {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.3s ease;
+  }
+  .pmode-mark::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-dore);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+  }
+  .pmode input:checked + .pmode-mark { border-color: var(--color-dore); }
+  .pmode input:checked + .pmode-mark::after { transform: scale(1); }
+  .pmode-text {
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .pmode-text input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: inherit;
+  }
+  .pmode-text .hint {
+    font-size: 0.8rem;
+    color: var(--color-text-dim);
+    font-style: italic;
+  }
+
+  /* ── Indicateurs visuels langue (sur les labels et onglets) ── */
+  .lf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .lf-flag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--color-dore);
+    border: 1px solid var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .lf-flag-en {
+    /* drapeau EN même couleur que FR pour cohérence : on est tous dans la même équipe */
+    color: var(--color-dore);
+  }
+
+  /* Bouton copier FR → EN, discret */
+  .copy-btn {
+    margin-left: auto;
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .copy-btn:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+
+  /* ── Onglets langue pour le contenu ── */
+  .lang-tabs {
+    display: flex;
+    gap: 0;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--color-border);
+    margin-top: 1rem;
+  }
+  .lang-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: -1px;
+  }
+  .lang-tab + .lang-tab { border-left: none; }
+  .lang-tab:hover { color: var(--color-dore); }
+  .lang-tab.is-active {
+    background: var(--color-surface);
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-surface);
+  }
+  .lang-tab .lf-flag {
+    margin: 0;
+  }
+  /* Petite pastille rouge si l'onglet EN est vide (visuellement repérable) */
+  .empty-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c66;
+    margin-left: 0.3rem;
+  }
+
+  .copy-content {
+    margin-bottom: 0.5rem;
+  }
+
+  .lang-pane {
+    padding-top: 1rem;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+  }
+  .editor-toolbar button {
+    padding: 0.3rem 0.7rem;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .editor-toolbar button:hover {
+    border-color: var(--color-border);
+    background: rgba(201, 169, 97, 0.06);
+    color: var(--color-dore);
+  }
+  .editor-toolbar .sep {
+    width: 1px;
+    height: 18px;
+    background: var(--color-border);
+    margin: 0 0.3rem;
+  }
+  #f-content, #f-content-en { border-top: none; }
+
+  .counter {
+    font-size: 0.78rem;
+    color: var(--color-text-dim);
+    font-style: italic;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('article-form') as HTMLFormElement | null;
+  const flash = document.getElementById('form-flash') as HTMLElement | null;
+  const excerptEl = document.getElementById('f-excerpt') as HTMLTextAreaElement | null;
+  const excerptCount = document.getElementById('excerpt-count') as HTMLElement | null;
+  const excerptEnEl = document.getElementById('f-excerpt-en') as HTMLTextAreaElement | null;
+  const excerptEnCount = document.getElementById('excerpt-en-count') as HTMLElement | null;
+  const tagInput = document.getElementById('tag-input') as HTMLInputElement | null;
+  const tagChips = document.getElementById('tag-chips') as HTMLElement | null;
+  const tagsJson = document.getElementById('tags-json') as HTMLInputElement | null;
+  const deleteBtn = document.getElementById('delete-btn');
+  const dateInput = document.getElementById('f-date') as HTMLInputElement | null;
+  const modeRadios = form?.querySelectorAll<HTMLInputElement>('input[name="publish_mode"]');
+
+  // Tags
+  let tags: string[] = [];
+  if (tagsJson) {
+    try { tags = JSON.parse(tagsJson.value) || []; } catch { tags = []; }
+  }
+  const renderChips = () => {
+    if (!tagChips || !tagsJson) return;
+    tagChips.innerHTML = '';
+    for (const t of tags) {
+      const li = document.createElement('li');
+      li.className = 'tag-chip';
+      const span = document.createElement('span');
+      span.textContent = t;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'x';
+      btn.setAttribute('aria-label', `Retirer ${t}`);
+      btn.textContent = '×';
+      btn.addEventListener('click', () => {
+        tags = tags.filter((x) => x !== t);
+        renderChips();
+      });
+      li.appendChild(span);
+      li.appendChild(btn);
+      tagChips.appendChild(li);
+    }
+    tagsJson.value = JSON.stringify(tags);
+  };
+  const addTag = (raw: string) => {
+    const t = raw.trim().replace(/^#+/, '').toLowerCase();
+    if (!t || tags.includes(t)) return;
+    tags.push(t);
+    renderChips();
+  };
+  if (tagInput) {
+    tagInput.addEventListener('keydown', (e) => {
+      const k = e.key;
+      if (k === 'Enter' || k === ',' || k === '#') {
+        e.preventDefault();
+        addTag(tagInput.value);
+        tagInput.value = '';
+      } else if (k === 'Backspace' && !tagInput.value && tags.length > 0) {
+        tags.pop();
+        renderChips();
+      }
+    });
+    tagInput.addEventListener('blur', () => {
+      if (tagInput.value.trim()) {
+        addTag(tagInput.value);
+        tagInput.value = '';
+      }
+    });
+  }
+  renderChips();
+
+  // Excerpt counters
+  const updateCount = (el: HTMLTextAreaElement | null, target: HTMLElement | null) => {
+    if (el && target) target.textContent = String(el.value.length);
+  };
+  excerptEl?.addEventListener('input', () => updateCount(excerptEl, excerptCount));
+  excerptEnEl?.addEventListener('input', () => updateCount(excerptEnEl, excerptEnCount));
+  updateCount(excerptEl, excerptCount);
+  updateCount(excerptEnEl, excerptEnCount);
+
+  // Toolbar : factorisée pour fonctionner sur les deux éditeurs (FR + EN)
+  const setupToolbar = (toolbar: Element) => {
+    const targetId = (toolbar as HTMLElement).dataset.target;
+    if (!targetId) return;
+    const el = document.getElementById(targetId) as HTMLTextAreaElement | null;
+    if (!el) return;
+
+    const wrap = (before: string, after: string) => {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const sel = el.value.slice(start, end);
+      el.value = el.value.slice(0, start) + before + sel + after + el.value.slice(end);
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + sel.length);
+    };
+    const wrapLine = (before: string, after: string) => {
+      const value = el.value;
+      let start = el.selectionStart;
+      let end = el.selectionEnd;
+      while (start > 0 && value[start - 1] !== '\n') start--;
+      while (end < value.length && value[end] !== '\n') end++;
+      const sel = value.slice(start, end);
+      el.value = value.slice(0, start) + before + sel + after + value.slice(end);
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + sel.length);
+    };
+    const list = (tag: string) => {
+      const value = el.value;
+      let start = el.selectionStart;
+      let end = el.selectionEnd;
+      while (start > 0 && value[start - 1] !== '\n') start--;
+      while (end < value.length && value[end] !== '\n') end++;
+      const sel = value.slice(start, end).trim();
+      const lines = sel ? sel.split('\n').filter((l) => l.trim()) : ['Premier item'];
+      const wrapped = `<${tag}>\n` + lines.map((l) => `  <li>${l.trim()}</li>`).join('\n') + `\n</${tag}>`;
+      el.value = value.slice(0, start) + wrapped + value.slice(end);
+      el.focus();
+    };
+    const link = () => {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const sel = el.value.slice(start, end) || 'texte du lien';
+      const url = prompt('URL du lien (ex: https://...) :', 'https://');
+      if (!url) return;
+      const before = `<a href="${url}">`;
+      const after = '</a>';
+      el.value = el.value.slice(0, start) + before + sel + after + el.value.slice(end);
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + sel.length);
+    };
+
+    for (const btn of toolbar.querySelectorAll<HTMLButtonElement>('button')) {
+      btn.addEventListener('click', () => {
+        const cmd = btn.dataset.cmd;
+        if (cmd === 'wrap') wrap(btn.dataset.before ?? '', btn.dataset.after ?? '');
+        else if (cmd === 'wrap-line') wrapLine(btn.dataset.before ?? '', btn.dataset.after ?? '');
+        else if (cmd === 'list') list(btn.dataset.tag ?? 'ul');
+        else if (cmd === 'link') link();
+      });
+    }
+  };
+  document.querySelectorAll('.editor-toolbar').forEach(setupToolbar);
+
+  // Lang tabs
+  const langTabs = document.querySelectorAll<HTMLButtonElement>('.lang-tab');
+  const langPanes = document.querySelectorAll<HTMLElement>('.lang-pane');
+  langTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const lang = tab.dataset.lang;
+      langTabs.forEach((t) => {
+        const active = t.dataset.lang === lang;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      langPanes.forEach((p) => {
+        if (p.dataset.lang === lang) p.removeAttribute('hidden');
+        else p.setAttribute('hidden', '');
+      });
+    });
+  });
+
+  // Copier FR → EN : pré-remplit le champ EN avec le texte FR (à traduire ensuite)
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fromId = btn.dataset.copyFrom;
+      const toId = btn.dataset.copyTo;
+      if (!fromId || !toId) return;
+      const from = document.getElementById(fromId) as HTMLInputElement | HTMLTextAreaElement | null;
+      const to = document.getElementById(toId) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (!from || !to) return;
+      if (to.value && !confirm("Le champ EN contient déjà du texte. L'écraser ?")) return;
+      to.value = from.value;
+      to.dispatchEvent(new Event('input', { bubbles: true }));
+      to.focus();
+    });
+  });
+
+  // Pastille "EN vide" sur l'onglet contenu : se met à jour à la frappe
+  const contentEnEl = document.getElementById('f-content-en') as HTMLTextAreaElement | null;
+  const emptyDot = document.getElementById('content-empty-dot') as HTMLElement | null;
+  const updateEmptyDot = () => {
+    if (!contentEnEl || !emptyDot) return;
+    if (contentEnEl.value.trim()) emptyDot.setAttribute('hidden', '');
+    else emptyDot.removeAttribute('hidden');
+  };
+  contentEnEl?.addEventListener('input', updateEmptyDot);
+  updateEmptyDot();
+
+  // Mode publication
+  const updateModeUI = () => {
+    if (!form || !dateInput) return;
+    const checked = form.querySelector<HTMLInputElement>('input[name="publish_mode"]:checked');
+    const isSchedule = checked?.value === 'schedule';
+    dateInput.disabled = !isSchedule;
+    dateInput.required = isSchedule;
+  };
+  modeRadios?.forEach((r) => r.addEventListener('change', updateModeUI));
+  updateModeUI();
+
+  // Submit
+  if (form && flash) {
+    const isEdit = form.dataset.edit === 'true';
+    const id = form.dataset.id;
+
+    const showFlash = (msg: string, ok: boolean) => {
+      flash.textContent = msg;
+      flash.className = `admin-flash ${ok ? 'ok' : 'error'}`;
+      flash.removeAttribute('hidden');
+      flash.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      flash.setAttribute('hidden', '');
+
+      if (tagInput && tagInput.value.trim()) {
+        addTag(tagInput.value);
+        tagInput.value = '';
+      }
+
+      const data = new FormData(form);
+      const mode = String(data.get('publish_mode') ?? 'now');
+      const publishDate = String(data.get('publish_date') ?? '').trim();
+
+      if (mode === 'schedule' && !publishDate) {
+        showFlash('Choisissez une date de publication.', false);
+        return;
+      }
+
+      const payload: Record<string, unknown> = {
+        title: String(data.get('title') ?? '').trim(),
+        title_en: String(data.get('title_en') ?? '').trim() || null,
+        excerpt: String(data.get('excerpt') ?? '').trim() || null,
+        excerpt_en: String(data.get('excerpt_en') ?? '').trim() || null,
+        content: String(data.get('content') ?? '') || null,
+        content_en: String(data.get('content_en') ?? '') || null,
+        tags: tags.length > 0 ? tags : null,
+        publish_mode: mode,
+        publish_date: publishDate || null,
+      };
+
+      const url = isEdit ? `/api/admin/articles/${id}` : '/api/admin/articles';
+      const method = isEdit ? 'PATCH' : 'POST';
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const r = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json();
+        if (r.ok && j.ok) {
+          if (!isEdit && j.id) {
+            window.location.href = `/admin/articles/${j.id}?ok=created`;
+          } else {
+            showFlash('Enregistré.', true);
+          }
+        } else {
+          showFlash(j.error ?? "Erreur lors de l'enregistrement.", false);
+        }
+      } catch {
+        showFlash('Connexion impossible.', false);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async () => {
+        if (!confirm('Supprimer cet article définitivement ?')) return;
+        try {
+          const r = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE' });
+          if (r.ok) {
+            window.location.href = '/admin/articles?ok=deleted';
+          } else {
+            showFlash('Suppression impossible.', false);
+          }
+        } catch {
+          showFlash('Connexion impossible.', false);
+        }
+      });
+    }
+  }
+</script>

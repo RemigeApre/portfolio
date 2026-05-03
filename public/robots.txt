@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /mentions-legales
+Disallow: /confidentialite
+Disallow: /en/legal-notice
+Disallow: /en/privacy
+Disallow: /liens
+Disallow: /en/links
+Disallow: /admin
+Disallow: /api
+
+Sitemap: https://www.legeai-informatique.fr/sitemap.xml

@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'custom-software', 'en')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+const hreflang = buildHreflang('/en/web-design/custom-software', 'en');
+---
+
+<BaseLayout
+  title="Custom software · on quote"
+  description="Custom software: web application or desktop software, designed from a written brief, phased development, documentation and training. On quote."
+  lang="en"
+  hreflang={hreflang}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} lang="en" />
+</BaseLayout>

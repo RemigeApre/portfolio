@@ -1,0 +1,119 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+type LinkItem =
+  | { kind: 'link'; label: string; href: string; external?: boolean }
+  | { kind: 'email'; user: string; domain: string }
+  | { kind: 'tel'; number: string; display: string };
+
+const liens: LinkItem[] = [
+  { kind: 'link', label: 'Site officiel', href: 'https://www.legeai-informatique.fr' },
+  { kind: 'link', label: 'Création web : voir les formules', href: '/creation-web' },
+  { kind: 'link', label: 'Maintenance web : voir les niveaux', href: '/maintenance-web' },
+  { kind: 'link', label: 'Portfolio des réalisations', href: '/portfolio' },
+  { kind: 'link', label: 'Le journal (blog)', href: '/blog' },
+  { kind: 'email', user: 'administration', domain: 'legeai-editions.com' },
+  { kind: 'tel', number: '+33482532564', display: 'Téléphone : 04 82 53 25 64' },
+  { kind: 'link', label: 'La maison mère, Le Geai Éditions', href: 'https://www.legeai-editions.com', external: true },
+];
+---
+
+<BaseLayout
+  title="Liens · Le Geai Informatique"
+  description="Toutes les portes d'entrée vers Le Geai Informatique : services, contact, réalisations, journal."
+  noindex={true}
+  hideNav={true}
+  hreflang={buildHreflang('/liens', 'fr')}
+>
+  <section class="liens">
+    <div class="container-narrow">
+      <Reveal>
+        <img src="/LeGeai_logo_monochrome.svg" alt="" aria-hidden="true" class="emblem" />
+      </Reveal>
+      <Reveal delay={120}>
+        <h1>Le Geai Informatique</h1>
+      </Reveal>
+      <Reveal delay={200}>
+        <p class="tagline">Artisanat numérique pour indépendants, artisans et PME.</p>
+      </Reveal>
+
+      <ul class="links">
+        {liens.map((l, i) => (
+          <Reveal delay={300 + i * 60}>
+            <li>
+              {l.kind === 'link' && (
+                <a
+                  href={l.href}
+                  target={l.external ? '_blank' : undefined}
+                  rel={l.external ? 'noopener' : undefined}
+                >{l.label}</a>
+              )}
+              {l.kind === 'email' && (
+                <ProtectedEmail user={l.user} domain={l.domain} lang="fr" fallback="Échanger par email →" />
+              )}
+              {l.kind === 'tel' && (
+                <ProtectedTel number={l.number} display={l.display} />
+              )}
+            </li>
+          </Reveal>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .liens {
+    min-height: 100vh;
+    padding: 7rem 1.5rem 4rem;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .emblem {
+    width: 80px;
+    height: auto;
+    margin: 0 auto 1.5rem;
+    filter: brightness(2);
+    opacity: 0.9;
+  }
+  h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+  }
+  .tagline {
+    margin-top: 0.6rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+  .links {
+    list-style: none;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .links a {
+    display: block;
+    padding: 1rem 1.4rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    transition: all 0.4s ease;
+  }
+  .links a:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+    color: var(--color-dore);
+  }
+</style>

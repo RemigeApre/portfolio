@@ -1,0 +1,135 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+const ok = Astro.url.searchParams.get('ok');
+
+interface FaqItem {
+  id: string | number;
+  status: string;
+  question: string;
+  question_en: string | null;
+  answer_en: string | null;
+  category: string | null;
+  sort: number | null;
+}
+
+let items: FaqItem[] = [];
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: FaqItem[] }>(
+    token,
+    '/items/faq?fields=id,status,question,question_en,answer_en,category,sort&sort=sort,question&limit=300'
+  );
+  items = r.data ?? [];
+} catch (e) {
+  error = String(e);
+}
+
+function isTranslated(q: FaqItem): boolean {
+  return Boolean(q.question_en?.trim() && q.answer_en?.trim());
+}
+const translatedCount = items.filter(isTranslated).length;
+
+const STATUS_LABEL: Record<string, string> = {
+  draft: 'Brouillon',
+  published: 'Publié',
+  archived: 'Archivé',
+};
+---
+
+<AdminLayout title="FAQ" active="faq">
+  <h1 class="admin-h1">Questions fréquentes</h1>
+  <p class="admin-sub">
+    Visible publiquement sur /faq dès qu'une question est publiée.
+    {items.length > 0 && (
+      <span class="trans-summary">
+        · {translatedCount} / {items.length} traduite{translatedCount > 1 ? 's' : ''} en anglais
+      </span>
+    )}
+  </p>
+
+  {ok === 'deleted' && <div class="admin-flash ok">Question supprimée.</div>}
+
+  <div class="admin-actions">
+    <a href="/admin/faq/new" class="btn-primary-sm">+ Nouvelle question</a>
+  </div>
+
+  {error && <div class="admin-flash error">Erreur : {error}</div>}
+  {!error && items.length === 0 && <p class="empty">Aucune question. Cliquez sur « Nouvelle question » pour commencer.</p>}
+
+  {items.length > 0 && (
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Langues</th>
+          <th>Catégorie</th>
+          <th>Ordre</th>
+          <th>Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((q) => {
+          const translated = isTranslated(q);
+          return (
+            <tr>
+              <td><a href={`/admin/faq/${q.id}`}>{q.question}</a></td>
+              <td>
+                <span class="lang-tag lang-fr">FR</span>
+                <span class:list={['lang-tag', translated ? 'lang-en-on' : 'lang-en-off']}>EN</span>
+              </td>
+              <td>{q.category ?? '—'}</td>
+              <td>{q.sort ?? '—'}</td>
+              <td><span class={`badge badge-${q.status}`}>{STATUS_LABEL[q.status] ?? q.status}</span></td>
+              <td>
+                <a href={`/admin/faq/${q.id}`} class="row-action">Modifier</a>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>
+
+<style>
+  .empty { text-align: center; padding: 3rem 0; font-style: italic; color: var(--color-text-muted); }
+  .row-action {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
+  }
+  .row-action:hover { border-color: var(--color-dore); color: var(--color-dore); }
+  .lang-tag {
+    display: inline-block;
+    padding: 0.18rem 0.5rem;
+    margin-right: 0.3rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    border: 1px solid var(--color-border);
+  }
+  .lang-tag.lang-fr,
+  .lang-tag.lang-en-on {
+    color: var(--color-dore);
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.08);
+  }
+  .lang-tag.lang-en-off {
+    color: var(--color-text-dim);
+    opacity: 0.55;
+    border-style: dashed;
+  }
+  .trans-summary { color: var(--color-text-dim); font-style: italic; }
+</style>

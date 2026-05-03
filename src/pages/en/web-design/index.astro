@@ -1,0 +1,548 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { creationFormules, fName, fSlug, fTarifLong, fTarifShort, fDelai, fCompositionShort } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const SITE = 'https://www.legeai-informatique.fr';
+const lang = 'en' as const;
+
+const offerCatalog = {
+  '@context': 'https://schema.org',
+  '@type': 'OfferCatalog',
+  '@id': `${SITE}/en/web-design#catalog`,
+  name: 'Web design packages by Le Geai Informatique',
+  url: `${SITE}/en/web-design`,
+  inLanguage: 'en-GB',
+  provider: { '@id': `${SITE}/#organization` },
+  itemListElement: creationFormules.map((f) => {
+    const priceNum = f.tarifShort.match(/\d[\d ]*/)?.[0]?.replace(/\s/g, '');
+    return {
+      '@type': 'Offer',
+      '@id': `${SITE}/en/web-design/${f.slug_en}#service`,
+      name: f.name_en,
+      url: `${SITE}/en/web-design/${f.slug_en}`,
+      description: f.compositionShort_en,
+      ...(priceNum ? {
+        price: priceNum,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+      } : { priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'EUR' } }),
+    };
+  }),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/en` },
+    { '@type': 'ListItem', position: 2, name: 'Web design', item: `${SITE}/en/web-design` },
+  ],
+};
+
+const tableFormules = creationFormules.filter((f) => f.slug !== 'logiciel-sur-mesure');
+const customFormule = creationFormules.find((f) => f.slug === 'logiciel-sur-mesure')!;
+
+type Cell = boolean | string;
+interface Group {
+  title: string;
+  rows: { feature: string; cells: [Cell, Cell, Cell] }[];
+}
+
+const groups: Group[] = [
+  {
+    title: 'Standard website',
+    rows: [
+      { feature: 'Bespoke pages', cells: ['2 to 3', '2 to 8', '10 or more'] },
+      { feature: 'Local search optimisation', cells: [true, true, true] },
+      { feature: 'Mobile adaptation', cells: [true, true, true] },
+      { feature: 'GDPR compliance', cells: [true, true, true] },
+      { feature: 'Training and documentation', cells: [true, true, true] },
+      { feature: 'Review rounds', cells: ['2', '3', '5 max'] },
+    ],
+  },
+  {
+    title: 'Management area',
+    rows: [
+      { feature: 'Secure administrator area', cells: [false, true, true] },
+      { feature: 'Interactive features of your choice', cells: [false, '1 to 3', '1 to 3'] },
+      { feature: 'Administrator training', cells: [false, true, true] },
+    ],
+  },
+  {
+    title: 'Product pages and e-commerce',
+    rows: [
+      { feature: 'Product pages', cells: [false, 'presentation only', 'full catalogue'] },
+      { feature: 'Bespoke shopping cart', cells: [false, false, true] },
+      { feature: 'Secure payment (PayPal, Stripe)', cells: [false, false, true] },
+      { feature: 'Order and delivery handling', cells: [false, false, true] },
+      { feature: 'Sales dashboard', cells: [false, false, true] },
+    ],
+  },
+];
+
+const colCount = tableFormules.length + 1;
+
+const renderCell = (c: Cell) => {
+  if (c === true) return { mark: '✓', text: '', cls: 'cell-yes' };
+  if (c === false) return { mark: '—', text: '', cls: 'cell-no' };
+  return { mark: '', text: c, cls: 'cell-text' };
+};
+
+const hreflang = buildHreflang('/en/web-design', 'en');
+---
+
+<BaseLayout
+  title="Bespoke website creation"
+  description="Four web design packages for independents and small firms: Showcase €900, Management from €2,800, E-commerce from €6,500, Custom software."
+  lang="en"
+  hreflang={hreflang}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(offerCatalog)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} slot="head" />
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Bespoke websites and tools</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="lead">
+          Clear, lasting, designed for your clients. Three packages cover the
+          most common needs; beyond that, custom work takes over.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="formules-row">
+    <h2 class="sr-only">The four packages</h2>
+    <div class="container">
+      <div class="cards-grid">
+        {creationFormules.map((f, i) => (
+          <Reveal delay={80 + i * 60}>
+            <a href={`/en/web-design/${fSlug(f, lang)}`} class="card-link">
+              <article class="card">
+                <h3>{fName(f, lang)}</h3>
+                <p class="card-tarif">{fTarifLong(f, lang)}</p>
+                <p class="card-meta">{fDelai(f, lang)}</p>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </article>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="comparator-section">
+    <div class="container">
+      <Reveal>
+        <h2 class="comparator-title">Comparison</h2>
+        <p class="comparator-hint" aria-hidden="true">
+          Click a package name to see the detail.
+        </p>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <div class="comparator-layout">
+          <div class="table-wrap">
+            <table class="comparator">
+              <thead>
+                <tr>
+                  <th class="feature-col" scope="col"><span class="sr-only">Feature</span></th>
+                  {tableFormules.map((f) => (
+                    <th class="formule-col" scope="col">
+                      <a href={`/en/web-design/${fSlug(f, lang)}`} class="formule-link">
+                        <span class="formule-name">{fName(f, lang)}</span>
+                        <span class="formule-tarif">{fTarifShort(f, lang)}</span>
+                      </a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((g) => (
+                  <>
+                    <tr class="group-row">
+                      <th colspan={colCount} scope="colgroup">{g.title}</th>
+                    </tr>
+                    {g.rows.map((r) => (
+                      <tr>
+                        <th scope="row" class="feature">{r.feature}</th>
+                        {r.cells.map((c) => {
+                          const v = renderCell(c);
+                          return (
+                            <td class={v.cls}>
+                              {v.mark && <span class="cell-mark" aria-hidden="true">{v.mark}</span>}
+                              {v.text && <span class="cell-value">{v.text}</span>}
+                              <span class="sr-only">
+                                {c === true ? 'included' : c === false ? 'not included' : c}
+                              </span>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </>
+                ))}
+
+                <tr class="summary-row">
+                  <th scope="row" class="feature">Delivery time</th>
+                  {tableFormules.map((f) => (
+                    <td class="cell-text">{fDelai(f, lang)}</td>
+                  ))}
+                </tr>
+                <tr class="summary-row">
+                  <th scope="row" class="feature">Price</th>
+                  {tableFormules.map((f) => (
+                    <td class="cell-tarif">{fTarifShort(f, lang)}</td>
+                  ))}
+                </tr>
+                <tr class="link-row">
+                  <th scope="row" class="sr-only">Detail page</th>
+                  {tableFormules.map((f) => (
+                    <td>
+                      <a href={`/en/web-design/${fSlug(f, lang)}`} class="detail-link">
+                        See detail
+                      </a>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <a href={`/en/web-design/${fSlug(customFormule, lang)}`} class="custom-panel" aria-label="Custom software, on quote, see detail">
+            <span class="custom-vertical">On quote</span>
+            <span class="custom-label">{fName(customFormule, lang)}</span>
+            <span class="custom-cta" aria-hidden="true">See detail</span>
+          </a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="conditions">
+    <div class="container-narrow">
+      <Reveal>
+        <p class="conditions-text">
+          30 % deposit on signature, payment in stages. Net prices, VAT not
+          applicable, art. 293 B of the French CGI. First conversation offered.
+        </p>
+        <p class="conditions-doc">
+          Sales brochure (in French):
+          <a href="/documents/plaquette_le_geai_informatique.pdf" download>
+            download the PDF
+          </a>
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>A question, a project to scope</h2>
+        <p class="lead">
+          Describe your activity, the tools already in place, what you wish to
+          build. We shall come back with a fair proposal.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href="/en/contact" class="btn-primary">Request a scope</a>
+          <a href="/en/web-maintenance" class="btn-ghost">View maintenance</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .page-head { padding: 8rem 1.5rem 3rem; text-align: center; }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); }
+  h2 { font-size: clamp(1.6rem, 3vw, 2rem); text-align: center; }
+  .lead {
+    max-width: 580px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .formules-row { padding: 2rem 1.5rem 4rem; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .card-link { display: block; color: inherit; height: 100%; }
+  .card {
+    position: relative;
+    height: 100%;
+    padding: 1.8rem 1.6rem 2.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .card-link:hover .card { border-color: var(--color-dore); transform: translateY(-3px); }
+  .card h3 { font-size: 1.4rem; color: var(--color-text); margin-bottom: 0.4rem; }
+  .card-tarif { font-style: italic; font-size: 1.4rem; color: var(--color-dore); line-height: 1.2; }
+  .card-meta { font-size: 0.85rem; color: var(--color-text-muted); }
+  .card-arrow {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.2rem;
+    font-size: 1.4rem;
+    color: var(--color-text-muted);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .card-link:hover .card-arrow { color: var(--color-dore); transform: translateX(4px); }
+
+  .comparator-section { padding: 4rem 1.5rem; border-top: 1px solid var(--color-border); }
+  .comparator-title { margin-bottom: 0.8rem; }
+  .comparator-hint {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .comparator-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.2rem;
+    align-items: stretch;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+  }
+  .comparator { width: 100%; min-width: 580px; border-collapse: collapse; }
+
+  .formule-col {
+    padding: 1.2rem 0.8rem 1.4rem;
+    text-align: center;
+    background: rgba(201, 169, 97, 0.08);
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+  }
+  .formule-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+  .formule-link:hover { color: var(--color-dore); }
+  .formule-name {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--color-dore);
+    border-bottom: 1px dotted transparent;
+    padding-bottom: 2px;
+    transition: border-color 0.3s ease;
+  }
+  .formule-link:hover .formule-name { border-bottom-color: var(--color-dore); }
+  .formule-tarif { font-size: 0.82rem; letter-spacing: 0.06em; color: var(--color-text-muted); }
+
+  .feature-col {
+    background: rgba(201, 169, 97, 0.04);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .feature {
+    text-align: left;
+    padding: 0.95rem 1rem;
+    color: var(--color-text);
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-border);
+    background: rgba(201, 169, 97, 0.03);
+    width: 32%;
+  }
+
+  .group-row th {
+    text-align: left;
+    padding: 1rem 1rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.95rem 0.8rem;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .cell-yes .cell-mark { color: var(--color-dore); font-size: 1.2rem; font-weight: 700; }
+  .cell-no .cell-mark { color: var(--color-text-dim); font-size: 1.1rem; }
+  .cell-text .cell-value,
+  .cell-text { color: var(--color-text-muted); font-size: 0.95rem; font-style: italic; }
+
+  .summary-row .feature {
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--color-dore);
+  }
+  .summary-row td { background: var(--color-surface); }
+  .cell-tarif {
+    font-style: italic;
+    color: var(--color-dore);
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  .link-row td { background: var(--color-surface); padding: 1rem 0.5rem 1.4rem; }
+  .link-row { border-top: 2px solid var(--color-border); }
+  .detail-link {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.3s ease;
+  }
+  .detail-link:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+
+  .custom-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 0.5rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    color: inherit;
+    text-align: center;
+    width: 110px;
+    transition: all 0.4s ease;
+  }
+  .custom-panel:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .custom-panel:hover .custom-vertical { color: var(--color-dore); }
+  .custom-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-style: italic;
+    color: var(--color-dore);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+  .custom-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0.8rem 0 0.4rem;
+    line-height: 1.3;
+  }
+  .custom-cta {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+  .custom-panel:hover .custom-cta { color: var(--color-dore); }
+
+  .conditions { padding: 4rem 1.5rem 2rem; text-align: center; }
+  .conditions-text { font-style: italic; color: var(--color-text-muted); line-height: 1.8; }
+  .conditions-doc { margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-text-dim); }
+  .conditions-doc a { color: var(--color-dore); border-bottom: 1px solid var(--color-border); transition: border-color 0.3s ease; }
+  .conditions-doc a:hover { border-bottom-color: var(--color-dore); }
+
+  .cta {
+    padding: 6rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+  .btn-primary {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-noir); background: var(--color-dore); transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block; padding: 0.85rem 2rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-text); border: 1px solid var(--color-border); transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  @media (max-width: 1024px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .comparator-layout { grid-template-columns: 1fr; }
+    .custom-panel {
+      width: auto;
+      flex-direction: row;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      justify-content: flex-start;
+    }
+    .custom-vertical {
+      writing-mode: horizontal-tb;
+      transform: none;
+      font-size: 1.6rem;
+      flex: 0 0 auto;
+    }
+    .custom-label { margin: 0; flex: 1; text-align: left; }
+    .custom-cta { align-self: center; }
+  }
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .comparator { font-size: 0.88rem; }
+    .feature { padding: 0.7rem 0.7rem; }
+    td { padding: 0.7rem 0.5rem; }
+    .formule-name { font-size: 1rem; }
+  }
+</style>

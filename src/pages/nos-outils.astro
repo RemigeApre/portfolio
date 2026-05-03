@@ -1,0 +1,327 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import ToolsList from '~/components/ToolsList.astro';
+import { getTools, setCacheHeaders, type Tool } from '~/lib/directus';
+
+setCacheHeaders(Astro.response.headers);
+
+const SITE = 'https://www.legeai-informatique.fr';
+
+let tools: Tool[] = [];
+let error = false;
+try {
+  tools = await getTools();
+} catch (e) {
+  console.error('Tools fetch failed', e);
+  error = true;
+}
+
+const softwareJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${SITE}/nos-outils#page`,
+  url: `${SITE}/nos-outils`,
+  name: 'Nos outils — Le Geai Informatique',
+  description: 'Logiciels gratuits, sobres et ouverts proposés par Le Geai Informatique. Disponibles sur Windows, macOS, Linux, en application web ou extension navigateur.',
+  inLanguage: 'fr-FR',
+  publisher: { '@id': `${SITE}/#organization` },
+  mainEntity: tools.map((t) => ({
+    '@type': 'SoftwareApplication',
+    name: t.name_fr,
+    operatingSystem: t.app_type === 'desktop'
+      ? Array.from(new Set((t.downloads ?? []).map((d) => d.os))).join(', ') || 'Windows, macOS, Linux'
+      : 'Web',
+    applicationCategory: t.app_type === 'extension' ? 'BrowserApplication' : t.app_type === 'web' ? 'WebApplication' : 'UtilitiesApplication',
+    softwareVersion: t.version ?? undefined,
+    description: t.description_fr ?? undefined,
+    url: `${SITE}/nos-outils/${t.slug}`,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    interactionStatistic: {
+      '@type': 'InteractionCounter',
+      interactionType: { '@type': 'DownloadAction' },
+      userInteractionCount: t.download_count ?? 0,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Nos outils · Logiciels gratuits et libres"
+  description="Logiciels minimalistes : sans IA, sans compte, sans connexion sauf exception. Code ouvert. Pour Windows, macOS, Linux, en app web ou extension navigateur."
+  canonical={`${SITE}/nos-outils`}
+  lang="fr"
+  hreflang={[
+    { lang: 'fr', href: '/nos-outils' },
+    { lang: 'en', href: '/en/our-tools' },
+    { lang: 'x-default', href: '/nos-outils' },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} slot="head" />
+
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Nos outils</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="lead">
+          Quelques logiciels que nous avons façonnés et que nous offrons librement.
+        </p>
+      </Reveal>
+      <Reveal delay={300}>
+        <p class="lang-switch">
+          <a href="/en/our-tools" hreflang="en" lang="en">English version →</a>
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="philosophy-collapse">
+    <div class="container-narrow">
+      <details class="phil-details">
+        <summary class="phil-summary">
+          <span class="phil-icon" aria-hidden="true">+</span>
+          <span class="phil-text">Notre démarche : pourquoi ces outils existent</span>
+        </summary>
+        <div class="phil-content">
+          <div class="philosophy-text">
+            <p>
+              Ces outils sont nés d'abord pour mes propres usages : me simplifier la
+              vie, et aussi par goût de créer des choses. Ils existent ; alors autant
+              les partager. Voilà toute l'histoire.
+            </p>
+            <p>
+              Nous gardons l'entière propriété intellectuelle. Le code est ouvert,
+              chacun peut donc vérifier ce qu'il télécharge.
+            </p>
+          </div>
+
+          <ul class="principles">
+            <li>
+              <p class="num">I</p>
+              <h3>Sobre par exigence</h3>
+              <p>
+                Une application de notes pèse moins de 80 kilooctets une fois
+                installée. Nous aurions aimé faire plus petit encore.
+              </p>
+            </li>
+            <li>
+              <p class="num">II</p>
+              <h3>Sans IA, sans compte, sans connexion</h3>
+              <p>
+                Pas d'intelligence artificielle dissimulée, pas d'inscription
+                demandée, pas de connexion à un serveur. Sauf exceptions clairement
+                indiquées, vos données ne quittent jamais votre machine.
+              </p>
+            </li>
+            <li>
+              <p class="num">III</p>
+              <h3>Code ouvert, vérifiable</h3>
+              <p>
+                Chaque outil est livré avec un lien vers son code source. Vous
+                pouvez l'inspecter, le compiler vous-même, le modifier pour vos
+                besoins.
+              </p>
+            </li>
+            <li>
+              <p class="num">IV</p>
+              <h3>Répondre à un besoin réel</h3>
+              <p>
+                Chaque outil est né d'un besoin concret. Pas de fonctionnalité
+                empilée pour le plaisir, pas d'abonnement caché, pas d'écran de
+                démarrage publicitaire.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="list-wrap">
+    <div class="container">
+      {error ? (
+        <p class="error-state">Outils temporairement indisponibles. Revenez dans un instant.</p>
+      ) : (
+        <ToolsList tools={tools} lang="fr" toolBaseHref="/nos-outils" />
+      )}
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Une demande, une suggestion, un retour</h2>
+        <p class="cta-lead">
+          Vous avez un outil à nous suggérer, un retour à faire, un bug à signaler ?
+          Écrivez-nous, on lit chaque message.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <a href="/contact" class="btn-primary">Nous écrire</a>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 9rem 1.5rem 2rem;
+    text-align: center;
+  }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); }
+  .lead {
+    max-width: 600px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .lang-switch { margin-top: 2rem; font-size: 0.85rem; }
+  .lang-switch a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1px;
+    transition: border-color 0.3s ease;
+  }
+  .lang-switch a:hover { border-bottom-color: var(--color-dore); }
+
+  /* Philosophy collapsible */
+  .philosophy-collapse {
+    padding: 1rem 1.5rem 0;
+  }
+  .phil-details {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    transition: border-color 0.3s ease;
+  }
+  .phil-details:hover { border-color: var(--color-border-hover); }
+  .phil-details[open] { border-color: var(--color-dore); }
+
+  .phil-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease, background 0.3s ease;
+  }
+  .phil-summary::-webkit-details-marker { display: none; }
+  .phil-summary::marker { display: none; content: ''; }
+  .phil-summary:hover { color: var(--color-dore); }
+  .phil-details[open] .phil-summary {
+    background: rgba(201, 169, 97, 0.04);
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .phil-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--color-dore);
+    flex-shrink: 0;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .phil-details[open] .phil-icon {
+    transform: rotate(45deg);
+    border-color: var(--color-dore);
+  }
+
+  .phil-content {
+    padding: 2rem 2rem 2.5rem;
+  }
+  .philosophy-text {
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+  }
+  .philosophy-text p {
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .principles {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .principles li {
+    padding: 1.4rem 1.4rem 1.2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  .principles .num {
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--color-dore);
+    opacity: 0.65;
+    margin-bottom: 0.4rem;
+  }
+  .principles h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+  .principles li p:last-child {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    font-size: 0.92rem;
+  }
+
+  .list-wrap { padding: 2.5rem 1.5rem 6rem; }
+  .error-state {
+    text-align: center;
+    padding: 4rem 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .cta {
+    padding: 6rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .cta h2 { font-size: clamp(1.6rem, 3vw, 2rem); }
+  .cta-lead {
+    max-width: 520px;
+    margin: 1.2rem auto 2rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  @media (max-width: 700px) {
+    .principles { grid-template-columns: 1fr; }
+  }
+</style>

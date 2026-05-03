@@ -1,0 +1,24 @@
+---
+// Téléphone protégé du scraping : pas de "tel:" dans le HTML source.
+// Le numéro affiché reste lisible (un humain doit voir comment nous joindre)
+// mais le lien tel: cliquable n'est injecté qu'après exécution du JS.
+
+interface Props {
+  // Numéro complet international, ex : "+33482532564"
+  number: string;
+  // Affichage humain, ex : "04 82 53 25 64" ou "+33 4 82 53 25 64"
+  display: string;
+  class?: string;
+}
+
+const { number, display, class: className = '' } = Astro.props;
+
+const encode = (s: string) => s.split('').map((c) => c.charCodeAt(0)).join(',');
+---
+
+<a
+  class:list={['protected-tel', className]}
+  href="#"
+  data-n={encode(number)}
+  rel="nofollow"
+>{display}</a>

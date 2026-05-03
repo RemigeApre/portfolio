@@ -1,0 +1,347 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+const hreflang = buildHreflang('/en/mission', 'en');
+---
+
+<BaseLayout
+  title="Our mission · Le Geai Informatique"
+  description="Le Geai Informatique is the digital branch of the Le Geai house. A vision: minimalist, secure, turned towards experience and beauty. A model that funds art and welcomes interns into a humane setting."
+  lang="en"
+  hreflang={hreflang}
+>
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>An idea, a mystique</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="motto">
+          <em>Obscuritas nutrit flammam.</em>
+          <span class="motto-fr">Darkness feeds the flame.</span>
+        </p>
+      </Reveal>
+      <Reveal delay={300}>
+        <p class="lead">
+          Le Geai Informatique is not a web agency. It is the digital workshop
+          of a wider house, founded on a simple exigence: to make well, to
+          serve art and those who pass through.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>A branch, a workshop</h2>
+        <p>
+          Le Geai Informatique is the digital branch of Le Geai, a publishing
+          house. What we build in code, in interfaces, in tools, does not serve
+          only the client who commissions it; it sustains a design wider than
+          the engagement, described further below.
+        </p>
+        <p>
+          We have tools, skills and time. But above all we carry a vision and
+          an empathy for those we accompany, along with a distaste for
+          conventional websites, those large bland windows that all resemble
+          one another. So we offer our own vision of computing.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-soft">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Our vision</h2>
+        <p class="lead">
+          Four exigences run through every one of our works.
+        </p>
+      </Reveal>
+      <div class="pillars">
+        <Reveal delay={100}>
+          <div class="pillar">
+            <p class="pillar-num">I</p>
+            <h3>Minimalist</h3>
+            <p>
+              Each line of code, each pixel, each word must have its reason for
+              being. The superfluous clutters, weighs down, blurs. We set it
+              aside.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={150}>
+          <div class="pillar">
+            <p class="pillar-num">II</p>
+            <h3>Secure</h3>
+            <p>
+              Your data and that of your clients is a responsibility, not a
+              merchandise. We build soberly, without needless dependencies, in
+              respect of the GDPR.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={200}>
+          <div class="pillar">
+            <p class="pillar-num">III</p>
+            <h3>Turned towards use</h3>
+            <p>
+              A tool only has meaning if it serves someone. We design our works
+              from your real activity, never from an abstract template.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={250}>
+          <div class="pillar">
+            <p class="pillar-num">IV</p>
+            <h3>Beautiful</h3>
+            <p>
+              For beauty is not a luxury, it is a condition. We give each work
+              the attention it deserves, in the line of what Dostoevsky wrote:
+              beauty will save the world.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>The pact</h2>
+        <p>
+          We work in computing to fund what we carry elsewhere: the publishing
+          house, the printing of our books, the illustrators and artists we
+          remunerate. That is also why our prices stay reasonable, where others
+          inflate theirs.
+        </p>
+        <p>
+          Becoming our client is not only having a website. It is obtaining a
+          viable tool, designed for you, and at the same time funding art,
+          jobs, and projects of the future at a humane scale.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-soft">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>Those who join the workshop</h2>
+        <p>
+          The founder knew the trial of the unfound internship, of time wasted
+          knocking on the wrong doors. So we regularly welcome interns and,
+          when the setting allows, apprentices. Our aim is to keep them on
+          permanent contracts when the mission ends well.
+        </p>
+        <p>
+          The setting we offer is designed to allow real work and a humane
+          life at the same time:
+        </p>
+        <ul class="list-clean">
+          <li>Mostly remote work, on-site possible when the need arises.</li>
+          <li>No fixed imposed schedule, so long as the work is delivered on time and well done.</li>
+          <li>The possibility of taking holidays, including for interns.</li>
+          <li>Menstrual flexibility: leave taken without consequence on the mission or on rest days.</li>
+          <li>An amicality that prevails over hierarchy, and a fluid working setting.</li>
+        </ul>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>The horizon</h2>
+        <p>
+          In time, we wish to open a shop kept by the Le Geai house. Our books
+          would be sold there, along with old objects chosen for their
+          aesthetic bearing, and we would open late in the evening to offer a
+          refuge to those who need it. A place where the light stays on.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="mystique">
+    <div class="container-narrow">
+      <Reveal>
+        <p class="mystique-text">
+          Le Geai Informatique is not a web shop. It is, to borrow Charles
+          Péguy's word, a <em>mystique</em>: a living idea we try to uphold
+          without letting it fall.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>The first conversation is offered</h2>
+        <p class="lead">
+          Describe your activity, what you wish to build, what deserves to be
+          reworked. We shall come back with a fair proposal.
+        </p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href="/en/contact" class="btn-primary">Discuss your project</a>
+          <a href="/en/portfolio" class="btn-ghost">View the works</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding: 8rem 1.5rem 4rem; text-align: center; }
+  h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
+  .motto {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .motto em {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    font-style: italic;
+    color: var(--color-dore);
+    letter-spacing: 0.04em;
+  }
+  .motto-fr {
+    font-size: 0.9rem;
+    color: var(--color-text-dim);
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+  .lead {
+    max-width: 620px;
+    margin: 2rem auto 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .block { padding: 5rem 1.5rem; border-top: 1px solid var(--color-border); }
+  .block-soft { background: var(--color-surface-raised); }
+  .block h2 {
+    text-align: center;
+    font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+    margin-bottom: 2rem;
+  }
+  .block p {
+    color: var(--color-text-muted);
+    line-height: 1.85;
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+  }
+  .block p em { color: var(--color-dore); font-style: italic; }
+  .block .lead { margin-bottom: 2rem; font-size: 1.05rem; }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem;
+    margin-top: 1.5rem;
+  }
+  .pillar {
+    padding: 1.8rem 1.6rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .pillar-num {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--color-dore);
+    opacity: 0.7;
+    margin-bottom: 0.4rem;
+  }
+  .pillar h3 { font-size: 1.3rem; margin-bottom: 0.7rem; }
+  .pillar p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+
+  .list-clean { list-style: none; margin: 1rem 0; }
+  .list-clean li {
+    padding: 0.6rem 0 0.6rem 1.6rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    position: relative;
+  }
+  .list-clean li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.2rem;
+    width: 10px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+
+  .mystique {
+    padding: 6rem 1.5rem;
+    text-align: center;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mystique-text {
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    color: var(--color-text);
+    line-height: 1.7;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+  .mystique-text em { color: var(--color-dore); font-weight: 700; }
+
+  .cta { padding: 6rem 1.5rem; text-align: center; }
+  .cta h2 { font-size: clamp(1.6rem, 3vw, 2rem); }
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover { border-color: var(--color-dore); color: var(--color-dore); }
+
+  @media (max-width: 700px) {
+    .pillars { grid-template-columns: 1fr; }
+  }
+</style>

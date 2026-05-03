@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, maintenanceFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('maintenance', 'premium', 'en')!;
+const index = maintenanceFormules.findIndex((f) => f.slug === formule.slug) + 1;
+const hreflang = buildHreflang('/en/web-maintenance/premium', 'en');
+---
+
+<BaseLayout
+  title="Premium web maintenance · €299 / month"
+  description="Premium level: Pro + full backup, 4 extra hours, 1 hour user training, intervention within 24 working hours. €299 net per month, 12-month engagement."
+  lang="en"
+  hreflang={hreflang}
+>
+  <FormuleDetail formule={formule} index={index} total={maintenanceFormules.length} lang="en" />
+</BaseLayout>

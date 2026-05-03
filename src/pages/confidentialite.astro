@@ -1,0 +1,267 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import { buildHreflang } from '~/lib/i18n';
+---
+
+<BaseLayout
+  title="Politique de confidentialité · Le Geai Informatique"
+  description="Politique de confidentialité du site legeai-informatique.fr : traitement des données, cookies, statistiques anonymes, likes, commentaires, droits RGPD."
+  noindex={true}
+  hreflang={buildHreflang('/confidentialite', 'fr')}
+>
+  <article class="legal">
+    <div class="container-narrow">
+      <header class="head">
+        <h1>Politique de confidentialité</h1>
+        <p class="lead">
+          Cette page décrit ce que nous faisons, ou ne faisons pas, des données
+          qui transitent par ce site. Le principe est simple : nous en collectons
+          le moins possible, et nous vous disons précisément ce qui est conservé.
+        </p>
+      </header>
+
+      <section>
+        <h2>Responsable du traitement</h2>
+        <p>
+          Le responsable du traitement des données est Le Geai Informatique,
+          micro-entreprise dont les coordonnées figurent sur la page
+          <a href="/mentions-legales">mentions légales</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Ce que nous ne faisons pas</h2>
+        <p>
+          Le site n'utilise <strong>aucune régie publicitaire</strong>, ne dépose
+          <strong>aucun cookie de tracking tiers</strong> (pas de Google Analytics,
+          pas de pixel Facebook, pas de Hotjar). Aucune donnée n'est revendue,
+          partagée à des tiers commerciaux ou utilisée à des fins de profilage.
+        </p>
+      </section>
+
+      <section>
+        <h2>Ce que nous collectons</h2>
+
+        <h3>1. Logs serveur techniques</h3>
+        <p>
+          Comme tout serveur web, le nôtre conserve des journaux techniques :
+          adresse IP, navigateur, page consultée, code de réponse, horaire. Ces
+          logs sont conservés au maximum <strong>30 jours</strong> à des fins de
+          sécurité, de diagnostic et de lutte contre les abus.
+        </p>
+
+        <h3>2. Statistiques de trafic anonymes</h3>
+        <p>
+          Nous mesurons l'audience de nos pages, en particulier des articles du
+          journal, pour comprendre ce qui intéresse nos lecteurs. Ces statistiques
+          sont <strong>strictement anonymes</strong> : nous enregistrons l'URL
+          consultée, l'horaire arrondi, le type d'appareil (mobile ou desktop) et
+          la source d'arrivée (moteur de recherche, lien direct, etc.). Aucune
+          donnée permettant de vous identifier n'est conservée. Pas de cookie,
+          pas d'identifiant persistant.
+        </p>
+
+        <h3>3. Formulaire de contact</h3>
+        <p>
+          Lorsque vous nous écrivez via le <a href="/contact">formulaire de contact</a>,
+          nous conservons ce que vous avez saisi : nom, éventuellement prénom,
+          moyens de contact que vous nous indiquez (email, téléphone ou adresse
+          postale), sujet et message. Ces données sont stockées dans notre
+          interface d'administration et conservées le temps utile à la réponse
+          puis au suivi de votre dossier (généralement 3 ans, durée légale
+          minimale pour les pièces commerciales).
+        </p>
+
+        <h3>4. Likes et commentaires (à venir)</h3>
+        <p>
+          Nous prévoyons d'ajouter prochainement la possibilité de réagir aux
+          articles : un système de <strong>likes anonymes</strong> et un système
+          de <strong>commentaires</strong>. Lorsque ces fonctionnalités seront
+          actives, cette politique sera précisée. Par anticipation :
+        </p>
+        <ul>
+          <li>
+            <strong>Likes</strong> : nous enregistrerons uniquement l'identifiant
+            de l'article et la date du like. Aucune donnée personnelle n'est
+            associée.
+          </li>
+          <li>
+            <strong>Commentaires</strong> : nous demanderons un nom (qui peut
+            être un pseudonyme), facultativement un email (jamais publié, utilisé
+            uniquement pour vous prévenir d'une réponse si vous le souhaitez),
+            et le commentaire. Les commentaires sont modérés avant publication.
+          </li>
+        </ul>
+
+        <h3>5. Empreinte anti-spam minimale</h3>
+        <p>
+          Pour empêcher les soumissions automatisées massives (formulaire de
+          contact, futurs likes et commentaires), nous calculons une empreinte
+          technique à partir de votre adresse IP, de votre navigateur et d'un
+          sel secret propre à notre site. Cette empreinte est :
+        </p>
+        <ul>
+          <li>
+            <strong>hachée</strong> de façon irréversible (SHA-256), ce qui
+            signifie qu'elle ne permet pas de remonter à votre IP ou à votre
+            identité ;
+          </li>
+          <li>
+            <strong>conservée 90 jours maximum</strong>, le temps de détecter les
+            soumissions répétées suspectes ;
+          </li>
+          <li>
+            utilisée <strong>uniquement</strong> à des fins de modération et de
+            limitation de débit. Elle n'est jamais croisée avec d'autres données
+            pour vous identifier.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Cookies</h2>
+        <p>
+          Le site n'utilise <strong>aucun cookie de mesure d'audience ni de
+          publicité</strong>. Il peut déposer des cookies strictement techniques
+          nécessaires au bon fonctionnement de l'interface (préférences
+          d'affichage, session). Ces cookies ne nécessitent pas votre
+          consentement, conformément à l'article 82 de la loi Informatique et
+          Libertés.
+        </p>
+      </section>
+
+      <section>
+        <h2>Destinataires des données</h2>
+        <p>
+          Les données ne sont transmises à aucun tiers, ni vendues, ni louées.
+          Elles sont accessibles uniquement à Le Geai Informatique, dans son
+          interface d'administration interne, pour la gestion des relations
+          avec les personnes qui nous contactent et l'amélioration du site.
+        </p>
+      </section>
+
+      <section>
+        <h2>Hébergement et localisation</h2>
+        <p>
+          Les données sont hébergées en France, sur un serveur privé virtuel
+          opéré par OVH SAS. Aucun transfert de données hors de l'Union
+          européenne n'est effectué.
+        </p>
+      </section>
+
+      <section>
+        <h2>Vos droits</h2>
+        <p>
+          Conformément au RGPD et à la loi Informatique et Libertés, vous
+          disposez des droits suivants sur vos données personnelles :
+        </p>
+        <ul>
+          <li>droit d'accès à vos données ;</li>
+          <li>droit de rectification ;</li>
+          <li>droit à l'effacement ;</li>
+          <li>droit à la limitation du traitement ;</li>
+          <li>droit à la portabilité ;</li>
+          <li>droit d'opposition.</li>
+        </ul>
+        <p>
+          Pour exercer ces droits, écrivez à
+          <ProtectedEmail user="administration" domain="legeai-editions.com" lang="fr" />
+          en indiquant votre demande. Nous vous répondrons dans un délai d'un
+          mois.
+        </p>
+        <p>
+          Pour les données entièrement anonymes (statistiques de trafic,
+          empreintes anti-spam hachées), il n'est techniquement pas possible
+          de retrouver les vôtres en particulier, donc les droits d'accès et
+          d'effacement ne peuvent pas s'y appliquer individuellement.
+        </p>
+        <p>
+          Si vous estimez que vos droits ne sont pas respectés, vous pouvez
+          introduire une réclamation auprès de la CNIL :
+          <a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Mise à jour de cette politique</h2>
+        <p>
+          Cette politique peut être mise à jour pour refléter des changements
+          légaux, techniques ou fonctionnels (en particulier l'ouverture des
+          fonctionnalités likes et commentaires). La dernière mise à jour
+          significative date de mai 2026.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal { padding-top: 8rem; padding-bottom: 5rem; }
+  .head { text-align: center; margin-bottom: 3rem; padding: 0 1.5rem; }
+  .kicker {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+  }
+  h1 { margin-top: 1rem; font-size: clamp(2rem, 4vw, 2.8rem); }
+  .lead {
+    max-width: 620px;
+    margin: 1.5rem auto 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  section { padding: 0 1.5rem; margin-bottom: 3rem; }
+  section h2 {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  section h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+    color: var(--color-dore);
+    font-style: italic;
+    font-weight: 500;
+  }
+  section h3:first-of-type { margin-top: 0.5rem; }
+  section p {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  section ul {
+    list-style: none;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+  section li {
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+    line-height: 1.7;
+  }
+  section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.05rem;
+    width: 8px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+  section a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  section a:hover { border-bottom-color: var(--color-dore); }
+  section strong { color: var(--color-text); font-weight: 700; }
+</style>

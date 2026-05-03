@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import FormuleDetail from '~/components/FormuleDetail.astro';
+import { getFormule, creationFormules } from '~/data/formules';
+import { buildHreflang } from '~/lib/i18n';
+
+const formule = getFormule('creation', 'management', 'en')!;
+const index = creationFormules.findIndex((f) => f.slug === formule.slug) + 1;
+const hreflang = buildHreflang('/en/web-design/management', 'en');
+---
+
+<BaseLayout
+  title="Management website · from €2,800 in 6 to 8 weeks"
+  description="Management package: showcase + secure admin area, 1 to 3 interactive features (bookings, scheduling, client area, stock), training. From €2,800 net."
+  lang="en"
+  hreflang={hreflang}
+>
+  <FormuleDetail formule={formule} index={index} total={creationFormules.length} lang="en" />
+</BaseLayout>

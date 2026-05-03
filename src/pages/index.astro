@@ -1,0 +1,706 @@
+---
+export const prerender = true;
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import HeroScene from '~/components/HeroScene.astro';
+import FriezeLine from '~/components/FriezeLine.astro';
+import ProtectedEmail from '~/components/ProtectedEmail.astro';
+import ProtectedTel from '~/components/ProtectedTel.astro';
+import { buildHreflang } from '~/lib/i18n';
+
+const tarifs = [
+  { label: 'Site vitrine', value: '900 €' },
+  { label: 'Site avec espace de gestion', value: 'dès 2 800 €' },
+  { label: 'Site e-commerce', value: 'dès 6 500 €' },
+  { label: 'Logiciel sur mesure', value: 'sur devis' },
+  { label: 'Maintenance web', value: 'dès 39 € / mois' },
+];
+
+const realisations = [
+  {
+    title: 'Bergfrid',
+    sub: 'Plateforme éditoriale',
+    body: "Architecture de publication, hiérarchie de l'information, circulation entre les contenus, logique de durée.",
+    href: 'https://bergfrid.com',
+    cta: 'Visiter le projet',
+    accent: 'cinder',
+  },
+  {
+    title: 'Gaio Polart',
+    sub: 'Commerce de terrain',
+    body: 'Présence commerciale, usages quotidiens, listes partagées, logique progressive.',
+    href: 'https://gaio-polart.legeai-informatique.fr/',
+    cta: 'Visiter le projet',
+    accent: 'moss',
+  },
+  {
+    title: 'Le Geai Informatique',
+    sub: 'Vitrine maison',
+    body: 'Hiérarchie, matière, rythme, lisibilité, contact : démonstration appliquée à notre propre maison.',
+    here: true,
+    accent: 'amethyst',
+  },
+];
+---
+
+<BaseLayout
+  title="Le Geai Informatique · Sites web et logiciels sur mesure"
+  description="Artisanat numérique pour indépendants, artisans et PME. Sites web sur mesure et maintenance durable. Premier rendez-vous offert."
+  hreflang={buildHreflang('/', 'fr')}
+>
+  <HeroScene />
+
+  <section class="serve">
+    <div class="serve-inner container">
+      <Reveal>
+        <h2>Servir votre activité dans la durée</h2>
+        <p class="lead">
+          Chaque intervention respecte la réalité de vos clients, de vos équipes
+          et de vos partenaires. Elle s'accorde à vos usages, à vos contraintes
+          et à votre rythme. Notre travail suit quatre lignes simples : clarifier,
+          alléger, relier, prolonger.
+        </p>
+      </Reveal>
+
+      <div class="serve-grid">
+        <Reveal delay={100}>
+          <article class="card card-warm">
+            <h3>Sur mesure pour votre activité</h3>
+            <p>
+              Des outils et des accompagnements taillés pour votre réalité.
+              Chaque solution s'accorde à vos usages, à vos équipes, à vos clients
+              et à la trajectoire propre de votre activité.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={150}>
+          <article class="card card-cool">
+            <h3>Suivi durable</h3>
+            <p>
+              Chaque intervention laisse derrière elle une transmission claire,
+              une disponibilité raisonnable et un accompagnement ponctuel. Pour
+              ceux qui le souhaitent, ce socle se prolonge en partenariat dans
+              le temps.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={200}>
+          <article class="card card-warm">
+            <h3>Simplicité d'usage réelle</h3>
+            <p>
+              Nos compositions sont choisies pour leur précision, leur intelligence
+              du terrain et leur clarté. Les solutions gagnent en lisibilité, en
+              fluidité, et la complexité reste à distance de vos usages quotidiens.
+            </p>
+          </article>
+        </Reveal>
+        <Reveal delay={250}>
+          <article class="card card-deep">
+            <h3>Une ligne d'échange claire</h3>
+            <p>
+              Plusieurs canaux apportent la souplesse nécessaire. Une chaîne
+              courte affine la compréhension, resserre les décisions et soutient
+              une continuité plus ferme.
+            </p>
+          </article>
+        </Reveal>
+      </div>
+
+      <Reveal delay={300}>
+        <aside class="serve-aside">
+          <h3>Une attention portée au réel</h3>
+          <p>
+            Les périodes tendues existent. Selon le besoin, le périmètre peut
+            s'ajuster, les paiements peuvent s'échelonner, certaines formules
+            récurrentes peuvent respirer pendant un temps. Une relation durable
+            réclame aussi cette intelligence des circonstances.
+          </p>
+        </aside>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="works">
+    <div class="works-inner container">
+      <Reveal>
+        <h2>Trois réalisations, trois usages réels</h2>
+        <p class="lead">
+          Trois cadres différents, une même exigence : rendre un usage plus clair,
+          plus fluide, plus durable.
+        </p>
+      </Reveal>
+
+      <div class="works-grid">
+        {realisations.map((r, i) => (
+          <Reveal delay={100 + i * 100}>
+            <article class={`work work-${r.accent}`}>
+              <p class="work-sub">{r.sub}</p>
+              <h3>{r.title}</h3>
+              <p class="work-body">{r.body}</p>
+              {r.href ? (
+                <a href={r.href} target="_blank" rel="noopener" class="work-link">
+                  {r.cta}
+                </a>
+              ) : (
+                <span class="work-here">Vous y êtes</span>
+              )}
+            </article>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={400}>
+        <p class="works-tail">
+          D'autres réalisations dans le <a href="/portfolio">portfolio complet</a>.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="method">
+    <div class="container">
+      <Reveal>
+        <h2 class="method-title">Une méthode</h2>
+      </Reveal>
+
+      <div class="frieze">
+        <FriezeLine />
+        <div class="frieze-steps">
+          <Reveal delay={100}>
+            <div class="step">
+              <span class="step-num">1</span>
+              <h3>Écouter</h3>
+              <p>Usages, contraintes, irritants, rythme, besoins réels.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={150}>
+            <div class="step">
+              <span class="step-num">2</span>
+              <h3>Cadrer</h3>
+              <p>La bonne réponse, à la bonne échelle, pour le bon usage.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={200}>
+            <div class="step">
+              <span class="step-num">3</span>
+              <h3>Façonner</h3>
+              <p>Un outil lisible, fiable, exploitable, prêt à durer.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={250}>
+            <div class="step">
+              <span class="step-num">4</span>
+              <h3>Soutenir</h3>
+              <p>Transmission, suivi, ajustements, continuité.</p>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      <Reveal delay={350}>
+        <div class="method-exit">
+          <div class="method-exit-bar" aria-hidden="true"></div>
+          <a href="/contact" class="method-exit-link">Initier l'échange</a>
+          <p>
+            Décrivez votre situation ou laissez une adresse pour être recontacté
+            au bon moment.
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="pricing">
+    <div class="pricing-inner">
+      <Reveal>
+        <h2>Des repères tarifaires</h2>
+        <p class="lead">
+          Derrière chaque dossier, une écoute réelle, un cadre juste, une mise en
+          place soignée et un interlocuteur disponible dans le temps.
+        </p>
+      </Reveal>
+
+      <Reveal delay={150}>
+        <div class="pricing-table">
+          {tarifs.map((t) => (
+            <div class="pricing-row">
+              <span class="pricing-label">{t.label}</span>
+              <span class="pricing-value">{t.value}</span>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={250}>
+        <div class="pricing-tail">
+          <p class="pricing-note">
+            Les quatre formules de création web et les quatre niveaux de
+            maintenance sont détaillés sur les pages dédiées.
+          </p>
+          <div class="pricing-actions">
+            <a href="/creation-web" class="btn-line">Voir les formules de création</a>
+            <a href="/maintenance-web" class="btn-line">Voir les formules de maintenance</a>
+          </div>
+          <p class="pricing-doc">
+            Plaquette commerciale :
+            <a
+              href="/documents/plaquette_le_geai_informatique.pdf"
+              download
+            >
+              télécharger le PDF
+            </a>
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="contact-home">
+    <div class="contact-inner container">
+      <Reveal>
+        <h2>Parlons de votre activité</h2>
+        <p class="lead">
+          Le bon outil répond à un besoin réel, s'intègre juste et tient dans le
+          temps.
+        </p>
+      </Reveal>
+
+      <div class="contact-options">
+        <Reveal delay={100}>
+          <div class="contact-card">
+            <h3>Premier contact</h3>
+            <p>Une question directe, un besoin simple, un premier échange.</p>
+            <ProtectedEmail user="administration" domain="legeai-editions.com" lang="fr" class="contact-data" />
+            <ProtectedTel number="+33482532564" display="04 82 53 25 64" class="contact-data" />
+          </div>
+        </Reveal>
+        <Reveal delay={200}>
+          <div class="contact-card">
+            <h3>Cadrage structuré</h3>
+            <p>
+              Décrivez votre activité, les outils déjà en place et les points à
+              reprendre. Nous reviendrons avec un cadrage clair.
+            </p>
+            <a href="/contact" class="btn-primary">Décrire le besoin</a>
+          </div>
+        </Reveal>
+      </div>
+
+      <Reveal delay={300}>
+        <p class="contact-bottom">
+          Réponse sous 48h ouvrées. Le premier rendez-vous est offert.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h2 {
+    font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+    text-align: center;
+  }
+
+  .lead {
+    max-width: 580px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── SERVE ── */
+  .serve {
+    padding: 6rem 1.5rem 4rem;
+  }
+  .serve-inner {
+    max-width: 920px;
+  }
+  .serve-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 3rem;
+  }
+  .card {
+    padding: 1.6rem 1.8rem;
+    border: 1px solid transparent;
+    transition: all 0.6s ease;
+    height: 100%;
+  }
+  .card-warm { background: rgba(46, 38, 24, 0.45); }
+  .card-cool { background: rgba(28, 38, 34, 0.45); }
+  .card-deep { background: rgba(28, 28, 42, 0.45); }
+  .card:hover {
+    border-color: var(--color-border);
+    background: rgba(58, 50, 36, 0.55);
+  }
+  .card h3 {
+    font-size: 1.15rem;
+    color: var(--color-text);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.5rem;
+    position: relative;
+  }
+  .card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 24px;
+    height: 1px;
+    background: rgba(201, 169, 97, 0.4);
+    transition: width 0.4s ease;
+  }
+  .card:hover h3::after {
+    width: 36px;
+  }
+  .card p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .serve-aside {
+    margin-top: 2.5rem;
+    padding: 1.6rem 2rem;
+    text-align: center;
+    max-width: 640px;
+    margin-inline: auto;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .serve-aside h3 {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--color-dore);
+    font-weight: 400;
+    margin-bottom: 0.7rem;
+  }
+  .serve-aside p {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+
+  /* ── WORKS ── */
+  .works {
+    padding: 5rem 1.5rem 4rem;
+  }
+  .works-inner {
+    max-width: 1100px;
+  }
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 3rem;
+  }
+  .work {
+    display: flex;
+    flex-direction: column;
+    padding: 2.4rem 2rem 2rem;
+    border: 1px solid var(--color-border);
+    transition: all 0.5s ease;
+    height: 100%;
+  }
+  .work:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+  .work-cinder { background: rgba(38, 28, 18, 0.5); border-left: 2px solid rgba(160, 120, 50, 0.3); }
+  .work-moss   { background: rgba(20, 32, 26, 0.5); border-left: 2px solid rgba(60, 140, 90, 0.18); }
+  .work-amethyst { background: rgba(24, 20, 36, 0.5); border-left: 2px solid rgba(120, 100, 170, 0.18); }
+
+  .work-sub {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+  .work h3 {
+    font-size: 1.6rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+  }
+  .work-body {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+  .work-link {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    opacity: 0.75;
+    transition: opacity 0.4s ease;
+  }
+  .work-link:hover { opacity: 1; }
+  .work-here {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    font-style: italic;
+    color: var(--color-text-dim);
+  }
+
+  .works-tail {
+    text-align: center;
+    margin-top: 2.5rem;
+    color: var(--color-text-muted);
+  }
+  .works-tail a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .works-tail a:hover {
+    border-bottom-color: var(--color-dore);
+  }
+
+  /* ── METHOD ── */
+  .method {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem;
+  }
+  .method-title {
+    margin-bottom: 4rem;
+  }
+  .frieze {
+    width: 100%;
+    max-width: 1060px;
+    margin-inline: auto;
+  }
+  .frieze-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 1.5rem;
+  }
+  .step {
+    padding: 0 1.6rem;
+    text-align: center;
+  }
+  .step-num {
+    display: block;
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--color-dore);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .step h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .step p {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .method-exit {
+    max-width: 500px;
+    margin: 4rem auto 0;
+    text-align: center;
+  }
+  .method-exit-bar {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(to bottom, rgba(201, 169, 97, 0.35), rgba(201, 169, 97, 0.05));
+    margin: 0 auto 1.5rem;
+  }
+  .method-exit-link {
+    display: inline-block;
+    padding: 0.85rem 2.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-dore);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+    margin-bottom: 1rem;
+  }
+  .method-exit-link:hover {
+    border-color: var(--color-dore);
+    background: rgba(201, 169, 97, 0.06);
+  }
+  .method-exit p {
+    color: var(--color-text-dim);
+    max-width: 400px;
+    margin-inline: auto;
+  }
+
+  /* ── PRICING ── */
+  .pricing {
+    padding: 7rem 1.5rem;
+  }
+  .pricing-inner {
+    max-width: 620px;
+    margin-inline: auto;
+  }
+  .pricing-table {
+    margin-top: 3rem;
+    border: 1px solid var(--color-border);
+  }
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1.1rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.3s ease;
+  }
+  .pricing-row:last-child { border-bottom: none; }
+  .pricing-row:hover { background: var(--color-surface-raised); }
+  .pricing-label { color: var(--color-text); }
+  .pricing-value {
+    font-style: italic;
+    color: var(--color-dore);
+    white-space: nowrap;
+  }
+
+  .pricing-tail {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .pricing-note {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .pricing-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .pricing-doc {
+    margin-top: 2rem;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+  }
+  .pricing-doc a {
+    color: var(--color-dore);
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .pricing-doc a:hover { border-bottom-color: var(--color-dore); }
+
+  .btn-line {
+    display: inline-block;
+    padding: 0.75rem 1.6rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-line:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+
+  /* ── CONTACT (home) ── */
+  .contact-home {
+    padding: 7rem 1.5rem;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+  }
+  .contact-inner {
+    max-width: 880px;
+  }
+  .contact-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .contact-card {
+    padding: 2.4rem 2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: border-color 0.4s ease;
+  }
+  .contact-card:hover { border-color: var(--color-border-hover); }
+  .contact-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .contact-card p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+  .contact-data {
+    display: block;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--color-dore);
+    margin-bottom: 0.4rem;
+    transition: opacity 0.3s ease;
+  }
+  .contact-data:hover { opacity: 0.7; }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  .contact-bottom {
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--color-text-dim);
+    font-size: 0.95rem;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-dore);
+    border: 0;
+    opacity: 0.3;
+    margin: 0 auto;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .works-grid { grid-template-columns: 1fr; }
+    .frieze-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+    .step { padding: 0; }
+    .contact-options { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .serve-grid { grid-template-columns: 1fr; }
+    .pricing-row { padding: 1rem 1.2rem; }
+  }
+</style>

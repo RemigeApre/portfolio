@@ -1,0 +1,435 @@
+---
+import Reveal from '~/components/Reveal.astro';
+import {
+  type Formule,
+  getNeighbors,
+  fName,
+  fSlug,
+  fTarifLong,
+  fDelai,
+  fCompositionShort,
+  fComposition,
+} from '~/data/formules';
+import { routes, t, type Lang } from '~/lib/i18n';
+
+interface Props {
+  formule: Formule;
+  index: number;
+  total: number;
+  lang?: Lang;
+}
+
+const { formule, index, total, lang = 'fr' } = Astro.props;
+const { prev, next } = getNeighbors(formule.category, formule.slug, 'fr'); // navigation par slug interne
+const strings = t(lang).formule;
+const r = routes[lang];
+
+const isCreation = formule.category === 'creation';
+const parentHref = isCreation ? r.creation : r.maintenance;
+const parentName = isCreation ? t(lang).nav.creation : t(lang).nav.maintenance;
+const backLabel = isCreation ? strings.backCreation : strings.backMaintenance;
+const positionLabel = isCreation
+  ? strings.positionCreation(index, total)
+  : strings.positionMaintenance(index, total);
+const compositionTitle = isCreation
+  ? strings.compositionTitleCreation
+  : strings.compositionTitleMaintenance;
+const ctaGhost = isCreation ? strings.ctaGhostCreation : strings.ctaGhostMaintenance;
+const conditionsLines = isCreation ? strings.conditionsCreation : strings.conditionsMaintenance;
+
+const formuleName = fName(formule, lang);
+const formuleSlug = fSlug(formule, lang);
+
+// JSON-LD : Service + BreadcrumbList pour différenciation SEO et pas de cannibalisation.
+const SITE = 'https://www.legeai-informatique.fr';
+const formuleUrl = `${SITE}${parentHref}/${formuleSlug}`;
+
+const priceNum = formule.tarifShort.match(/\d[\d ]*/)?.[0]?.replace(/\s/g, '');
+const inLanguage = lang === 'en' ? 'en-GB' : 'fr-FR';
+
+const serviceJsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${formuleUrl}#service`,
+  name: lang === 'en'
+    ? (isCreation ? `${formuleName} website creation` : `${formuleName} web maintenance`)
+    : (isCreation ? `Création de site web ${formuleName}` : `Maintenance web ${formuleName}`),
+  serviceType: lang === 'en'
+    ? (isCreation ? `${formuleName.toLowerCase()} website creation` : `${formuleName.toLowerCase()} web maintenance`)
+    : (isCreation ? `Création de site ${formuleName.toLowerCase()}` : `Maintenance web niveau ${formuleName.toLowerCase()}`),
+  description: fCompositionShort(formule, lang),
+  url: formuleUrl,
+  inLanguage,
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'Country', name: 'France' },
+  category: lang === 'en'
+    ? (isCreation ? 'Web design' : 'Web maintenance')
+    : (isCreation ? 'Création web' : 'Maintenance web'),
+};
+
+if (priceNum) {
+  serviceJsonLd.offers = isCreation
+    ? {
+        '@type': 'Offer',
+        url: formuleUrl,
+        price: priceNum,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        priceValidUntil: '2027-12-31',
+      }
+    : {
+        '@type': 'Offer',
+        url: formuleUrl,
+        price: priceNum,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: priceNum,
+          priceCurrency: 'EUR',
+          billingIncrement: 1,
+          unitCode: 'MON',
+        },
+      };
+}
+
+const breadcrumbHome = lang === 'en' ? 'Home' : 'Accueil';
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: SITE + (lang === 'en' ? '/en' : '') },
+    { '@type': 'ListItem', position: 2, name: parentName, item: `${SITE}${parentHref}` },
+    { '@type': 'ListItem', position: 3, name: formuleName, item: formuleUrl },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+
+<article class="formule">
+  <header class="formule-head">
+    <div class="container-narrow">
+      <Reveal>
+        <nav class="breadcrumb" aria-label={strings.breadcrumbAriaLabel}>
+          <a href={parentHref} class="back-link">← {backLabel}</a>
+          <span class="position">{positionLabel}</span>
+        </nav>
+      </Reveal>
+      <Reveal delay={120}>
+        <h1>{formuleName}</h1>
+      </Reveal>
+      <Reveal delay={240}>
+        <p class="tarif">
+          <span class="tarif-value">{fTarifLong(formule, lang)}</span>
+          <span class="tarif-meta">{fDelai(formule, lang)}</span>
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="block">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>{compositionTitle}</h2>
+      </Reveal>
+      <Reveal delay={120}>
+        <ul class="composition">
+          {fComposition(formule, lang).map((line) => <li>{line}</li>)}
+        </ul>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-conditions">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>{strings.conditionsTitle}</h2>
+      </Reveal>
+      <Reveal delay={120}>
+        <ul class="conditions">
+          {conditionsLines.map((line) => <li>{line}</li>)}
+        </ul>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="block block-cta">
+    <div class="container-narrow">
+      <Reveal>
+        <h2>{strings.ctaTitle}</h2>
+        <p class="lead">{strings.ctaLead}</p>
+      </Reveal>
+      <Reveal delay={150}>
+        <div class="cta-row">
+          <a href={r.contact} class="btn-primary">{strings.ctaPrimary}</a>
+          <a href={parentHref} class="btn-ghost">{ctaGhost}</a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <nav class="pager container-narrow" aria-label={strings.pagerAriaLabel}>
+    {prev ? (
+      <a href={`${parentHref}/${fSlug(prev, lang)}`} class="pager-link pager-prev">
+        <span class="pager-arrow" aria-hidden="true">←</span>
+        <span class="pager-text">
+          <span class="pager-meta">{strings.pagerPrev}</span>
+          <span class="pager-name">{fName(prev, lang)}</span>
+        </span>
+      </a>
+    ) : (
+      <span class="pager-placeholder"></span>
+    )}
+    {next ? (
+      <a href={`${parentHref}/${fSlug(next, lang)}`} class="pager-link pager-next">
+        <span class="pager-text">
+          <span class="pager-meta">{strings.pagerNext}</span>
+          <span class="pager-name">{fName(next, lang)}</span>
+        </span>
+        <span class="pager-arrow" aria-hidden="true">→</span>
+      </a>
+    ) : (
+      <span class="pager-placeholder"></span>
+    )}
+  </nav>
+</article>
+
+<style>
+  .formule {
+    padding-top: 8rem;
+  }
+
+  .formule-head {
+    text-align: center;
+    padding: 2rem 1.5rem 4rem;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .back-link {
+    color: var(--color-dore);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  .back-link:hover {
+    border-bottom-color: var(--color-dore);
+  }
+  .position {
+    color: var(--color-text-dim);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    margin-top: 1rem;
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+  }
+
+  .tarif {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tarif-value {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-style: italic;
+    color: var(--color-dore);
+  }
+  .tarif-meta {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .block {
+    padding: 4rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .block h2 {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .composition {
+    list-style: none;
+    max-width: 580px;
+    margin-inline: auto;
+  }
+  .composition li {
+    padding: 1rem 0 1rem 1.6rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    line-height: 1.6;
+    position: relative;
+  }
+  .composition li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.55rem;
+    width: 8px;
+    height: 1px;
+    background: var(--color-dore);
+  }
+  .composition li:last-child {
+    border-bottom: none;
+  }
+
+  .block-conditions {
+    background: var(--color-surface-raised);
+  }
+  .conditions {
+    list-style: none;
+    max-width: 580px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .conditions li {
+    padding: 0.6rem 0;
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  .block-cta {
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .lead {
+    max-width: 540px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-noir);
+    background: var(--color-dore);
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    transition: all 0.4s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-dore);
+    color: var(--color-dore);
+  }
+
+  /* Pager : typographique, sans box, séparé du contenu par un trait doré discret */
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 3rem 1.5rem 5rem;
+    position: relative;
+  }
+  .pager::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: var(--color-dore);
+    opacity: 0.4;
+  }
+  .pager-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1rem;
+    color: inherit;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pager-prev { justify-self: start; }
+  .pager-next { justify-self: end; }
+  .pager-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .pager-prev .pager-text { text-align: left; }
+  .pager-next .pager-text { text-align: right; }
+  .pager-arrow {
+    font-size: 1.4rem;
+    color: var(--color-text-dim);
+    line-height: 1;
+    transition: color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pager-link:hover .pager-arrow {
+    color: var(--color-dore);
+  }
+  .pager-prev:hover .pager-arrow { transform: translateX(-4px); }
+  .pager-next:hover .pager-arrow { transform: translateX(4px); }
+  .pager-meta {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    transition: color 0.4s ease;
+  }
+  .pager-link:hover .pager-meta { color: var(--color-text-muted); }
+  .pager-name {
+    font-size: 1.3rem;
+    color: var(--color-text);
+    font-style: italic;
+    line-height: 1.2;
+    transition: color 0.4s ease;
+  }
+  .pager-link:hover .pager-name { color: var(--color-dore); }
+  .pager-placeholder { display: block; }
+
+  @media (max-width: 640px) {
+    .formule {
+      padding-top: 6rem;
+    }
+    .pager {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .pager-prev { justify-self: start; }
+    .pager-next { justify-self: start; }
+    .pager-next .pager-text { text-align: left; }
+    .pager-next { flex-direction: row-reverse; }
+  }
+</style>

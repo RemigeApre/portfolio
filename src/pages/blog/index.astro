@@ -1,0 +1,297 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Reveal from '~/components/Reveal.astro';
+import { getArticles, assetUrl, setCacheHeaders, type Article } from '~/lib/directus';
+import { tagColor } from '~/lib/tag-color';
+import { buildHreflang } from '~/lib/i18n';
+
+setCacheHeaders(Astro.response.headers);
+
+const SITE = 'https://www.legeai-informatique.fr';
+
+let articles: Article[] = [];
+let error = false;
+try {
+  articles = await getArticles();
+} catch (e) {
+  console.error('Directus articles fetch failed', e);
+  error = true;
+}
+
+const formatDate = (iso?: string | null) => {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+const dayMonthYear = (iso?: string | null) => {
+  if (!iso) return { day: '', month: '', year: '' };
+  const d = new Date(iso);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
+  const year = String(d.getFullYear());
+  return { day, month, year };
+};
+
+const blogJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${SITE}/blog#blog`,
+  url: `${SITE}/blog`,
+  name: 'Le Geai Informatique — Le journal',
+  description: "Notes, retours et lectures sur l'artisanat numérique : création web, maintenance, choix sobres et durables.",
+  inLanguage: 'fr-FR',
+  publisher: { '@id': `${SITE}/#organization` },
+  blogPost: articles.slice(0, 30).map((a) => ({
+    '@type': 'BlogPosting',
+    '@id': `${SITE}/blog/${a.slug}#post`,
+    headline: a.title,
+    url: `${SITE}/blog/${a.slug}`,
+    datePublished: a.date_published ?? undefined,
+    description: a.excerpt ?? undefined,
+    author: a.author ? { '@type': 'Organization', name: a.author } : undefined,
+  })),
+};
+---
+
+<BaseLayout
+  title="Le journal · Le Geai Informatique"
+  description="Articles, retours d'expérience et notes sur l'artisanat numérique : création web, maintenance, choix techniques sobres et durables."
+  hreflang={buildHreflang('/blog', 'fr')}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(blogJsonLd)} slot="head" />
+
+  <header class="page-head">
+    <div class="container-narrow">
+      <Reveal>
+        <h1>Le journal</h1>
+      </Reveal>
+      <Reveal delay={150}>
+        <p class="lead">
+          Notes, retours, lectures. Les éclats d'un artisanat qui prend le temps.
+        </p>
+      </Reveal>
+    </div>
+  </header>
+
+  <section class="list-wrap">
+    <div class="container-narrow">
+      {error && (
+        <p class="empty">Le journal est temporairement indisponible. Revenez dans un instant.</p>
+      )}
+      {!error && articles.length === 0 && (
+        <p class="empty">Aucun article publié pour le moment. Le premier paraîtra bientôt.</p>
+      )}
+      {!error && articles.length > 0 && (
+        <ul class="articles">
+          {articles.map((a, i) => {
+            const dmy = dayMonthYear(a.date_published);
+            const cover = assetUrl(a.cover);
+            return (
+              <Reveal delay={50 + i * 60} class="article-item">
+                <article class="article">
+                  <a href={`/blog/${a.slug}`} class="article-link">
+                    <div class="article-date" aria-hidden="true">
+                      <span class="day">{dmy.day}</span>
+                      <span class="month">{dmy.month}</span>
+                      <span class="year">{dmy.year}</span>
+                    </div>
+                    <div class="article-body">
+                      <time class="sr-only" datetime={a.date_published ?? ''}>{formatDate(a.date_published)}</time>
+                      {a.author && <span class="sr-only">{a.author}</span>}
+                      <h2 class="article-title">{a.title}</h2>
+                      {a.excerpt && <p class="article-excerpt">{a.excerpt}</p>}
+                      {a.tags && a.tags.length > 0 && (
+                        <ul class="article-tags" aria-label="Étiquettes">
+                          {a.tags.map((t) => (
+                            <li class={`tag tag-${tagColor(t)}`}>{t}</li>
+                          ))}
+                        </ul>
+                      )}
+                      <p class="article-cta">
+                        Lire l'article <span aria-hidden="true">→</span>
+                      </p>
+                    </div>
+                    {cover && (
+                      <img src={cover} alt="" class="article-cover" loading="lazy" />
+                    )}
+                  </a>
+                </article>
+              </Reveal>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 9rem 1.5rem 4rem;
+    text-align: center;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+  }
+  .lead {
+    max-width: 540px;
+    margin: 1.4rem auto 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .list-wrap {
+    padding: 1rem 1.5rem 6rem;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 4rem 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Liste éditoriale, sans cards box, séparateur subtil entre articles ── */
+  .articles {
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .article-item {
+    display: block;
+  }
+  .article {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .article-link {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2.5rem;
+    padding: 3rem 0;
+    color: inherit;
+    transition: padding 0.4s ease;
+  }
+  .article-link:hover {
+    padding-left: 0.5rem;
+  }
+
+  /* Bloc date à gauche, en colonne, esthétique journal/calendrier */
+  .article-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 0.4rem;
+    border-right: 1px solid var(--color-border);
+    padding-right: 1.5rem;
+  }
+  .article-date .day {
+    font-size: 2.6rem;
+    font-style: italic;
+    color: var(--color-dore);
+    line-height: 1;
+    font-weight: 500;
+  }
+  .article-date .month {
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .article-date .year {
+    margin-top: 0.3rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--color-text-dim);
+    font-style: italic;
+  }
+
+  .article-body {
+    min-width: 0;
+  }
+
+  .article-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text);
+    transition: color 0.3s ease;
+  }
+  .article-link:hover .article-title {
+    color: var(--color-dore);
+  }
+
+  .article-excerpt {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    max-width: 56ch;
+  }
+
+  .article-tags {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+  }
+  .article-tags li {
+    padding: 0.22rem 0.7rem;
+    border: 1px solid var(--color-border);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .article-cta {
+    margin-top: 1.4rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+  .article-link:hover .article-cta {
+    color: var(--color-dore);
+  }
+
+  .article-cover {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    object-fit: cover;
+    justify-self: end;
+    border: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 700px) {
+    .article-link {
+      grid-template-columns: 60px 1fr;
+      gap: 1.4rem;
+      padding: 2.2rem 0;
+    }
+    .article-date {
+      padding-right: 1rem;
+    }
+    .article-date .day {
+      font-size: 1.8rem;
+    }
+    .article-cover {
+      display: none;
+    }
+  }
+</style>

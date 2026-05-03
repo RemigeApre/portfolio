@@ -1,0 +1,53 @@
+---
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import FaqForm from '~/components/admin/FaqForm.astro';
+import { directusFetch } from '~/lib/admin';
+
+export const prerender = false;
+
+const token = Astro.locals.adminToken!;
+const id = Astro.params.id;
+
+if (!id) return Astro.redirect('/admin/faq', 302);
+
+interface FaqItem {
+  id: string | number;
+  status: string;
+  question: string;
+  question_en: string | null;
+  answer: string;
+  answer_en: string | null;
+  category: string | null;
+  category_en: string | null;
+  sort: number | null;
+}
+
+let item: FaqItem | null = null;
+let error: string | null = null;
+try {
+  const r = await directusFetch<{ data: FaqItem }>(
+    token,
+    `/items/faq/${encodeURIComponent(id)}`
+  );
+  item = r.data;
+} catch (e) {
+  error = String(e);
+}
+
+const ok = Astro.url.searchParams.get('ok');
+---
+
+<AdminLayout title={item?.question ?? 'Question'} active="faq">
+  {error && <div class="admin-flash error">Erreur : {error} <a href="/admin/faq">Retour</a></div>}
+
+  {item && (
+    <>
+      <h1 class="admin-h1">{item.question}</h1>
+      <p class="admin-sub"><a href="/admin/faq">← Toutes les questions</a></p>
+
+      {ok === 'created' && <div class="admin-flash ok">Question créée.</div>}
+
+      <FaqForm item={item} />
+    </>
+  )}
+</AdminLayout>
