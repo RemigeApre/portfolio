@@ -27,5 +27,8 @@ ENV PORT=3000
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+# Scripts d'init Directus (setup.mjs) : doivent rester dans l'image pour permettre
+# `docker compose exec web node /app/directus/setup.mjs` après chaque deploy.
+COPY --from=builder /app/directus ./directus
 EXPOSE 3000
 CMD ["node", "./dist/server/entry.mjs"]
