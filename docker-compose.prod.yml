@@ -19,13 +19,16 @@ services:
       context: .
       target: runner
     command: ["node", "./dist/server/entry.mjs"]
-    volumes: []
+    # !reset vide vraiment la liste heritee du compose dev (sinon Compose fusionne et on garde
+    # le bind ./:/app qui masque le /app/dist build, d'ou "Cannot find module entry.mjs").
+    volumes: !reset []
     environment:
       NODE_ENV: production
       DIRECTUS_INTERNAL_URL: ${DIRECTUS_INTERNAL_URL}
       DIRECTUS_PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
       DIRECTUS_ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
       DIRECTUS_ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      SECURITY_SALT: ${SECURITY_SALT}
     networks:
       - default
       - proxy
